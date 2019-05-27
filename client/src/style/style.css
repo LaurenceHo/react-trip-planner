@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Rubik:400,500,700');
 
+html,
 body {
-  height: 100%;
   margin: 0;
+  padding: 0;
+  height: 100%;
   font-size: 1rem;
   font-family: 'Rubik', sans-serif;
 }
@@ -10,7 +12,6 @@ body {
 .container {
   min-height: 100%;
   width: 100%;
-  background-color: #2d3a4b;
   overflow: hidden;
 }
 
@@ -29,7 +30,7 @@ body {
 
 .user-form-title {
   font-size: 2rem;
-  color: #eee;
+  color: #4c4c4c;
   text-align: center;
   font-weight: bold;
 }

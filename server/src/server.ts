@@ -23,7 +23,7 @@ app.use(expressSanitizer());
 app.use(morgan('dev'));
 
 const corsHeader = (req: any, res: any, next: any) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
