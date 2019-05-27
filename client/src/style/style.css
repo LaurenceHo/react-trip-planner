@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik:400,500,700');
+
+body {
+  height: 100%;
+  margin: 0;
+  font-size: 1rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.container {
+  min-height: 100%;
+  width: 100%;
+  background-color: #2d3a4b;
+  overflow: hidden;
+}
+
+.user-form {
+  position: relative;
+  width: 22rem;
+  max-width: 100%;
+  padding: 8rem 3rem 0;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.user-form-title-container {
+  position: relative;
+}
+
+.user-form-title {
+  font-size: 2rem;
+  color: #eee;
+  text-align: center;
+  font-weight: bold;
+}
+
+.user-form-button {
+  width: 100%;
+}
+
+.loading-spinner-outer {
+  width: 100%;
+  text-align: center;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  display: inline-block;
+}
