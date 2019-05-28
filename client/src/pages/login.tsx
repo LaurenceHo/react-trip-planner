@@ -5,8 +5,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
+import { push } from 'connected-react-router';
 
+import store, { history } from '../store';
 import { UserService } from '../services/user-service';
+import { SnackbarComponent } from '../components/snackbar';
 
 const userService = new UserService();
 
@@ -21,15 +24,33 @@ const useStyles = makeStyles(theme => ({
   rightIcon: {
     marginLeft: theme.spacing(1),
   },
+  margin: {
+    margin: theme.spacing(1),
+  },
 }));
 
 export const Login = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const [status, setStatus] = React.useState({
+    success: null,
+    message: '',
+  });
+
   const [values, setValues] = React.useState({
     email: '',
     password: '',
   });
 
   const classes = useStyles();
+
+  const handleClose = (event: any, reason: any) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleChange = (name: string) => (event: any) => {
     setValues({ ...values, [name]: event.target.value });
@@ -51,23 +72,54 @@ export const Login = () => {
         if (result.success) {
           localStorage.setItem('user', JSON.stringify(result.user));
           // TODO - redirect to dashboard
+          store.dispatch(push('/'));
         } else {
-          // TODO - error message
+          setOpen(true);
+          setStatus({
+            success: false,
+            message: result.error,
+          });
         }
       })
       .catch((error: any) => {
-        // TODO - error message
+        setOpen(true);
+        setStatus({
+          success: false,
+          message: error,
+        });
       });
+  };
+
+  const goToRegisterPage = () => {
+    history.push('/register');
+    store.dispatch(push('/register'));
   };
 
   return (
     <div className='container'>
+      <Grid container direction='row' justify='center' alignItems='center'>
+        <Grid item xs={12}>
+          <Button variant='contained' color='primary' className={classes.button} onClick={goToRegisterPage}>
+            Register
+          </Button>
+        </Grid>
+      </Grid>
+      {status.success !== null && !isEmpty(status.message) ? (
+        <SnackbarComponent
+          open={open}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          message={status.message}
+          variant={status.success === true ? 'success' : 'error'}
+          className={classes.margin}
+          onClose={handleClose}
+        />
+      ) : null}
       <div className='user-form'>
         <div className='user-form-title-container'>
-          <h3 className='user-form-title '>Sign In</h3>
+          <h3 className='user-form-title '>Login</h3>
         </div>
         <Grid container direction='row' justify='center' alignItems='center'>
-          <Grid item xs={10}>
+          <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
             <TextField
               className={classes.textField}
               label='Email'
@@ -84,7 +136,7 @@ export const Login = () => {
           </Grid>
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
-          <Grid item xs={10}>
+          <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
             <TextField
               className={classes.textField}
               label='Password'
@@ -101,7 +153,7 @@ export const Login = () => {
           </Grid>
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
-          <Grid item xs={10}>
+          <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
             <Button variant='contained' color='primary' className={classes.button} onClick={handleSubmit}>
               Login
               <Icon className={classes.rightIcon}>send</Icon>

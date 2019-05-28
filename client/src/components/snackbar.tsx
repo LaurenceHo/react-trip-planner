@@ -6,18 +6,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 import WarningIcon from '@material-ui/icons/Warning';
 import * as React from 'react';
-
-interface MySnackbarContentWrapperProps {
-  className: string;
-  message: Element;
-  onClose: any;
-  variant: 'success' | 'warning' | 'error' | 'info';
-}
 
 interface VariantIcon {
   [key: string]: any;
@@ -60,7 +54,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const MySnackbarContentWrapper = (props: MySnackbarContentWrapperProps) => {
+interface SnackbarContentWrapperProps {
+  className?: string;
+  message: string;
+  onClose?: any;
+  variant: 'success' | 'warning' | 'error' | 'info';
+}
+
+const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
   const classes: Classes = useStyles();
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
@@ -82,5 +83,25 @@ export const MySnackbarContentWrapper = (props: MySnackbarContentWrapperProps) =
       ]}
       {...other}
     />
+  );
+};
+
+interface SnackbarComponentProps {
+  open: boolean;
+  anchorOrigin: { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' };
+  autoHideDuration?: number;
+  className?: string;
+  message: string;
+  onClose?: any;
+  variant: 'success' | 'warning' | 'error' | 'info';
+}
+
+export const SnackbarComponent = (props: SnackbarComponentProps) => {
+  const { open, anchorOrigin, autoHideDuration, className, message, onClose, variant } = props;
+
+  return (
+    <Snackbar anchorOrigin={anchorOrigin} open={open} onClose={onClose} autoHideDuration={autoHideDuration}>
+      <SnackbarContentWrapper variant={variant} className={className} message={message} onClose={onClose} />
+    </Snackbar>
   );
 };
