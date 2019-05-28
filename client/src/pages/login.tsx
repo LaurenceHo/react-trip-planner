@@ -1,21 +1,19 @@
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/icon';
-import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import TextField from '@material-ui/core/TextField';
+import { isEmpty } from 'lodash';
 import * as React from 'react';
 
-import { User } from '../models/user';
 import { UserService } from '../services/user-service';
 
-const user: User = JSON.parse(localStorage.getItem('user'));
 const userService = new UserService();
 
 const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   button: {
     margin: theme.spacing(1),
@@ -38,6 +36,10 @@ export const Login = () => {
   };
 
   const handleSubmit = () => {
+    if (isEmpty(values.email) || isEmpty(values.password)) {
+      return;
+    }
+
     const user = {
       email: values.email,
       password: values.password,
@@ -48,12 +50,13 @@ export const Login = () => {
       .then((result: any) => {
         if (result.success) {
           localStorage.setItem('user', JSON.stringify(result.user));
+          // TODO - redirect to dashboard
         } else {
-          // TODO
+          // TODO - error message
         }
       })
       .catch((error: any) => {
-        // TODO
+        // TODO - error message
       });
   };
 
@@ -65,34 +68,36 @@ export const Login = () => {
         </div>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={10}>
-            <FormControl fullWidth className={classes.formControl} variant='outlined' required>
-              <InputLabel htmlFor='user-email'>Email</InputLabel>
-              <OutlinedInput
-                id='user-email'
-                name='email'
-                value={values.email}
-                onChange={handleChange('email')}
-                labelWidth={50}
-                fullWidth
-                required
-              />
-            </FormControl>
+            <TextField
+              className={classes.textField}
+              label='Email'
+              name='email'
+              type='email'
+              autoComplete='email'
+              margin='normal'
+              variant='outlined'
+              value={values.email}
+              onChange={handleChange('email')}
+              required
+              fullWidth
+            />
           </Grid>
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={10}>
-            <FormControl fullWidth className={classes.formControl} variant='outlined' required>
-              <InputLabel htmlFor='user-password'>Password</InputLabel>
-              <OutlinedInput
-                id='user-password'
-                name='password'
-                value={values.password}
-                onChange={handleChange('password')}
-                labelWidth={50}
-                fullWidth
-                required
-              />
-            </FormControl>
+            <TextField
+              className={classes.textField}
+              label='Password'
+              name='password'
+              type='password'
+              autoComplete='current-password'
+              margin='normal'
+              variant='outlined'
+              value={values.password}
+              onChange={handleChange('password')}
+              required
+              fullWidth
+            />
           </Grid>
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
