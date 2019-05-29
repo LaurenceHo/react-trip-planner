@@ -3,13 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/icon';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
-import { push } from 'connected-react-router';
+import { withRouter } from 'react-router-dom';
 
-import store, { history } from '../store';
-import { UserService } from '../services/user-service';
 import { SnackbarComponent } from '../components/snackbar';
+import { UserService } from '../services/user-service';
+import store from '../store';
 
 const userService = new UserService();
 
@@ -56,52 +57,67 @@ export const Login = () => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleSubmit = () => {
-    if (isEmpty(values.email) || isEmpty(values.password)) {
-      return;
-    }
-
-    const user = {
-      email: values.email,
-      password: values.password,
-    };
-
-    userService
-      .login(user)
-      .then((result: any) => {
-        if (result.success) {
-          localStorage.setItem('user', JSON.stringify(result.user));
-          // TODO - redirect to dashboard
-          store.dispatch(push('/'));
-        } else {
-          setOpen(true);
-          setStatus({
-            success: false,
-            message: result.error,
-          });
+  const LoginButton = withRouter(({ history }) => (
+    <Button
+      variant='contained'
+      color='primary'
+      className={classes.button}
+      onClick={() => {
+        if (isEmpty(values.email) || isEmpty(values.password)) {
+          return;
         }
-      })
-      .catch((error: any) => {
-        setOpen(true);
-        setStatus({
-          success: false,
-          message: error,
-        });
-      });
-  };
 
-  const goToRegisterPage = () => {
-    history.push('/register');
-    store.dispatch(push('/register'));
-  };
+        const user = {
+          email: values.email,
+          password: values.password,
+        };
+
+        userService
+          .login(user)
+          .then((result: any) => {
+            if (result.success) {
+              localStorage.setItem('user', JSON.stringify(result.user));
+              history.push('/');
+              store.dispatch(push('/'));
+            } else {
+              setOpen(true);
+              setStatus({
+                success: false,
+                message: result.error,
+              });
+            }
+          })
+          .catch((error: any) => {
+            setOpen(true);
+            setStatus({
+              success: false,
+              message: error,
+            });
+          });
+      }}>
+      Login
+      <Icon className={classes.rightIcon}>send</Icon>
+    </Button>
+  ));
+
+  const RegisterRedirectButton = withRouter(({ history }) => (
+    <Button
+      variant='contained'
+      color='primary'
+      className={classes.button}
+      onClick={() => {
+        history.push('/register');
+        store.dispatch(push('/register'));
+      }}>
+      Register
+    </Button>
+  ));
 
   return (
     <div className='container'>
       <Grid container direction='row' justify='center' alignItems='center'>
         <Grid item xs={12}>
-          <Button variant='contained' color='primary' className={classes.button} onClick={goToRegisterPage}>
-            Register
-          </Button>
+          <RegisterRedirectButton />
         </Grid>
       </Grid>
       {status.success !== null && !isEmpty(status.message) ? (
@@ -154,10 +170,7 @@ export const Login = () => {
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-            <Button variant='contained' color='primary' className={classes.button} onClick={handleSubmit}>
-              Login
-              <Icon className={classes.rightIcon}>send</Icon>
-            </Button>
+            <LoginButton />
           </Grid>
         </Grid>
       </div>

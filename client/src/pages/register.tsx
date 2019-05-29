@@ -3,13 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/icon';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
-
-import store, { history } from '../store';
-import { UserService } from '../services/user-service';
+import { withRouter } from 'react-router';
 import { SnackbarComponent } from '../components/snackbar';
-import { push } from 'connected-react-router';
+import { UserService } from '../services/user-service';
+
+import store from '../store';
 
 const userService = new UserService();
 
@@ -95,18 +96,74 @@ export const Register = () => {
       });
   };
 
-  const goToLoginPage = () => {
-    history.push('/login');
-    store.dispatch(push('/login'));
-  };
+  const RegisterButton = withRouter(({ history }) => (
+    <Button
+      variant='contained'
+      color='primary'
+      className={classes.button}
+      onClick={() => {
+        if (isEmpty(values.username) || isEmpty(values.email) || isEmpty(values.password)) {
+          return;
+        }
+
+        const user = {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        };
+
+        userService
+          .register(user)
+          .then((result: any) => {
+            if (result.success) {
+              setOpen(true);
+              setStatus({
+                success: true,
+                message: 'You are all set! Will redirect to login page in 3 secs...',
+              });
+              setTimeout(() => {
+                history.push('/login');
+                store.dispatch(push('/login'));
+              }, 3000);
+            } else {
+              setOpen(true);
+              setStatus({
+                success: false,
+                message: result.error,
+              });
+            }
+          })
+          .catch((error: any) => {
+            setOpen(true);
+            setStatus({
+              success: false,
+              message: error,
+            });
+          });
+      }}>
+      Register
+      <Icon className={classes.rightIcon}>send</Icon>
+    </Button>
+  ));
+
+  const LoginRedirectButton = withRouter(({ history }) => (
+    <Button
+      variant='contained'
+      color='primary'
+      className={classes.button}
+      onClick={() => {
+        history.push('/login');
+        store.dispatch(push('/login'));
+      }}>
+      Login
+    </Button>
+  ));
 
   return (
     <div className='container'>
       <Grid container direction='row' justify='center' alignItems='center'>
         <Grid item xs={12}>
-          <Button variant='contained' color='primary' className={classes.button} onClick={goToLoginPage}>
-            Login
-          </Button>
+          <LoginRedirectButton />
         </Grid>
       </Grid>
       {status.success !== null && !isEmpty(status.message) ? (
@@ -174,10 +231,7 @@ export const Register = () => {
         </Grid>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-            <Button variant='contained' color='primary' className={classes.button} onClick={handleSubmit}>
-              Register
-              <Icon className={classes.rightIcon}>send</Icon>
-            </Button>
+            <RegisterButton />
           </Grid>
         </Grid>
       </div>
