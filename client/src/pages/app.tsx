@@ -1,13 +1,13 @@
 import { ConnectedRouter } from 'connected-react-router';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Provider, ReactReduxContext } from 'react-redux';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { User } from '../models/user';
 
 import store, { history } from '../store';
+import LoginPage from './login';
+import RegisterPage from './register';
 import { TripDashboard } from './trip-dashboard';
-import { Login } from './login';
-import { Register } from './register';
-import { User } from '../models/user';
 
 export class App extends React.Component<any, any> {
   render() {
@@ -34,13 +34,13 @@ export class App extends React.Component<any, any> {
     };
 
     return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
+      <Provider store={store} context={ReactReduxContext}>
+        <ConnectedRouter history={history} context={ReactReduxContext}>
           <Router>
             <Switch>
               <PrivateRoute exact path='/' component={TripDashboard as any} />
-              <Route path='/login' component={Login as any} />
-              <Route path='/register' component={Register as any} />
+              <Route path='/login' component={LoginPage as any} />
+              <Route path='/register' component={RegisterPage as any} />
             </Switch>
           </Router>
         </ConnectedRouter>

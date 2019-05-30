@@ -8,7 +8,7 @@ import amber from '@material-ui/core/colors/amber';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import WarningIcon from '@material-ui/icons/Warning';
 import * as React from 'react';
@@ -28,31 +28,33 @@ const variantIcon: VariantIcon = {
   info: InfoIcon,
 };
 
-const useStyles = makeStyles(theme => ({
-  success: {
-    backgroundColor: green[600],
-  },
-  error: {
-    backgroundColor: theme.palette.error.dark,
-  },
-  info: {
-    backgroundColor: theme.palette.primary.dark,
-  },
-  warning: {
-    backgroundColor: amber[700],
-  },
-  icon: {
-    fontSize: 20,
-  },
-  iconVariant: {
-    opacity: 0.9,
-    marginRight: theme.spacing(1),
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    success: {
+      backgroundColor: green[600],
+    },
+    error: {
+      backgroundColor: theme.palette.error.dark,
+    },
+    info: {
+      backgroundColor: theme.palette.primary.dark,
+    },
+    warning: {
+      backgroundColor: amber[700],
+    },
+    icon: {
+      fontSize: 20,
+    },
+    iconVariant: {
+      opacity: 0.9,
+      marginRight: theme.spacing(1),
+    },
+    message: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+  })
+);
 
 interface SnackbarContentWrapperProps {
   className?: string;
@@ -62,7 +64,7 @@ interface SnackbarContentWrapperProps {
 }
 
 const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
-  const classes: Classes = useStyles();
+  const classes: Classes = useStyles({});
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 

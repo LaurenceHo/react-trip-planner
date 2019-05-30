@@ -5,7 +5,7 @@ const SERVER_URL = 'http://localhost:3000/api';
 export class UserService {
   apiService = new ApiService();
 
-  login(requestBody: any) {
+  login(requestBody: { email: string; password: string }) {
     const searchParams = {};
     const formParams = {};
 
@@ -16,7 +16,7 @@ export class UserService {
     localStorage.removeItem('user');
   }
 
-  register(requestBody: any) {
+  register(requestBody: { username: string; email: string; password: string }) {
     const searchParams = {};
     const formParams = {};
 
