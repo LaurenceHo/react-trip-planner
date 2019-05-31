@@ -2,7 +2,7 @@ import { User } from '../../models/user';
 import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../types';
 
 const user: User = JSON.parse(localStorage.getItem('user'));
-export const userInitialState = user ? { status: { loggedIn: true }, user } : { status: { loggedIn: false }, user };
+const userInitialState = user ? { status: { loggedIn: true }, user } : { status: { loggedIn: false }, user };
 
 export const userReducers = (state: any = userInitialState, action: any) => {
   switch (action.type) {
