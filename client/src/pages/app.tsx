@@ -5,15 +5,15 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 
 import { User } from '../models/user';
 import store, { history } from '../store';
+import { DashboardPage } from './dashboard';
 import LoginPage from './login';
 import RegisterPage from './register';
-import TripDashboard from './trip-dashboard';
 
 export class App extends React.Component<any, any> {
   render() {
-    const user: User = JSON.parse(localStorage.getItem('user'));
-
     const PrivateRoute = ({ component: Component, ...rest }: any) => {
+      const user: User = JSON.parse(localStorage.getItem('user'));
+
       return (
         <Route
           {...rest}
@@ -38,7 +38,7 @@ export class App extends React.Component<any, any> {
         <ConnectedRouter history={history} context={ReactReduxContext}>
           <Router history={history}>
             <Switch>
-              <PrivateRoute exact path='/' component={TripDashboard as any} />
+              <PrivateRoute exact path='/' component={DashboardPage as any} />
               <Route path='/login' component={LoginPage as any} />
               <Route path='/register' component={RegisterPage as any} />
             </Switch>
