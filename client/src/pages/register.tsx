@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/icon';
 import TextField from '@material-ui/core/TextField';
-import { styled } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
@@ -14,6 +14,18 @@ import { SnackbarComponent } from '../components/snackbar';
 import store from '../store';
 import { alertError, clearAlert } from '../store/actions/alert-actions';
 import { userRegister } from '../store/actions/user-actions';
+
+const styles = {
+  registerButton: {
+    marginTop: '0.5rem',
+  },
+  sendIcon: {
+    paddingLeft: '0.5rem',
+  },
+  login1RedirectButton: {
+    margin: '1rem 0 0 1rem',
+  },
+};
 
 interface RegisterPageState {
   email: string;
@@ -40,7 +52,7 @@ class RegisterPage extends React.Component<any, RegisterPageState> {
 
   render() {
     const { username, email, password } = this.state;
-    const { alert } = this.props;
+    const { classes, alert } = this.props;
 
     const formSubmit = () => {
       if (isEmpty(username) || isEmpty(email) || isEmpty(password)) {
@@ -55,34 +67,23 @@ class RegisterPage extends React.Component<any, RegisterPageState> {
       }
     };
 
-    const MyRegisterButton = styled(Button)({
-      marginTop: '0.8rem',
-    });
-
-    const MySendIcon = styled(Icon)({
-      paddingLeft: '0.5rem',
-    });
-
     const RegisterButton = (
-      <MyRegisterButton variant='contained' color='primary' type='submit' onClick={formSubmit}>
+      <Button className={classes.registerButton} variant='contained' color='primary' type='submit' onClick={formSubmit}>
         Register
-        <MySendIcon>send</MySendIcon>
-      </MyRegisterButton>
+        <Icon className={classes.sendIcon}>send</Icon>
+      </Button>
     );
 
-    const MyLoginButton = styled(Button)({
-      margin: '1rem 0 0 1rem',
-    });
-
     const LoginRedirectButton = (
-      <MyLoginButton
+      <Button
+        className={classes.login1RedirectButton}
         variant='contained'
         color='primary'
         onClick={() => {
           store.dispatch(push('/login'));
         }}>
         Login
-      </MyLoginButton>
+      </Button>
     );
 
     return (
@@ -184,4 +185,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RegisterPage);
+)(withStyles(styles)(RegisterPage));

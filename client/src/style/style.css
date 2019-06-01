@@ -38,12 +38,50 @@ body {
   width: 100%;
 }
 
-.loading-spinner-outer {
-  width: 100%;
-  text-align: center;
+.app-bar-search-input {
+  position: relative;
 }
 
-.loading-spinner {
-  font-size: 3rem;
-  display: inline-block;
+.app-bar-search-input-icon {
+  position: absolute;
+  pointer-events: none;
+}
+
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+}
+
+@media screen and (min-width: 769px) and (max-width: 992px) {
+}
+
+@media screen and (min-device-width: 577px) and (max-device-width: 768px) {
+  .app-bar-menu-button-desktop {
+    display: none !important;
+  }
+
+  .app-bar-menu-button-mobile {
+    display: flex !important;
+  }
+
+  .app-bar-search-input-mobile {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media screen and (min-device-width: 320px) and (max-device-width: 576px) {
+  .app-bar-title {
+    display: none !important;
+  }
+  .app-bar-menu-button-desktop {
+    display: none !important;
+  }
+
+  .app-bar-menu-button-mobile {
+    display: flex !important;
+  }
+
+  .app-bar-search-input-mobile {
+    margin-left: 0;
+    width: 100%;
+  }
 }
