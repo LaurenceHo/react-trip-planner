@@ -17,10 +17,28 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { UserService } from '../services/user-service';
 import store from '../store';
-import { closeDrawer, openDrawer } from '../store/actions/dashboard-actions';
+import { openDrawer } from '../store/actions/dashboard-actions';
 
 const userService = new UserService();
 const styles = {
+  appBar: {
+    zIndex: 1021,
+    transition: 'width 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms,margin 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
+  },
+  appBarShift: {
+    marginLeft: '15rem',
+    width: 'calc(100% - 15rem)',
+    transition: 'width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms,margin 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
+  },
+  menuButton: {
+    marginRight: '2.25rem',
+  },
+  hide: {
+    display: 'none',
+  },
+  title: {
+    display: 'block',
+  },
   margin: {
     margin: '0.5rem',
   },
@@ -29,12 +47,6 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: '1rem',
-  },
-  title: {
-    display: 'block',
   },
   search: {
     borderRadius: '0.3rem',
@@ -105,9 +117,13 @@ class AppBarComponent extends React.Component<any, AppbarState> {
     });
   };
 
+  handleDrawerOpen = () => {
+    this.props.openDrawer();
+  };
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes } = this.props;
+    const { classes, dashboard } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -152,10 +168,21 @@ class AppBarComponent extends React.Component<any, AppbarState> {
     );
 
     return (
-      <div className={classes.grow}>
-        <AppBar position='static'>
+      <div>
+        <AppBar
+          position='fixed'
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: dashboard.isDrawerOpen,
+          })}>
           <Toolbar>
-            <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='Open drawer'>
+            <IconButton
+              color='inherit'
+              aria-label='Open drawer'
+              onClick={this.handleDrawerOpen}
+              edge='start'
+              className={clsx(classes.menuButton, {
+                [classes.hide]: dashboard.isDrawerOpen,
+              })}>
               <Icon>menu</Icon>
             </IconButton>
             <Typography className={clsx('app-bar-title', classes.title)} variant='h6' noWrap>
@@ -208,7 +235,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
       openDrawer,
-      closeDrawer,
     },
     dispatch
   );

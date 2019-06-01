@@ -1,13 +1,13 @@
 import { ConnectedRouter } from 'connected-react-router';
 import * as React from 'react';
 import { Provider, ReactReduxContext } from 'react-redux';
-import { Router, Redirect, Route, Switch } from 'react-router-dom';
-import { User } from '../models/user';
+import { Redirect, Route, Router, Switch } from 'react-router-dom';
 
+import { User } from '../models/user';
 import store, { history } from '../store';
 import LoginPage from './login';
 import RegisterPage from './register';
-import { TripDashboard } from './trip-dashboard';
+import TripDashboard from './trip-dashboard';
 
 export class App extends React.Component<any, any> {
   render() {
