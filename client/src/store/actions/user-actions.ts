@@ -31,7 +31,7 @@ export const userLogin = (userLoginPayload: { email: string; password: string })
         if (result.success) {
           localStorage.setItem('user', JSON.stringify(result.user));
           dispatch(userLoginSuccess(result.user));
-          dispatch(push('/'));
+          dispatch(push('/dashboard'));
         } else {
           dispatch(userLoginFailure());
           dispatch(alertError(result.error));

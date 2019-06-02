@@ -38,9 +38,10 @@ export class App extends React.Component<any, any> {
         <ConnectedRouter history={history} context={ReactReduxContext}>
           <Router history={history}>
             <Switch>
-              <PrivateRoute exact path='/' component={DashboardPage as any} />
+              <PrivateRoute path='/dashboard' component={DashboardPage as any} />
               <Route path='/login' component={LoginPage as any} />
               <Route path='/register' component={RegisterPage as any} />
+              <Redirect from='/' to='/dashboard' />
             </Switch>
           </Router>
         </ConnectedRouter>

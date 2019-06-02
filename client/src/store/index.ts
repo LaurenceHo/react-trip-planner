@@ -4,6 +4,7 @@ import { applyMiddleware, compose, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import { alertReducers } from './reducers/alert-reducers';
+import { tripReducers } from './reducers/trip-reducers';
 import { userReducers } from './reducers/user-reducers';
 
 export const history: History<any> = createBrowserHistory();
@@ -12,6 +13,7 @@ const rootReducer = (history: History<any>) =>
     router: connectRouter(history),
     alert: alertReducers,
     user: userReducers,
+    trip: tripReducers,
   });
 
 const composeEnhancer: typeof compose = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
