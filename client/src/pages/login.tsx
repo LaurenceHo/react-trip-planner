@@ -4,7 +4,6 @@ import Icon from '@material-ui/core/icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
-import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -13,7 +12,6 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
-import store from '../store';
 import { alertError, clearAlert } from '../store/actions/alert-actions';
 import { userLogin } from '../store/actions/user-actions';
 
@@ -34,7 +32,7 @@ interface LoginPageState {
   password: string;
 }
 
-class LoginPage extends React.Component<any, LoginPageState> {
+class Login extends React.Component<any, LoginPageState> {
   state = {
     email: '',
     password: '',
@@ -53,7 +51,7 @@ class LoginPage extends React.Component<any, LoginPageState> {
 
   render() {
     const { email, password } = this.state;
-    const { classes, alert } = this.props;
+    const { classes, alert, history } = this.props;
 
     const formSubmit = (event: any) => {
       event.preventDefault();
@@ -81,7 +79,7 @@ class LoginPage extends React.Component<any, LoginPageState> {
         variant='contained'
         color='primary'
         onClick={() => {
-          store.dispatch(push('/register'));
+          history.push('/register');
         }}>
         Register
       </Button>
@@ -174,4 +172,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(LoginPage));
+)(withStyles(styles)(Login));

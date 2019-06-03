@@ -5,7 +5,7 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 
 import { User } from '../models/user';
 import store, { history } from '../store';
-import { DashboardPage } from './dashboard';
+import { Dashboard } from './dashboard';
 import LoginPage from './login';
 import RegisterPage from './register';
 
@@ -38,7 +38,7 @@ export class App extends React.Component<any, any> {
         <ConnectedRouter history={history} context={ReactReduxContext}>
           <Router history={history}>
             <Switch>
-              <PrivateRoute path='/dashboard' component={DashboardPage as any} />
+              <PrivateRoute path='/dashboard' component={Dashboard as any} />
               <Route path='/login' component={LoginPage as any} />
               <Route path='/register' component={RegisterPage as any} />
               <Redirect from='/' to='/dashboard' />

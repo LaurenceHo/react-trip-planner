@@ -148,7 +148,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const DashboardPage = () => {
+export const Dashboard = () => {
   const classes = useStyles({});
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = React.useState(true);
