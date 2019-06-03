@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -27,7 +28,7 @@ const styles = {
 };
 
 class TripList extends React.Component<any, any> {
-  componentDidMount() {
+  componentDidMount(): void {
     const defaultRequestBody = {
       archived: false,
     };
@@ -35,7 +36,7 @@ class TripList extends React.Component<any, any> {
     this.props.fetchTripList(defaultRequestBody);
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate(): void {}
 
   render() {
     const { classes, tripList } = this.props;
@@ -58,7 +59,9 @@ class TripList extends React.Component<any, any> {
                   <TableCell align='center'>{trip.name}</TableCell>
                   <TableCell align='center'>{`${trip.start_date} ~ ${trip.end_date}`}</TableCell>
                   <TableCell align='center'>{trip.destination}</TableCell>
-                  <TableCell align='center'>Detail</TableCell>
+                  <TableCell align='center'>
+                    <Link to={`/dashboard/trip/${trip.id}`}>Detail</Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

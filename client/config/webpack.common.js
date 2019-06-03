@@ -9,6 +9,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../../dist/client'),
     filename: '[name].bundle.js',
+    publicPath: '/',
   },
   resolve: {
     modules: [path.join(__dirname, '../dist/client'), 'node_modules'],

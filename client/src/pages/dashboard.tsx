@@ -15,12 +15,14 @@ import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { push } from 'connected-react-router';
 import * as React from 'react';
+import { Route } from 'react-router';
 
 import { SideMenu } from '../components/side-menu';
 import myTheme from '../components/theme';
 import TripList from '../components/trip-list';
 import { UserService } from '../services/user-service';
 import store from '../store';
+import TripDetailDashboard from './trip-detail-dashboard';
 
 const userService = new UserService();
 const drawerWidth = 240;
@@ -156,24 +158,24 @@ export const DashboardPage = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleDrawer = () => {
+  const handleDrawer = (): void => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
+  const handleMobileMenuClose = (): void => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (): void => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
@@ -295,7 +297,8 @@ export const DashboardPage = () => {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <TripList />
+          <Route exact path='/dashboard' component={TripList as any} />
+          <Route path='/dashboard/trip/:id' component={TripDetailDashboard} />
         </main>
       </div>
     </MuiThemeProvider>

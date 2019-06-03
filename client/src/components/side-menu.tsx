@@ -12,13 +12,19 @@ import * as React from 'react';
 export const SideMenu = () => {
   const [expendListOpen, setExpendListOpen] = React.useState(true);
 
-  const handExpendListClick = () => {
+  const handExpendListClick = (): void => {
     setExpendListOpen(!expendListOpen);
   };
 
   return (
     <div>
       <List>
+        <ListItem button key='Create trip'>
+          <ListItemIcon>
+            <Icon>add</Icon>
+          </ListItemIcon>
+          <ListItemText primary='Create trip' />
+        </ListItem>
         <ListItem button onClick={handExpendListClick}>
           <ListItemIcon>
             <Icon>filter_list</Icon>
