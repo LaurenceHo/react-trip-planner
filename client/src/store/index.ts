@@ -4,6 +4,7 @@ import { applyMiddleware, compose, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import { alertReducers } from './reducers/alert-reducers';
+import { dashboardReducers } from './reducers/dashboard-reducers';
 import { tripReducers } from './reducers/trip-reducers';
 import { userReducers } from './reducers/user-reducers';
 
@@ -11,6 +12,7 @@ export const history: History<any> = createBrowserHistory();
 const rootReducer = (history: History<any>) =>
   combineReducers({
     router: connectRouter(history),
+    dashboard: dashboardReducers,
     alert: alertReducers,
     user: userReducers,
     trip: tripReducers,

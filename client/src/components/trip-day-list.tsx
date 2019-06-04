@@ -1,13 +1,13 @@
 import { ListItemIcon } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import List from '@material-ui/core/List';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import { clearAlert } from '../store/actions/alert-actions';
 
@@ -25,6 +25,12 @@ class TripDayList extends React.Component<any, any> {
 
     return (
       <List className={classes.tripDayList}>
+        <ListItem button key='Create new day'>
+          <ListItemIcon>
+            <Icon>add</Icon>
+          </ListItemIcon>
+          <ListItemText primary='Create new day' />
+        </ListItem>
         {tripDetail.trip_day.map(tripDay => (
           <ListItem button key={tripDay.id}>
             <ListItemText primary={tripDay.trip_date} />

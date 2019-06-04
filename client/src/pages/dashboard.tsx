@@ -17,7 +17,7 @@ import { push } from 'connected-react-router';
 import * as React from 'react';
 import { Route } from 'react-router';
 
-import { SideMenu } from '../components/side-menu';
+import SideMenu from '../components/side-menu';
 import myTheme from '../components/theme';
 import TripList from '../components/trip-list';
 import { UserService } from '../services/user-service';

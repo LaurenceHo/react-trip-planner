@@ -1,3 +1,4 @@
+import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Table from '@material-ui/core/Table';
@@ -8,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -39,8 +39,7 @@ class TripList extends React.Component<any, any> {
   componentDidUpdate(): void {}
 
   render() {
-    const { classes, tripList } = this.props;
-
+    const { classes, tripList, history } = this.props;
     return (
       <MuiThemeProvider theme={myTheme}>
         <Paper className={classes.root}>
@@ -60,7 +59,14 @@ class TripList extends React.Component<any, any> {
                   <TableCell align='center'>{`${trip.start_date} ~ ${trip.end_date}`}</TableCell>
                   <TableCell align='center'>{trip.destination}</TableCell>
                   <TableCell align='center'>
-                    <Link to={`/dashboard/trip/${trip.id}`}>Detail</Link>
+                    <Link
+                      component='button'
+                      variant='body2'
+                      onClick={() => {
+                        history.push(`/dashboard/trip/${trip.id}`);
+                      }}>
+                      Detail
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
