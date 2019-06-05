@@ -43,13 +43,6 @@ class Register extends React.Component<any, RegisterPageState> {
     this.setState({ ...this.state, [name]: event.target.value });
   };
 
-  handleClose = (event: any, reason: any) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.clearAlert();
-  };
-
   render() {
     const { username, email, password } = this.state;
     const { classes, alert, history } = this.props;
@@ -80,9 +73,7 @@ class Register extends React.Component<any, RegisterPageState> {
         className={classes.login1RedirectButton}
         variant='contained'
         color='primary'
-        onClick={() => {
-          history.push('/login');
-        }}>
+        onClick={() => history.push('/login')}>
         Login
       </Button>
     );
@@ -95,15 +86,15 @@ class Register extends React.Component<any, RegisterPageState> {
               {LoginRedirectButton}
             </Grid>
           </Grid>
-          {alert.type !== null && !isEmpty(alert.message) ? (
+          {alert.type !== null && !isEmpty(alert.message) && (
             <SnackbarComponent
               open={alert.type !== null && !isEmpty(alert.message)}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               message={alert.message}
               variant={alert.type}
-              onClose={this.handleClose}
+              onClose={() => this.props.clearAlert()}
             />
-          ) : null}
+          )}
           <div className='user-form'>
             <div className='user-form-title-container'>
               <h3 className='user-form-title '>Register</h3>

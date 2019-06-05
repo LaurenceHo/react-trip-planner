@@ -42,13 +42,6 @@ class Login extends React.Component<any, LoginPageState> {
     this.setState({ ...this.state, [name]: event.target.value });
   };
 
-  handleClose = (event: any, reason: any) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.clearAlert();
-  };
-
   render() {
     const { email, password } = this.state;
     const { classes, alert, history } = this.props;
@@ -78,9 +71,7 @@ class Login extends React.Component<any, LoginPageState> {
         className={classes.registerRedirectButton}
         variant='contained'
         color='primary'
-        onClick={() => {
-          history.push('/register');
-        }}>
+        onClick={() => history.push('/register')}>
         Register
       </Button>
     );
@@ -93,15 +84,15 @@ class Login extends React.Component<any, LoginPageState> {
               {RegisterRedirectButton}
             </Grid>
           </Grid>
-          {alert.type !== null && !isEmpty(alert.message) ? (
+          {alert.type !== null && !isEmpty(alert.message) && (
             <SnackbarComponent
               open={alert.type !== null && !isEmpty(alert.message)}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               message={alert.message}
               variant={alert.type}
-              onClose={this.handleClose}
+              onClose={() => this.props.clearAlert()}
             />
-          ) : null}
+          )}
           <div className='user-form'>
             <div className='user-form-title-container'>
               <h3 className='user-form-title '>Login</h3>

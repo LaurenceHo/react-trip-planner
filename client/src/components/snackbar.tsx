@@ -89,21 +89,22 @@ const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
 };
 
 interface SnackbarComponentProps {
-  open: boolean;
+  outerClassName?: string;
   anchorOrigin: { vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' };
+  open: boolean;
   autoHideDuration?: number;
   className?: string;
+  variant: 'success' | 'warning' | 'error' | 'info';
   message: string;
   onClose?: any;
-  variant: 'success' | 'warning' | 'error' | 'info';
 }
 
 export const SnackbarComponent = (props: SnackbarComponentProps) => {
-  const { open, anchorOrigin, autoHideDuration, className, message, onClose, variant } = props;
+  const { open, anchorOrigin, autoHideDuration, outerClassName, className, message, onClose, variant } = props;
 
   return (
-    <Snackbar anchorOrigin={anchorOrigin} open={open} onClose={onClose} autoHideDuration={autoHideDuration}>
-      <SnackbarContentWrapper variant={variant} className={className} message={message} onClose={onClose} />
+    <Snackbar className={outerClassName} anchorOrigin={anchorOrigin} open={open} autoHideDuration={autoHideDuration}>
+      <SnackbarContentWrapper className={className} variant={variant} message={message} onClose={onClose} />
     </Snackbar>
   );
 };
