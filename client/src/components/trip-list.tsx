@@ -15,7 +15,7 @@ import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { clearAlert } from '../store/actions/alert-actions';
-import { fetchTripList } from '../store/actions/trip-actions';
+import { getTripList } from '../store/actions/trip-actions';
 import { SnackbarComponent } from './snackbar';
 import myTheme from './theme';
 
@@ -46,7 +46,7 @@ class TripList extends React.Component<any, any> {
       archived: false,
     };
 
-    this.props.fetchTripList(defaultRequestBody);
+    this.props.getTripList(defaultRequestBody);
   }
 
   componentDidUpdate(): void {}
@@ -117,7 +117,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
       clearAlert,
-      fetchTripList,
+      getTripList,
     },
     dispatch
   );

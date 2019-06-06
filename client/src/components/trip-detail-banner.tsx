@@ -8,11 +8,6 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-
-import { clearAlert } from '../store/actions/alert-actions';
-import { fetchTripDetail, fetchTripList } from '../store/actions/trip-actions';
 import myTheme from './theme';
 
 const styles = {
@@ -22,15 +17,13 @@ const styles = {
 };
 
 class TripDetailBanner extends React.Component<any, any> {
-  componentDidMount(): void {}
-
   render() {
     const { classes, tripDetail, history } = this.props;
     return (
       <MuiThemeProvider theme={myTheme}>
         <div>
           <Paper className={classes.root}>
-            <Grid container spacing={2}>
+            <Grid container alignItems='center' spacing={2}>
               <Grid item>
                 <IconButton onClick={() => history.goBack()}>
                   <Icon>chevron_left</Icon>
@@ -62,18 +55,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
-  return bindActionCreators(
-    {
-      clearAlert,
-      fetchTripList,
-      fetchTripDetail,
-    },
-    dispatch
-  );
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {}
 )(withStyles(styles)(TripDetailBanner));

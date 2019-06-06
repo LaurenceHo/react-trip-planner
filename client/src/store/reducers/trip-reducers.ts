@@ -7,6 +7,9 @@ import {
   FETCHING_TRIP_DETAIL,
   FETCHING_TRIP_DETAIL_FAILURE,
   FETCHING_TRIP_DETAIL_SUCCESS,
+  FETCHING_TRIP_DAY_DETAIL,
+  FETCHING_TRIP_DAY_DETAIL_FAILURE,
+  FETCHING_TRIP_DAY_DETAIL_SUCCESS,
 } from '../types';
 
 const tripList: Trip[] = [];
@@ -74,6 +77,25 @@ export const tripReducers = (state: any = initialState, action: any) => {
         ...state,
         isLoading: false,
         tripDetail: action.tripDetail,
+      };
+
+    case FETCHING_TRIP_DAY_DETAIL:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case FETCHING_TRIP_DAY_DETAIL_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case FETCHING_TRIP_DAY_DETAIL_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        tripDayDetail: action.tripDayDetail,
       };
 
     default:

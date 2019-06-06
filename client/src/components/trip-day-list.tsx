@@ -1,20 +1,16 @@
-import { ListItemIcon } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-
-import { clearAlert } from '../store/actions/alert-actions';
 
 const styles = {
   tripDayList: {
     width: '100%',
-    maxWidth: '20rem',
+    maxWidth: '16rem',
     backgroundColor: '#fff',
   },
 };
@@ -51,16 +47,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
-  return bindActionCreators(
-    {
-      clearAlert,
-    },
-    dispatch
-  );
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {}
 )(withStyles(styles)(TripDayList));
