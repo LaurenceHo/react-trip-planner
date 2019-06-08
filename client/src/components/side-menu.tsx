@@ -26,10 +26,6 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     this.setState({ expendListOpen: !this.state.expendListOpen });
   };
 
-  handleMenuOptionClick(key: string): void {
-    this.props.setSideMenu(key);
-  }
-
   render() {
     const { expendListOpen } = this.state;
     const { dashboard, router } = this.props;
@@ -48,6 +44,7 @@ export class SideMenu extends React.Component<any, SideMenuState> {
             </ListItemIcon>
             <ListItemText primary='Create trip' />
           </ListItem>
+          <Divider />
           <ListItem button onClick={this.handExpendListClick}>
             <ListItemIcon>
               <Icon>filter_list</Icon>
@@ -62,7 +59,7 @@ export class SideMenu extends React.Component<any, SideMenuState> {
                 disabled={router.location.pathname !== '/dashboard'}
                 key={option.key}
                 selected={dashboard.menu === option.key}
-                onClick={() => this.handleMenuOptionClick(option.key)}>
+                onClick={() => this.props.setSideMenu(option.key)}>
                 <ListItemIcon>
                   <Icon>{option.icon}</Icon>
                 </ListItemIcon>
@@ -78,7 +75,7 @@ export class SideMenu extends React.Component<any, SideMenuState> {
             disabled={router.location.pathname !== '/dashboard'}
             key='archived'
             selected={dashboard.menu === 'archived'}
-            onClick={() => this.handleMenuOptionClick('archived')}>
+            onClick={() => this.props.setSideMenu('archived')}>
             <ListItemIcon>
               <Icon>all_inbox</Icon>
             </ListItemIcon>

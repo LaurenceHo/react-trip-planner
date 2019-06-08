@@ -1,5 +1,4 @@
 import { Trip } from '../../models/trip';
-import { TripDay } from '../../models/trip-day';
 import {
   FETCHING_TRIP_LIST,
   FETCHING_TRIP_LIST_SUCCESS,
@@ -7,9 +6,6 @@ import {
   FETCHING_TRIP_DETAIL,
   FETCHING_TRIP_DETAIL_FAILURE,
   FETCHING_TRIP_DETAIL_SUCCESS,
-  FETCHING_TRIP_DAY_DETAIL,
-  FETCHING_TRIP_DAY_DETAIL_FAILURE,
-  FETCHING_TRIP_DAY_DETAIL_SUCCESS,
 } from '../types';
 
 const tripList: Trip[] = [];
@@ -24,19 +20,12 @@ const tripDetail: Trip = {
   archived: false,
   trip_day: [],
 };
-const tripDayDetail: TripDay = {
-  id: 0,
-  name: '',
-  trip_id: 0,
-  user_id: 0,
-  trip_date: '',
-  events: [],
-};
+
 const initialState = {
-  isLoading: false,
+  isLoadingTripList: false,
+  isLoadingTripDetail: false,
   tripList,
   tripDetail,
-  tripDayDetail,
 };
 
 export const tripReducers = (state: any = initialState, action: any) => {
@@ -44,58 +33,39 @@ export const tripReducers = (state: any = initialState, action: any) => {
     case FETCHING_TRIP_LIST:
       return {
         ...state,
-        isLoading: true,
+        isLoadingTripList: true,
       };
 
     case FETCHING_TRIP_LIST_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        isLoadingTripList: false,
       };
 
     case FETCHING_TRIP_LIST_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        isLoadingTripList: false,
         tripList: action.tripList,
       };
 
     case FETCHING_TRIP_DETAIL:
       return {
         ...state,
-        isLoading: true,
+        isLoadingTripDetail: true,
       };
 
     case FETCHING_TRIP_DETAIL_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        isLoadingTripDetail: false,
       };
 
     case FETCHING_TRIP_DETAIL_SUCCESS:
       return {
         ...state,
-        isLoading: false,
+        isLoadingTripDetail: false,
         tripDetail: action.tripDetail,
-      };
-
-    case FETCHING_TRIP_DAY_DETAIL:
-      return {
-        ...state,
-        isLoading: true,
-      };
-
-    case FETCHING_TRIP_DAY_DETAIL_FAILURE:
-      return {
-        ...state,
-        isLoading: false,
-      };
-
-    case FETCHING_TRIP_DAY_DETAIL_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        tripDayDetail: action.tripDayDetail,
       };
 
     default:

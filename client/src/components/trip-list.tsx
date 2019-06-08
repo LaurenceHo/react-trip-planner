@@ -55,7 +55,11 @@ class TripList extends React.Component<any, any> {
     const { alert, classes, tripList, history, isLoading } = this.props;
     return (
       <MuiThemeProvider theme={myTheme}>
-        {alert.type !== null && !isEmpty(alert.message) && (
+        {isLoading ? (
+          <div className={classes.progressWrapper}>
+            <CircularProgress className={classes.progress} color='secondary' />
+          </div>
+        ) : alert.type !== null && !isEmpty(alert.message) ? (
           <SnackbarComponent
             outerClassName={classes.snackbar}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -64,11 +68,6 @@ class TripList extends React.Component<any, any> {
             message={alert.message}
             onClose={() => this.props.clearAlert()}
           />
-        )}
-        {isLoading ? (
-          <div className={classes.progressWrapper}>
-            <CircularProgress className={classes.progress} color='secondary' />
-          </div>
         ) : (
           <Paper className={classes.root}>
             <Table className={classes.table}>
@@ -108,7 +107,7 @@ class TripList extends React.Component<any, any> {
 const mapStateToProps = (state: any) => {
   return {
     alert: state.alert,
-    isLoading: state.trip.isLoading,
+    isLoading: state.trip.isLoadingTripList,
     tripList: state.trip.tripList,
   };
 };

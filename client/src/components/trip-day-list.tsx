@@ -1,3 +1,4 @@
+import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -6,18 +7,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { selectedTripDayId } from '../store/actions/dashboard-actions';
 
 const styles = {
   tripDayList: {
-    width: '100%',
-    maxWidth: '16rem',
+    width: '18rem',
     backgroundColor: '#fff',
   },
 };
 
 class TripDayList extends React.Component<any, any> {
   render() {
-    const { classes, tripDetail } = this.props;
+    const { classes, dashboard, tripDetail } = this.props;
 
     return (
       <List className={classes.tripDayList}>
@@ -27,8 +30,13 @@ class TripDayList extends React.Component<any, any> {
           </ListItemIcon>
           <ListItemText primary='Create new day' />
         </ListItem>
+        <Divider />
         {tripDetail.trip_day.map(tripDay => (
-          <ListItem button key={tripDay.id}>
+          <ListItem
+            button
+            key={tripDay.id}
+            selected={dashboard.tripDayId === tripDay.id}
+            onClick={() => this.props.selectedTripDayId(tripDay.id)}>
             <ListItemText primary={tripDay.trip_date} />
             <ListItemIcon>
               <Icon>chevron_right</Icon>
@@ -42,12 +50,21 @@ class TripDayList extends React.Component<any, any> {
 
 const mapStateToProps = (state: any) => {
   return {
-    alert: state.alert,
+    dashboard: state.dashboard,
     tripDetail: state.trip.tripDetail,
   };
 };
 
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+  return bindActionCreators(
+    {
+      selectedTripDayId,
+    },
+    dispatch
+  );
+};
+
 export default connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(withStyles(styles)(TripDayList));

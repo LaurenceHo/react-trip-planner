@@ -21,28 +21,26 @@ class TripDetailBanner extends React.Component<any, any> {
     const { classes, tripDetail, history } = this.props;
     return (
       <MuiThemeProvider theme={myTheme}>
-        <div>
-          <Paper className={classes.root}>
-            <Grid container alignItems='center' spacing={2}>
-              <Grid item>
-                <IconButton onClick={() => history.goBack()}>
-                  <Icon>chevron_left</Icon>
-                </IconButton>
-              </Grid>
-              <Grid item xs={12} sm container>
-                <Grid item xs container direction='column' spacing={2}>
-                  <Typography variant='h5' component='h3'>
-                    {tripDetail.destination}
-                  </Typography>
-                  <Typography variant='subtitle1'>
-                    {tripDetail.start_date} ~ {tripDetail.end_date}
-                  </Typography>
-                  {!isEmpty(tripDetail.name) && <Typography variant='body2'>{tripDetail.name}</Typography>}
-                </Grid>
+        <Paper className={classes.root}>
+          <Grid container alignItems='center' spacing={2}>
+            <Grid item>
+              <IconButton onClick={() => history.goBack()}>
+                <Icon>chevron_left</Icon>
+              </IconButton>
+            </Grid>
+            <Grid item xs={12} sm container>
+              <Grid item xs container direction='column' spacing={2}>
+                <Typography variant='h5' component='h3'>
+                  {tripDetail.destination}
+                </Typography>
+                <Typography variant='subtitle1'>
+                  {tripDetail.start_date} ~ {tripDetail.end_date}
+                </Typography>
+                {!isEmpty(tripDetail.name) && <Typography variant='body2'>{tripDetail.name}</Typography>}
               </Grid>
             </Grid>
-          </Paper>
-        </div>
+          </Grid>
+        </Paper>
       </MuiThemeProvider>
     );
   }
@@ -50,7 +48,6 @@ class TripDetailBanner extends React.Component<any, any> {
 
 const mapStateToProps = (state: any) => {
   return {
-    alert: state.alert,
     tripDetail: state.trip.tripDetail,
   };
 };
