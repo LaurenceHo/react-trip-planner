@@ -1,10 +1,13 @@
 import { isEmpty } from 'lodash';
 import { knex } from '../database/knex';
+import { Event } from '../models/event';
 import { Trip } from '../models/trip';
 import { TripDay } from '../models/trip-day';
 import { BaseRepository } from './base-repository';
+import { EventRepository } from './event-repository';
 import { TripDayRepository } from './trip-day-repository';
 
+const eventRepository = new EventRepository();
 const tripDayRepository = new TripDayRepository();
 
 export class TripRepository implements BaseRepository<Trip> {
@@ -19,16 +22,34 @@ export class TripRepository implements BaseRepository<Trip> {
       .then((results: Trip[]) => {
         trip = results[0];
         if (trip) {
-          const columns = ['id', 'name', 'trip_date'];
           tripDayRepository.retrieve(
-            columns,
+            null,
             { trip_id: whereClauses.id, user_id: whereClauses.user_id },
             (results: TripDay[], error: any) => {
               if (error) {
                 callback(null, error);
               }
               trip.trip_day = results;
-              callback(trip);
+              if (!isEmpty(trip.trip_day)) {
+                let count = 0;
+                for (let i = 0; i < trip.trip_day.length; i++) {
+                  eventRepository.retrieve(
+                    null,
+                    { trip_day_id: trip.trip_day[i].id, user_id: whereClauses.user_id },
+                    (tripEvents: Event[], error: any) => {
+                      if (error) {
+                        callback(null, error);
+                      } else {
+                        trip.trip_day[i].events = tripEvents;
+                        ++count;
+                        if (count == trip.trip_day.length) {
+                          callback(trip);
+                        }
+                      }
+                    }
+                  );
+                }
+              }
             }
           );
         } else {
@@ -40,7 +61,7 @@ export class TripRepository implements BaseRepository<Trip> {
 
   retrieve(columns: string[], whereClauses: any, callback: any): void {
     if (isEmpty(columns)) {
-      columns = ['id', 'start_date', 'end_date', 'name', 'destination'];
+      columns = ['id', 'start_date', 'end_date', 'name', 'destination', 'archived'];
     }
     knex
       .column(columns)

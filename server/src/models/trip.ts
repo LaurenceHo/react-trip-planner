@@ -1,3 +1,5 @@
+import { TripDay } from './trip-day';
+
 export interface Trip {
   id: number;
   user_id: number;
@@ -7,7 +9,7 @@ export interface Trip {
   name: string;
   destination: string;
   archived: boolean;
-  trip_day: object;
+  trip_day: TripDay[];
   created_at: string;
   updated_at: string;
 }

@@ -10,10 +10,10 @@ export class UserController {
   register(req: express.Request, res: express.Response): void {
     try {
       const newUser: User = req.body;
-
       userService.create(newUser, (result: any, error: any) => {
         if (error) {
-          res.status(400).send({ error: error.sqlMessage });
+          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
+          res.status(400).send({ error: errorMessage });
         } else {
           res.status(200).send({ success: true, result });
         }
@@ -67,7 +67,8 @@ export class UserController {
       const user: User = req.body;
       userService.update(user, (result: any, error: any) => {
         if (error) {
-          res.status(400).send({ error: error.sqlMessage });
+          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
+          res.status(400).send({ error: errorMessage });
         } else {
           res.status(200).send({ success: true, result });
         }
