@@ -73,10 +73,10 @@ class TripDetailDashboard extends React.Component<any, TripDetailDashboardState>
               <TripDetailBanner />
             </div>
             <Grid container spacing={2}>
-              <Grid item>
+              <Grid item xs={2}>
                 <TripDayList />
               </Grid>
-              <Grid item>
+              <Grid item xs={10}>
                 <EventList />
               </Grid>
             </Grid>

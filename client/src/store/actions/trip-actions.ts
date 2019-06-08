@@ -95,32 +95,37 @@ export const getTripDetail = (tripId: number) => {
       .getTripDetailWithDays(tripId)
       .then((tripDetailResult: any) => {
         if (tripDetailResult.success) {
-          if (!isEmpty(tripDetailResult.result.start_date)) {
-            tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
-          }
-          if (!isEmpty(tripDetailResult.result.end_date)) {
-            tripDetailResult.result.end_date = moment(tripDetailResult.result.end_date).format(DATE_FORMAT);
-          }
-          if (!isEmpty(tripDetailResult.result.trip_day)) {
-            map(tripDetailResult.result.trip_day, (tripDay: TripDay) => {
-              tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
-              map(tripDay.events, (tripEvent: Event) => {
-                if (!isEmpty(tripEvent.start_time)) {
-                  tripEvent.start_time = moment(tripEvent.start_time).format(DATE_TIME_FORMAT);
-                }
-                if (!isEmpty(tripEvent.end_time)) {
-                  tripEvent.end_time = moment(tripEvent.end_time).format(DATE_TIME_FORMAT);
-                }
-                return tripEvent;
-              });
-              return tripDay;
-            });
-            if (getState().dashboard.tripDayId === 0) {
-              dispatch(selectedTripDayId(tripDetailResult.result.trip_day[0].id));
+          if (isEmpty(tripDetailResult)) {
+            dispatch(fetchingTripDetailFailure());
+            dispatch(alertError('Ooooops, there is something wrong, please try again.'));
+          } else {
+            if (!isEmpty(tripDetailResult.result.start_date)) {
+              tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
             }
+            if (!isEmpty(tripDetailResult.result.end_date)) {
+              tripDetailResult.result.end_date = moment(tripDetailResult.result.end_date).format(DATE_FORMAT);
+            }
+            if (!isEmpty(tripDetailResult.result.trip_day)) {
+              map(tripDetailResult.result.trip_day, (tripDay: TripDay) => {
+                tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
+                map(tripDay.events, (tripEvent: Event) => {
+                  if (!isEmpty(tripEvent.start_time)) {
+                    tripEvent.start_time = moment(tripEvent.start_time).format(DATE_TIME_FORMAT);
+                  }
+                  if (!isEmpty(tripEvent.end_time)) {
+                    tripEvent.end_time = moment(tripEvent.end_time).format(DATE_TIME_FORMAT);
+                  }
+                  return tripEvent;
+                });
+                return tripDay;
+              });
+              if (getState().dashboard.tripDayId === 0) {
+                dispatch(selectedTripDayId(tripDetailResult.result.trip_day[0].id));
+              }
+            }
+            tripDetailResult.result.archived = tripDetailResult.result.archived === 1;
+            dispatch(fetchingTripDetailSuccess(tripDetailResult.result));
           }
-          tripDetailResult.result.archived = tripDetailResult.result.archived === 1;
-          dispatch(fetchingTripDetailSuccess(tripDetailResult.result));
         } else {
           dispatch(fetchingTripDetailFailure());
           dispatch(alertError(tripDetailResult.error));

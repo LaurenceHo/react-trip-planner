@@ -5,6 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/styles';
+import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,7 +14,6 @@ import { selectedTripDayId } from '../store/actions/dashboard-actions';
 
 const styles = {
   tripDayList: {
-    width: '18rem',
     backgroundColor: '#fff',
   },
 };
@@ -30,7 +30,7 @@ class TripDayList extends React.Component<any, any> {
           </ListItemIcon>
           <ListItemText primary='Create new day' />
         </ListItem>
-        <Divider />
+        {!isEmpty && <Divider />}
         {tripDetail.trip_day.map(tripDay => (
           <ListItem
             button
