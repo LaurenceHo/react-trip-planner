@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import myTheme from './theme';
 
 const styles = {
@@ -18,18 +19,23 @@ const styles = {
 
 class TripDetailBanner extends React.Component<any, any> {
   render() {
-    const { classes, tripDetail, history } = this.props;
+    const { classes, tripDetail } = this.props;
+
+    const GoBackButton = withRouter(({ history }) => (
+      <IconButton onClick={() => history.goBack()}>
+        <Icon>chevron_left</Icon>
+      </IconButton>
+    ));
+
     return (
       <MuiThemeProvider theme={myTheme}>
         <Paper className={classes.root}>
           <Grid container alignItems='center' spacing={2}>
             <Grid item>
-              <IconButton onClick={() => history.goBack()}>
-                <Icon>chevron_left</Icon>
-              </IconButton>
+              <GoBackButton />
             </Grid>
             <Grid item xs={12} sm container>
-              <Grid item xs container direction='column' spacing={2}>
+              <Grid item container direction='column' spacing={2}>
                 <Typography variant='h5' component='h3'>
                   {tripDetail.destination}
                 </Typography>
