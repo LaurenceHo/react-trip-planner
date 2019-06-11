@@ -1,5 +1,8 @@
 export const SET_SIDE_MENU = 'SET_SIDE_MENU';
 export const SELECTED_TRIP_DAY_ID = 'SELECTED_TRIP_DAY_ID';
+export const OPEN_TRIP_FORM = 'OPEN_TRIP_FORM';
+export const OPEN_TRIP_DAY_FORM = 'OPEN_TRIP_DAY_FORM';
+export const OPEN_EVENT_FORM = 'OPEN_EVENT_FORM';
 
 export const CLEAR_ALERT = 'CLEAR_ALERT';
 export const ALERT_SUCCESS = 'ALERT_SUCCESS';

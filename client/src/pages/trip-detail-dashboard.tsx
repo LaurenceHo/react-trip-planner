@@ -32,14 +32,7 @@ const styles = {
   },
 };
 
-interface TripDetailDashboardState {
-  tripDayId: number;
-}
-class TripDetailDashboard extends React.Component<any, TripDetailDashboardState> {
-  state = {
-    tripDayId: 0,
-  };
-
+class TripDetailDashboard extends React.Component<any, any> {
   componentDidMount(): void {
     if (isEmpty(this.props.tripList)) {
       // TODO - should use user's filter to fetch trip list

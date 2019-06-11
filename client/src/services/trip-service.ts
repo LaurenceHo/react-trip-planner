@@ -15,26 +15,12 @@ export class TripService {
     return this.apiService.perform('POST', `${SERVER_URL}/trip`, requestBody, searchParams, formParams);
   }
 
-  getTripDetailWithDays(tripId: number): any {
+  getTripDetail(tripId: number): any {
     const requestBody = {};
     const searchParams = {};
     const formParams = {};
 
     return this.apiService.perform('GET', `${SERVER_URL}/trip/${tripId}`, requestBody, searchParams, formParams);
-  }
-
-  getTripDayWithEvents(tripId: number, tripDayId: number): any {
-    const requestBody = {};
-    const searchParams = {};
-    const formParams = {};
-
-    return this.apiService.perform(
-      'GET',
-      `${SERVER_URL}/trip/${tripId}/day/${tripDayId}`,
-      requestBody,
-      searchParams,
-      formParams
-    );
   }
 
   createTrip(requestBody: Trip): any {

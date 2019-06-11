@@ -35,7 +35,7 @@ class TripDayList extends React.Component<any, any> {
           <ListItem
             button
             key={tripDay.id}
-            selected={dashboard.tripDayId === tripDay.id}
+            selected={dashboard.selectedTripDayId === tripDay.id}
             onClick={() => this.props.selectedTripDayId(tripDay.id)}>
             <ListItemText primary={tripDay.trip_date} />
             <ListItemIcon>

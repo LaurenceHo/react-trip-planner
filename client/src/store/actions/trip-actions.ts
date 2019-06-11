@@ -92,7 +92,7 @@ export const getTripDetail = (tripId: number) => {
     dispatch(clearAlert());
     dispatch(fetchingTripDetail());
     tripService
-      .getTripDetailWithDays(tripId)
+      .getTripDetail(tripId)
       .then((tripDetailResult: any) => {
         if (tripDetailResult.success) {
           if (isEmpty(tripDetailResult)) {
@@ -119,7 +119,7 @@ export const getTripDetail = (tripId: number) => {
                 });
                 return tripDay;
               });
-              if (getState().dashboard.tripDayId === 0) {
+              if (getState().dashboard.selectedTripDayId === 0) {
                 dispatch(selectedTripDayId(tripDetailResult.result.trip_day[0].id));
               }
             }

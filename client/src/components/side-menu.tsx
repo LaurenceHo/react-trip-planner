@@ -11,7 +11,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { setSideMenu } from '../store/actions/dashboard-actions';
+
+import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
+import TripForm from './trip-form';
 
 interface SideMenuState {
   expendListOpen: boolean;
@@ -37,8 +39,9 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     ];
     return (
       <div>
+        <TripForm />
         <List>
-          <ListItem button key='Create trip'>
+          <ListItem button key='Create trip' onClick={() => this.props.openTripForm(true)}>
             <ListItemIcon>
               <Icon>add</Icon>
             </ListItemIcon>
@@ -98,6 +101,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
       setSideMenu,
+      openTripForm,
     },
     dispatch
   );
