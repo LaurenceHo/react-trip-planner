@@ -9,6 +9,9 @@ import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
 import { TripService } from '../../services/trip-service';
 import {
+  CREATING_TRIP,
+  CREATING_TRIP_FAILURE,
+  CREATING_TRIP_SUCCESS,
   FETCHING_TRIP_DETAIL,
   FETCHING_TRIP_DETAIL_FAILURE,
   FETCHING_TRIP_DETAIL_SUCCESS,
@@ -133,6 +136,51 @@ export const getTripDetail = (tripId: number) => {
       })
       .catch((error: any) => {
         dispatch(fetchingTripDetailFailure());
+        dispatch(alertError(error));
+      });
+  };
+};
+
+export const creatingTrip = () => {
+  return {
+    type: CREATING_TRIP,
+  };
+};
+
+export const creatingTripFailure = () => {
+  return {
+    type: CREATING_TRIP_FAILURE,
+  };
+};
+
+export const creatingTripSuccess = () => {
+  return {
+    type: CREATING_TRIP_SUCCESS,
+  };
+};
+
+export const createTrip = (payload: Trip) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
+    dispatch(creatingTrip());
+    tripService
+      .createTrip(payload)
+      .then((result: any) => {
+        if (result.success) {
+          dispatch(creatingTripSuccess());
+          let requestPayload = {
+            archived: true,
+          };
+          if (getState().dashboard.menu !== 'archived') {
+            requestPayload.archived = false;
+          }
+          dispatch(getTripList(requestPayload));
+        } else {
+          dispatch(creatingTripFailure());
+          dispatch(alertError(result.error));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(creatingTripFailure());
         dispatch(alertError(error));
       });
   };

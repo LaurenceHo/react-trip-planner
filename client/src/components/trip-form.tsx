@@ -1,56 +1,121 @@
+import { isEmpty } from 'lodash';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
 import * as React from 'react';
-import { CSSProperties } from 'react';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { timezone } from '../assets/timezone';
 import { openTripForm } from '../store/actions/dashboard-actions';
+import { createTrip } from '../store/actions/trip-actions';
 
-const styles = {};
+const styles = {
+  menu: {
+    width: '12.5rem',
+  },
+};
 
-class TripForm extends React.Component<any, any> {
-  rand = () => {
-    return Math.round(Math.random() * 20) - 10;
+interface TripFormState {
+  timezone_id: number;
+  start_date: string;
+  end_date: string;
+  name: string;
+  destination: string;
+}
+
+class TripForm extends React.Component<any, TripFormState> {
+  state = {
+    timezone_id: 99,
+    start_date: '',
+    end_date: '',
+    name: '',
+    destination: '',
   };
 
-  getModalStyle = (): CSSProperties => {
-    const top = 50 + this.rand();
-    const left = 50 + this.rand();
+  handleChange = (name: string) => (event: any) => {
+    this.setState({ ...this.state, [name]: event.target.value });
+  };
 
-    return {
-      top: `${top}%`,
-      left: `${left}%`,
-      transform: `translate(-${top}%, -${left}%)`,
-      position: 'absolute',
-      width: '400px',
-      padding: '32px',
-      outline: 'none',
-      boxShadow:
-        '0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)',
-      backgroundColor: '#fff',
-    };
+  validateForm = () => {
+    const { start_date, end_date, destination } = this.state;
+    if (isEmpty(start_date) || isEmpty(end_date) || isEmpty(destination)) {
+      return;
+    }
+    this.props.createTrip(this.state);
+    this.props.openTripForm(false);
   };
 
   render() {
+    const { timezone_id, start_date, end_date, name, destination } = this.state;
     const { classes, dashboard, openTripForm } = this.props;
 
     return (
-      <Modal
-        aria-labelledby='simple-modal-title'
-        aria-describedby='simple-modal-description'
-        open={dashboard.openTripForm}
-        onClose={() => openTripForm(false)}>
-        <div style={this.getModalStyle()} className={classes.paper}>
-          <Typography variant='h6' id='modal-title'>
-            Text in a modal
-          </Typography>
-          <Typography variant='subtitle1' id='simple-modal-description'>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </div>
-      </Modal>
+      <div>
+        <Dialog
+          open={dashboard.openTripForm}
+          onClose={() => openTripForm(false)}
+          aria-labelledby='form-dialog-title'
+          maxWidth='sm'
+          fullWidth>
+          <DialogTitle id='form-dialog-title'>Create trip</DialogTitle>
+          <DialogContent>
+            <TextField
+              label='Name'
+              name='name'
+              margin='normal'
+              variant='outlined'
+              value={name}
+              onChange={this.handleChange('name')}
+              fullWidth
+            />
+            <TextField
+              label='Destination'
+              name='destination'
+              margin='normal'
+              variant='outlined'
+              value={destination}
+              onChange={this.handleChange('destination')}
+              required
+              fullWidth
+            />
+            <TextField
+              select
+              label='Timezone'
+              name='timezone_id'
+              margin='normal'
+              variant='outlined'
+              value={timezone_id}
+              onChange={this.handleChange('timezone_id')}
+              required
+              fullWidth
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}>
+              {timezone.map(tz => (
+                <MenuItem key={tz.id} value={tz.id}>
+                  {tz.text}
+                </MenuItem>
+              ))}
+            </TextField>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => openTripForm(false)} color='primary'>
+              Cancel
+            </Button>
+            <Button onClick={this.validateForm} color='primary'>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
 }
@@ -65,6 +130,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
       openTripForm,
+      createTrip,
     },
     dispatch
   );
