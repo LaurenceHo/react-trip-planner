@@ -1,12 +1,17 @@
-import { isEmpty } from 'lodash';
+import MomentUtils from '@date-io/moment';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { withStyles } from '@material-ui/styles';
+import { isEmpty } from 'lodash';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -27,19 +32,38 @@ interface TripFormState {
   end_date: string;
   name: string;
   destination: string;
+  archived: boolean;
 }
 
 class TripForm extends React.Component<any, TripFormState> {
   state = {
     timezone_id: 99,
-    start_date: '',
-    end_date: '',
+    start_date: moment().format('YYYY-MM-DD'),
+    end_date: moment().format('YYYY-MM-DD'),
     name: '',
     destination: '',
+    archived: false,
   };
 
   handleChange = (name: string) => (event: any) => {
     this.setState({ ...this.state, [name]: event.target.value });
+  };
+
+  handleDateChange = (name: string) => (date: Moment | null) => {
+    const dateString = moment(date).format('YYYY-MM-DD');
+    this.setState({ ...this.state, [name]: dateString });
+  };
+
+  handleDialogClose = () => {
+    this.props.openTripForm(false);
+    this.setState({
+      timezone_id: 99,
+      start_date: moment().format('YYYY-MM-DD'),
+      end_date: moment().format('YYYY-MM-DD'),
+      name: '',
+      destination: '',
+      archived: false,
+    });
   };
 
   validateForm = () => {
@@ -53,13 +77,13 @@ class TripForm extends React.Component<any, TripFormState> {
 
   render() {
     const { timezone_id, start_date, end_date, name, destination } = this.state;
-    const { classes, dashboard, openTripForm } = this.props;
+    const { classes, dashboard } = this.props;
 
     return (
       <div>
         <Dialog
           open={dashboard.openTripForm}
-          onClose={() => openTripForm(false)}
+          onClose={this.handleDialogClose}
           aria-labelledby='form-dialog-title'
           maxWidth='sm'
           fullWidth>
@@ -69,7 +93,6 @@ class TripForm extends React.Component<any, TripFormState> {
               label='Name'
               name='name'
               margin='normal'
-              variant='outlined'
               value={name}
               onChange={this.handleChange('name')}
               fullWidth
@@ -78,18 +101,52 @@ class TripForm extends React.Component<any, TripFormState> {
               label='Destination'
               name='destination'
               margin='normal'
-              variant='outlined'
               value={destination}
               onChange={this.handleChange('destination')}
               required
               fullWidth
             />
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <KeyboardDatePicker
+                    required
+                    fullWidth
+                    margin='normal'
+                    id='mui-pickers-date'
+                    label='Start date'
+                    value={start_date}
+                    onChange={this.handleDateChange('start_date')}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    format='YYYY-MM-DD'
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item xs={6}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <KeyboardDatePicker
+                    required
+                    fullWidth
+                    margin='normal'
+                    id='mui-pickers-date'
+                    label='End date'
+                    value={end_date}
+                    onChange={this.handleDateChange('end_date')}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    format='YYYY-MM-DD'
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
             <TextField
               select
               label='Timezone'
               name='timezone_id'
               margin='normal'
-              variant='outlined'
               value={timezone_id}
               onChange={this.handleChange('timezone_id')}
               required
@@ -107,7 +164,7 @@ class TripForm extends React.Component<any, TripFormState> {
             </TextField>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => openTripForm(false)} color='primary'>
+            <Button onClick={this.handleDialogClose} color='primary'>
               Cancel
             </Button>
             <Button onClick={this.validateForm} color='primary'>

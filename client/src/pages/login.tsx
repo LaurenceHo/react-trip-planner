@@ -106,7 +106,6 @@ class Login extends React.Component<any, LoginPageState> {
                     type='email'
                     autoComplete='email'
                     margin='normal'
-                    variant='outlined'
                     value={email}
                     onChange={this.handleChange('email')}
                     required
@@ -122,7 +121,6 @@ class Login extends React.Component<any, LoginPageState> {
                     type='password'
                     autoComplete='current-password'
                     margin='normal'
-                    variant='outlined'
                     value={password}
                     onChange={this.handleChange('password')}
                     required

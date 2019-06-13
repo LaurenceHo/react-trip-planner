@@ -106,7 +106,6 @@ class Register extends React.Component<any, RegisterPageState> {
                     label='Username'
                     name='username'
                     margin='normal'
-                    variant='outlined'
                     value={username}
                     onChange={this.handleChange('username')}
                     required
@@ -122,7 +121,6 @@ class Register extends React.Component<any, RegisterPageState> {
                     type='email'
                     autoComplete='email'
                     margin='normal'
-                    variant='outlined'
                     value={email}
                     onChange={this.handleChange('email')}
                     required
@@ -138,7 +136,6 @@ class Register extends React.Component<any, RegisterPageState> {
                     type='password'
                     autoComplete='current-password'
                     margin='normal'
-                    variant='outlined'
                     value={password}
                     onChange={this.handleChange('password')}
                     required
