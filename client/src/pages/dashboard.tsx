@@ -293,7 +293,7 @@ export const Dashboard = () => {
             </IconButton>
           </div>
           <Divider />
-          <SideMenu />
+          <SideMenu isDrawerOpen={drawerOpen} />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />

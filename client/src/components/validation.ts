@@ -20,3 +20,11 @@ export const userRegisterValidationSchema = Yup.object().shape({
     .min(6, 'Password must contain at least 6 characters')
     .required('Password is required'),
 });
+
+export const tripFormValidationSchema = Yup.object().shape({
+  destination: Yup.string('Enter trip destination')
+    .min(4, 'Trip destination must contain at least 4 characters')
+    .required('Trip destination is required'),
+  start_date: Yup.string('Enter trip start date').required('Start date is required'),
+  end_date: Yup.string('Enter trip end date').required('End date is required'),
+});

@@ -1,32 +1,39 @@
 import MomentUtils from '@date-io/moment';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { withStyles } from '@material-ui/styles';
-import { isEmpty } from 'lodash';
+import { Formik, FormikActions, FormikProps } from 'formik';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
 import { timezone } from '../assets/timezone';
 import { openTripForm } from '../store/actions/dashboard-actions';
 import { createTrip } from '../store/actions/trip-actions';
+import { tripFormValidationSchema } from './validation';
 
 const styles = {
   menu: {
     width: '12.5rem',
   },
+  buttonWrapper: {
+    padding: '1rem 0',
+  },
+  confirmButton: {
+    marginLeft: '0.5rem',
+  },
 };
 
-interface TripFormState {
+interface TripFormTypes {
   timezone_id: number;
   start_date: string;
   end_date: string;
@@ -35,53 +42,131 @@ interface TripFormState {
   archived: boolean;
 }
 
-class TripForm extends React.Component<any, TripFormState> {
-  state = {
-    timezone_id: 99,
-    start_date: moment().format('YYYY-MM-DD'),
-    end_date: moment().format('YYYY-MM-DD'),
-    name: '',
-    destination: '',
-    archived: false,
-  };
-
-  handleChange = (name: string) => (event: any) => {
-    this.setState({ ...this.state, [name]: event.target.value });
-  };
-
-  handleDateChange = (name: string) => (date: Moment | null) => {
-    const dateString = moment(date).format('YYYY-MM-DD');
-    this.setState({ ...this.state, [name]: dateString });
-  };
-
+class TripForm extends React.Component<any, any> {
   handleDialogClose = () => {
-    this.cleanupForm();
-  };
-
-  validateForm = () => {
-    const { start_date, end_date, destination } = this.state;
-    if (isEmpty(start_date) || isEmpty(end_date) || isEmpty(destination)) {
-      return;
-    }
-    this.props.createTrip(this.state);
-    this.cleanupForm();
-  };
-
-  cleanupForm = () => {
-    this.setState({
-      timezone_id: 99,
-      start_date: moment().format('YYYY-MM-DD'),
-      end_date: moment().format('YYYY-MM-DD'),
-      name: '',
-      destination: '',
-      archived: false,
-    });
     this.props.openTripForm(false);
   };
 
   render() {
-    const { timezone_id, start_date, end_date, name, destination } = this.state;
     const { classes, dashboard } = this.props;
+
+    const InnerForm = (props: FormikProps<TripFormTypes>) => {
+      const {
+        values: { timezone_id, start_date, end_date, name, destination },
+        errors,
+        touched,
+        handleChange,
+        isValid,
+        handleSubmit,
+        setFieldValue,
+        setFieldTouched,
+      } = props;
+
+      const change = (name, e) => {
+        e.persist();
+        handleChange(e);
+        setFieldTouched(name, true, false);
+      };
+
+      const handleDateChange = (name: string) => (date: Moment | null) => {
+        const dateString = moment(date).format('YYYY-MM-DD');
+        setFieldValue(name, dateString);
+      };
+
+      return (
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label='Name'
+            name='name'
+            margin='normal'
+            value={name}
+            onChange={change.bind(null, 'name')}
+            fullWidth
+          />
+          <TextField
+            label='Destination'
+            name='destination'
+            helperText={touched.destination ? errors.destination : ''}
+            error={touched.destination && Boolean(errors.destination)}
+            margin='normal'
+            value={destination}
+            onChange={change.bind(null, 'destination')}
+            required
+            fullWidth
+          />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DatePicker
+                  label='Start date'
+                  name='start_date'
+                  helperText={touched.start_date ? errors.start_date : ''}
+                  error={touched.start_date && Boolean(errors.start_date)}
+                  margin='normal'
+                  value={start_date}
+                  onChange={handleDateChange('start_date')}
+                  format='YYYY-MM-DD'
+                  required
+                  fullWidth
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item xs={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DatePicker
+                  label='End date'
+                  name='end_date'
+                  helperText={touched.end_date ? errors.end_date : ''}
+                  error={touched.end_date && Boolean(errors.end_date)}
+                  margin='normal'
+                  value={end_date}
+                  onChange={handleDateChange('end_date')}
+                  minDate={start_date}
+                  format='YYYY-MM-DD'
+                  required
+                  fullWidth
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+          </Grid>
+          <TextField
+            select
+            label='Timezone'
+            name='timezone_id'
+            margin='normal'
+            value={timezone_id}
+            onChange={change.bind(null, 'timezone_id')}
+            required
+            fullWidth
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}>
+            {timezone.map(tz => (
+              <MenuItem key={tz.id} value={tz.id}>
+                {tz.text}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Grid container spacing={2} className={classes.buttonWrapper}>
+            <Grid item>
+              <Button variant='contained' onClick={this.handleDialogClose}>
+                Cancel
+              </Button>
+              <Button
+                className={classes.confirmButton}
+                disabled={!isValid}
+                variant='contained'
+                color='primary'
+                type='submit'>
+                Confirm
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      );
+    };
 
     return (
       <div>
@@ -93,88 +178,24 @@ class TripForm extends React.Component<any, TripFormState> {
           fullWidth>
           <DialogTitle id='form-dialog-title'>Create trip</DialogTitle>
           <DialogContent>
-            <TextField
-              label='Name'
-              name='name'
-              margin='normal'
-              value={name}
-              onChange={this.handleChange('name')}
-              fullWidth
+            <Formik
+              initialValues={{
+                timezone_id: 99,
+                start_date: moment().format('YYYY-MM-DD'),
+                end_date: moment().format('YYYY-MM-DD'),
+                name: '',
+                destination: '',
+                archived: false,
+              }}
+              validationSchema={tripFormValidationSchema}
+              onSubmit={(values: TripFormTypes, actions: FormikActions<TripFormTypes>) => {
+                actions.setSubmitting(false);
+                this.props.createTrip(values);
+                this.handleDialogClose();
+              }}
+              render={(props: FormikProps<TripFormTypes>) => <InnerForm {...props} />}
             />
-            <TextField
-              label='Destination'
-              name='destination'
-              margin='normal'
-              value={destination}
-              onChange={this.handleChange('destination')}
-              required
-              fullWidth
-            />
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <KeyboardDatePicker
-                    required
-                    fullWidth
-                    margin='normal'
-                    id='mui-pickers-date'
-                    label='Start date'
-                    value={start_date}
-                    onChange={this.handleDateChange('start_date')}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                    format='YYYY-MM-DD'
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item xs={6}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <KeyboardDatePicker
-                    required
-                    fullWidth
-                    margin='normal'
-                    id='mui-pickers-date'
-                    label='End date'
-                    value={end_date}
-                    onChange={this.handleDateChange('end_date')}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                    format='YYYY-MM-DD'
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-            </Grid>
-            <TextField
-              select
-              label='Timezone'
-              name='timezone_id'
-              margin='normal'
-              value={timezone_id}
-              onChange={this.handleChange('timezone_id')}
-              required
-              fullWidth
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}>
-              {timezone.map(tz => (
-                <MenuItem key={tz.id} value={tz.id}>
-                  {tz.text}
-                </MenuItem>
-              ))}
-            </TextField>
           </DialogContent>
-          <DialogActions>
-            <Button variant='outlined' onClick={this.handleDialogClose}>
-              Cancel
-            </Button>
-            <Button variant='outlined' onClick={this.validateForm} color='primary'>
-              Confirm
-            </Button>
-          </DialogActions>
         </Dialog>
       </div>
     );

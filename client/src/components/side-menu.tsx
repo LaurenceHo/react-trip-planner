@@ -25,6 +25,12 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     expendListOpen: true,
   };
 
+  componentWillReceiveProps(nextProps: Readonly<any>): void {
+    if (this.props.isDrawerOpen !== nextProps.isDrawerOpen) {
+      this.setState({ expendListOpen: !!nextProps.isDrawerOpen });
+    }
+  }
+
   handExpendListClick = (): void => {
     this.setState({ expendListOpen: !this.state.expendListOpen });
   };
@@ -74,10 +80,11 @@ export class SideMenu extends React.Component<any, SideMenuState> {
           <Collapse in={expendListOpen} timeout='auto' unmountOnExit>
             {sideMenuOption.map(option => (
               <ListItem
+                style={{ paddingLeft: '4rem' }}
                 button
                 disabled={router.location.pathname !== '/dashboard'}
                 key={option.key}
-                selected={dashboard.menu === option.key}
+                selected={dashboard.currentMenu === option.key}
                 onClick={() => this.handMenuChange(option.key)}>
                 <ListItemIcon>
                   <Icon>{option.icon}</Icon>
@@ -106,10 +113,15 @@ export class SideMenu extends React.Component<any, SideMenuState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+interface SideMenuProps {
+  isDrawerOpen: boolean;
+}
+
+const mapStateToProps = (state: any, sideMenuProps: SideMenuProps) => {
   return {
     router: state.router,
     dashboard: state.dashboard,
+    isDrawerOpen: sideMenuProps.isDrawerOpen,
   };
 };
 
