@@ -4,6 +4,7 @@ import Icon from '@material-ui/core/icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
+import { Formik, FormikActions, FormikProps } from 'formik';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,6 +13,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
+import { userRegisterValidationSchema } from '../components/validation';
 import { clearAlert, createAlert } from '../store/actions/alert-actions';
 import { userRegister } from '../store/actions/user-actions';
 
@@ -27,42 +29,18 @@ const styles = {
   },
 };
 
-interface RegisterPageState {
+interface RegisterFormTypes {
+  username: string;
   email: string;
   password: string;
 }
 
-class Register extends React.Component<any, RegisterPageState> {
-  state = {
-    username: '',
-    email: '',
-    password: '',
-  };
-
-  handleChange = (name: string) => (event: any) => {
-    this.setState({ ...this.state, [name]: event.target.value });
-  };
-
+class Register extends React.Component<any, any> {
   render() {
-    const { username, email, password } = this.state;
     const { classes, alert, history } = this.props;
 
-    const formSubmit = (event: any) => {
-      event.preventDefault();
-      if (isEmpty(username) || isEmpty(email) || isEmpty(password)) {
-        this.props.createAlert({ type: 'error', message: 'Username or email or password cannot be empty' });
-      } else {
-        const user = {
-          username,
-          email,
-          password,
-        };
-        this.props.userRegister(user);
-      }
-    };
-
-    const RegisterButton = (
-      <Button className={classes.registerButton} variant='contained' color='primary' type='submit' onClick={formSubmit}>
+    const RegisterButton = (isValid: boolean) => (
+      <Button className={classes.registerButton} disabled={!isValid} variant='contained' color='primary' type='submit'>
         Register
         <Icon className={classes.sendIcon}>send</Icon>
       </Button>
@@ -77,6 +55,80 @@ class Register extends React.Component<any, RegisterPageState> {
         Login
       </Button>
     );
+
+    const RegisterForm = (props: FormikProps<RegisterFormTypes>) => {
+      const {
+        values: { username, email, password },
+        errors,
+        touched,
+        handleChange,
+        isValid,
+        handleSubmit,
+        setFieldTouched,
+      } = props;
+
+      const change = (name, e) => {
+        e.persist();
+        handleChange(e);
+        setFieldTouched(name, true, false);
+      };
+
+      return (
+        <form method='POST' onSubmit={handleSubmit}>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid container direction='row' justify='center' alignItems='center'>
+              <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                <TextField
+                  label='Username'
+                  name='username'
+                  helperText={touched.username ? errors.username : ''}
+                  error={touched.username && Boolean(errors.username)}
+                  margin='normal'
+                  value={username}
+                  onChange={change.bind(null, 'username')}
+                  required
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              <TextField
+                label='Email'
+                name='email'
+                helperText={touched.email ? errors.email : ''}
+                error={touched.email && Boolean(errors.email)}
+                margin='normal'
+                value={email}
+                onChange={change.bind(null, 'email')}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              <TextField
+                label='Password'
+                name='password'
+                type='password'
+                helperText={touched.password ? errors.password : ''}
+                error={touched.password && Boolean(errors.password)}
+                margin='normal'
+                value={password}
+                onChange={change.bind(null, 'password')}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              {RegisterButton(isValid)}
+            </Grid>
+          </Grid>
+        </form>
+      );
+    };
 
     return (
       <MuiThemeProvider theme={myTheme}>
@@ -99,56 +151,19 @@ class Register extends React.Component<any, RegisterPageState> {
             <div className='user-form-title-container'>
               <h3 className='user-form-title '>Register</h3>
             </div>
-            <form onSubmit={formSubmit}>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  <TextField
-                    label='Username'
-                    name='username'
-                    margin='normal'
-                    value={username}
-                    onChange={this.handleChange('username')}
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  <TextField
-                    label='Email'
-                    name='email'
-                    type='email'
-                    autoComplete='email'
-                    margin='normal'
-                    value={email}
-                    onChange={this.handleChange('email')}
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  <TextField
-                    label='Password'
-                    name='password'
-                    type='password'
-                    autoComplete='current-password'
-                    margin='normal'
-                    value={password}
-                    onChange={this.handleChange('password')}
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  {RegisterButton}
-                </Grid>
-              </Grid>
-            </form>
+            <Formik
+              initialValues={{
+                username: '',
+                email: '',
+                password: '',
+              }}
+              validationSchema={userRegisterValidationSchema}
+              onSubmit={(values: RegisterFormTypes, actions: FormikActions<RegisterFormTypes>) => {
+                actions.setSubmitting(false);
+                this.props.userRegister(values);
+              }}
+              render={(props: FormikProps<RegisterFormTypes>) => <RegisterForm {...props} />}
+            />
           </div>
         </div>
       </MuiThemeProvider>

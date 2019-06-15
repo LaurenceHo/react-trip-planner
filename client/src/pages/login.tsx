@@ -4,6 +4,7 @@ import Icon from '@material-ui/core/icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
+import { Formik, FormikActions, FormikProps } from 'formik';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +13,8 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
-import { createAlert, clearAlert } from '../store/actions/alert-actions';
+import { userLoginValidationSchema } from '../components/validation';
+import { clearAlert, createAlert } from '../store/actions/alert-actions';
 import { userLogin } from '../store/actions/user-actions';
 
 const styles = {
@@ -27,40 +29,17 @@ const styles = {
   },
 };
 
-interface LoginPageState {
+interface LoginFormTypes {
   email: string;
   password: string;
 }
 
-class Login extends React.Component<any, LoginPageState> {
-  state = {
-    email: '',
-    password: '',
-  };
-
-  handleChange = (name: string) => (event: any) => {
-    this.setState({ ...this.state, [name]: event.target.value });
-  };
-
+class Login extends React.Component<any, any> {
   render() {
-    const { email, password } = this.state;
     const { classes, alert, history } = this.props;
 
-    const formSubmit = (event: any) => {
-      event.preventDefault();
-      if (isEmpty(email) || isEmpty(password)) {
-        this.props.createAlert({ type: 'error', message: 'Email or password cannot be empty' });
-      } else {
-        const user = {
-          email,
-          password,
-        };
-        this.props.userLogin(user);
-      }
-    };
-
-    const LoginButton = (
-      <Button className={classes.loginButton} variant='contained' color='primary' type='submit' onClick={formSubmit}>
+    const LoginButton = (isValid: boolean) => (
+      <Button className={classes.loginButton} disabled={!isValid} variant='contained' color='primary' type='submit'>
         Login
         <Icon className={classes.sendIcon}>send</Icon>
       </Button>
@@ -75,6 +54,65 @@ class Login extends React.Component<any, LoginPageState> {
         Register
       </Button>
     );
+
+    const LoginForm = (props: FormikProps<LoginFormTypes>) => {
+      const {
+        values: { email, password },
+        errors,
+        touched,
+        handleChange,
+        isValid,
+        handleSubmit,
+        setFieldTouched,
+      } = props;
+
+      const change = (name, e) => {
+        e.persist();
+        handleChange(e);
+        setFieldTouched(name, true, false);
+      };
+
+      return (
+        <form method='POST' onSubmit={handleSubmit}>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              <TextField
+                label='Email'
+                name='email'
+                helperText={touched.email ? errors.email : ''}
+                error={touched.email && Boolean(errors.email)}
+                margin='normal'
+                value={email}
+                onChange={change.bind(null, 'email')}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              <TextField
+                label='Password'
+                name='password'
+                type='password'
+                helperText={touched.password ? errors.password : ''}
+                error={touched.password && Boolean(errors.password)}
+                margin='normal'
+                value={password}
+                onChange={change.bind(null, 'password')}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+              {LoginButton(isValid)}
+            </Grid>
+          </Grid>
+        </form>
+      );
+    };
 
     return (
       <MuiThemeProvider theme={myTheme}>
@@ -97,43 +135,18 @@ class Login extends React.Component<any, LoginPageState> {
             <div className='user-form-title-container'>
               <h3 className='user-form-title '>Login</h3>
             </div>
-            <form method='POST' onSubmit={formSubmit}>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  <TextField
-                    label='Email'
-                    name='email'
-                    type='email'
-                    autoComplete='email'
-                    margin='normal'
-                    value={email}
-                    onChange={this.handleChange('email')}
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  <TextField
-                    label='Password'
-                    name='password'
-                    type='password'
-                    autoComplete='current-password'
-                    margin='normal'
-                    value={password}
-                    onChange={this.handleChange('password')}
-                    required
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Grid container direction='row' justify='center' alignItems='center'>
-                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                  {LoginButton}
-                </Grid>
-              </Grid>
-            </form>
+            <Formik
+              initialValues={{
+                email: '',
+                password: '',
+              }}
+              validationSchema={userLoginValidationSchema}
+              onSubmit={(values: LoginFormTypes, actions: FormikActions<LoginFormTypes>) => {
+                actions.setSubmitting(false);
+                this.props.userLogin(values);
+              }}
+              render={(props: FormikProps<LoginFormTypes>) => <LoginForm {...props} />}
+            />
           </div>
         </div>
       </MuiThemeProvider>
