@@ -29,10 +29,10 @@ class EventList extends React.Component<any, any> {
   componentDidMount(): void {}
 
   render() {
-    const { classes, tripDayId, tripDetail } = this.props;
+    const { classes, selectedTripDayId, tripDetail } = this.props;
     let tripDay: TripDay = null;
     if (!isEmpty(tripDetail.trip_day)) {
-      tripDay = tripDetail.trip_day.find(tripDay => tripDay.id === tripDayId);
+      tripDay = tripDetail.trip_day.find(tripDay => tripDay.id === selectedTripDayId);
     }
 
     return (
@@ -86,7 +86,7 @@ class EventList extends React.Component<any, any> {
 
 const mapStateToProps = (state: any) => {
   return {
-    tripDayId: state.dashboard.tripDayId,
+    selectedTripDayId: state.dashboard.selectedTripDayId,
     tripDetail: state.trip.tripDetail,
   };
 };

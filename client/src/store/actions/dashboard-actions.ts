@@ -1,5 +1,11 @@
 import { Action, ActionCreator } from 'redux';
-import { OPEN_EVENT_FORM, OPEN_TRIP_DAY_FORM, OPEN_TRIP_FORM, SELECTED_TRIP_DAY_ID, SET_SIDE_MENU } from '../types';
+import {
+  OPEN_EVENT_FORM,
+  OPEN_TRIP_DAY_FORM,
+  OPEN_TRIP_FORM,
+  SET_SIDE_MENU,
+  UPDATE_SELECTED_TRIP_DAY_ID,
+} from '../types';
 
 export const setSideMenu: ActionCreator<Action> = (menu: string) => {
   return {
@@ -8,9 +14,9 @@ export const setSideMenu: ActionCreator<Action> = (menu: string) => {
   };
 };
 
-export const selectedTripDayId: ActionCreator<Action> = (tripDayId: string) => {
+export const updateSelectedTripDayId: ActionCreator<Action> = (tripDayId: string) => {
   return {
-    type: SELECTED_TRIP_DAY_ID,
+    type: UPDATE_SELECTED_TRIP_DAY_ID,
     tripDayId,
   };
 };

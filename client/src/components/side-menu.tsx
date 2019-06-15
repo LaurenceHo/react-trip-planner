@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
+import { getTripList } from '../store/actions/trip-actions';
 import TripForm from './trip-form';
 
 interface SideMenuState {
@@ -26,6 +27,21 @@ export class SideMenu extends React.Component<any, SideMenuState> {
 
   handExpendListClick = (): void => {
     this.setState({ expendListOpen: !this.state.expendListOpen });
+  };
+
+  handMenuChange = (menu: string) => {
+    this.props.setSideMenu(menu);
+    let requestBody = null;
+    if (menu === 'archived') {
+      requestBody = {
+        archived: true,
+      };
+    } else {
+      requestBody = {
+        archived: false,
+      };
+    }
+    this.props.getTripList(requestBody);
   };
 
   render() {
@@ -62,7 +78,7 @@ export class SideMenu extends React.Component<any, SideMenuState> {
                 disabled={router.location.pathname !== '/dashboard'}
                 key={option.key}
                 selected={dashboard.menu === option.key}
-                onClick={() => this.props.setSideMenu(option.key)}>
+                onClick={() => this.handMenuChange(option.key)}>
                 <ListItemIcon>
                   <Icon>{option.icon}</Icon>
                 </ListItemIcon>
@@ -77,8 +93,8 @@ export class SideMenu extends React.Component<any, SideMenuState> {
             button
             disabled={router.location.pathname !== '/dashboard'}
             key='archived'
-            selected={dashboard.menu === 'archived'}
-            onClick={() => this.props.setSideMenu('archived')}>
+            selected={dashboard.currentMenu === 'archived'}
+            onClick={() => this.handMenuChange('archived')}>
             <ListItemIcon>
               <Icon>all_inbox</Icon>
             </ListItemIcon>
@@ -102,6 +118,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
     {
       setSideMenu,
       openTripForm,
+      getTripList,
     },
     dispatch
   );

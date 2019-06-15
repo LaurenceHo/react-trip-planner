@@ -1,28 +1,27 @@
-import { ALERT_ERROR, ALERT_SUCCESS, CLEAR_ALERT } from '../types';
+import { CLEAR_ALERT, CREATE_ALERT } from '../types';
 
-const initialState = {
-  type: '',
-  message: '',
+export interface AlertState {
+  type: 'success' | 'warning' | 'error' | 'info';
+  message: string;
+}
+
+const initialState: AlertState = {
+  type: null,
+  message: null,
 };
 
-export const alertReducers = (state: any = initialState, action: any) => {
+export const alertReducers = (state: AlertState = initialState, action: any) => {
   switch (action.type) {
     case CLEAR_ALERT:
       return {
-        type: '',
-        message: '',
+        type: null,
+        message: null,
       };
 
-    case ALERT_SUCCESS:
+    case CREATE_ALERT:
       return {
-        type: 'success',
-        message: action.message,
-      };
-
-    case ALERT_ERROR:
-      return {
-        type: 'error',
-        message: action.message,
+        type: action.alert.type,
+        message: action.alert.message,
       };
 
     default:

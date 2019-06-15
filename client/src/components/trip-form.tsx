@@ -10,8 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
-import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -55,15 +55,7 @@ class TripForm extends React.Component<any, TripFormState> {
   };
 
   handleDialogClose = () => {
-    this.props.openTripForm(false);
-    this.setState({
-      timezone_id: 99,
-      start_date: moment().format('YYYY-MM-DD'),
-      end_date: moment().format('YYYY-MM-DD'),
-      name: '',
-      destination: '',
-      archived: false,
-    });
+    this.cleanupForm();
   };
 
   validateForm = () => {
@@ -72,6 +64,18 @@ class TripForm extends React.Component<any, TripFormState> {
       return;
     }
     this.props.createTrip(this.state);
+    this.cleanupForm();
+  };
+
+  cleanupForm = () => {
+    this.setState({
+      timezone_id: 99,
+      start_date: moment().format('YYYY-MM-DD'),
+      end_date: moment().format('YYYY-MM-DD'),
+      name: '',
+      destination: '',
+      archived: false,
+    });
     this.props.openTripForm(false);
   };
 
@@ -164,10 +168,10 @@ class TripForm extends React.Component<any, TripFormState> {
             </TextField>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleDialogClose} color='primary'>
+            <Button variant='outlined' onClick={this.handleDialogClose}>
               Cancel
             </Button>
-            <Button onClick={this.validateForm} color='primary'>
+            <Button variant='outlined' onClick={this.validateForm} color='primary'>
               Confirm
             </Button>
           </DialogActions>

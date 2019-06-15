@@ -10,6 +10,12 @@ import { TripDay } from '../../models/trip-day';
 import { TripService } from '../../services/trip-service';
 import {
   CREATING_TRIP,
+  CREATING_TRIP_DAY,
+  CREATING_TRIP_DAY_FAILURE,
+  CREATING_TRIP_DAY_SUCCESS,
+  CREATING_TRIP_EVENT,
+  CREATING_TRIP_EVENT_FAILURE,
+  CREATING_TRIP_EVENT_SUCCESS,
   CREATING_TRIP_FAILURE,
   CREATING_TRIP_SUCCESS,
   FETCHING_TRIP_DETAIL,
@@ -19,8 +25,8 @@ import {
   FETCHING_TRIP_LIST_FAILURE,
   FETCHING_TRIP_LIST_SUCCESS,
 } from '../types';
-import { alertError, clearAlert } from './alert-actions';
-import { selectedTripDayId } from './dashboard-actions';
+import { clearAlert, createAlert } from './alert-actions';
+import { updateSelectedTripDayId } from './dashboard-actions';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
@@ -61,12 +67,12 @@ export const getTripList = (payload: any) => {
           dispatch(fetchingTripListSuccess(result.result));
         } else {
           dispatch(fetchingTripListFailure());
-          dispatch(alertError(result.error));
+          dispatch(createAlert({ type: 'error', message: result.error }));
         }
       })
       .catch((error: any) => {
         dispatch(fetchingTripListFailure());
-        dispatch(alertError(error));
+        dispatch(createAlert({ type: 'error', message: error.error }));
       });
   };
 };
@@ -90,6 +96,13 @@ export const fetchingTripDetailSuccess = (tripDetail: Trip) => {
   };
 };
 
+const fetchTripDetailFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch(fetchingTripDetailFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
 export const getTripDetail = (tripId: number) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
     dispatch(clearAlert());
@@ -99,8 +112,7 @@ export const getTripDetail = (tripId: number) => {
       .then((tripDetailResult: any) => {
         if (tripDetailResult.success) {
           if (isEmpty(tripDetailResult)) {
-            dispatch(fetchingTripDetailFailure());
-            dispatch(alertError('Ooooops, there is something wrong, please try again.'));
+            dispatch(fetchTripDetailFailure('Ooooops, there is something wrong, please try again.'));
           } else {
             if (!isEmpty(tripDetailResult.result.start_date)) {
               tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
@@ -123,20 +135,18 @@ export const getTripDetail = (tripId: number) => {
                 return tripDay;
               });
               if (getState().dashboard.selectedTripDayId === 0) {
-                dispatch(selectedTripDayId(tripDetailResult.result.trip_day[0].id));
+                dispatch(updateSelectedTripDayId(tripDetailResult.result.trip_day[0].id));
               }
             }
             tripDetailResult.result.archived = tripDetailResult.result.archived === 1;
             dispatch(fetchingTripDetailSuccess(tripDetailResult.result));
           }
         } else {
-          dispatch(fetchingTripDetailFailure());
-          dispatch(alertError(tripDetailResult.error));
+          dispatch(fetchTripDetailFailure(tripDetailResult.error));
         }
       })
       .catch((error: any) => {
-        dispatch(fetchingTripDetailFailure());
-        dispatch(alertError(error));
+        dispatch(fetchTripDetailFailure(error.error));
       });
   };
 };
@@ -159,6 +169,13 @@ export const creatingTripSuccess = () => {
   };
 };
 
+const createTripFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch(creatingTripFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
 export const createTrip = (payload: Trip) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
     dispatch(creatingTrip());
@@ -170,18 +187,104 @@ export const createTrip = (payload: Trip) => {
           let requestPayload = {
             archived: true,
           };
-          if (getState().dashboard.menu !== 'archived') {
+          if (getState().dashboard.currentMenu !== 'archived') {
             requestPayload.archived = false;
           }
           dispatch(getTripList(requestPayload));
         } else {
-          dispatch(creatingTripFailure());
-          dispatch(alertError(result.error));
+          dispatch(createTripFailure(result.error));
         }
       })
       .catch((error: any) => {
-        dispatch(creatingTripFailure());
-        dispatch(alertError(error));
+        dispatch(createTripFailure(error.error));
+      });
+  };
+};
+
+export const creatingTripDay = () => {
+  return {
+    type: CREATING_TRIP_DAY,
+  };
+};
+
+export const creatingTripDayFailure = () => {
+  return {
+    type: CREATING_TRIP_DAY_FAILURE,
+  };
+};
+
+export const creatingTripDaySuccess = () => {
+  return {
+    type: CREATING_TRIP_DAY_SUCCESS,
+  };
+};
+
+const createTripDayFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch(creatingTripDayFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
+export const createTripDay = (payload: TripDay) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch(creatingTripDay());
+    tripService
+      .createTripDay(payload)
+      .then((result: any) => {
+        if (result.success) {
+          dispatch(creatingTripDaySuccess());
+          dispatch(getTripDetail(payload.trip_id));
+        } else {
+          dispatch(createTripDayFailure(result.error));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(createTripDayFailure(error.error));
+      });
+  };
+};
+
+export const creatingTripEvent = () => {
+  return {
+    type: CREATING_TRIP_EVENT,
+  };
+};
+
+export const creatingTripEventFailure = () => {
+  return {
+    type: CREATING_TRIP_EVENT_FAILURE,
+  };
+};
+
+export const creatingTripEventSuccess = () => {
+  return {
+    type: CREATING_TRIP_EVENT_SUCCESS,
+  };
+};
+
+const createTripEventFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch(creatingTripEventFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
+export const createTripEvent = (payload: Event) => {
+  return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
+    dispatch(creatingTripEvent());
+    tripService
+      .createTripEvent(getState().trip.tripDetail.id, payload)
+      .then((result: any) => {
+        if (result.success) {
+          dispatch(creatingTripEventSuccess());
+          dispatch(getTripDetail(getState().trip.tripDetail.id));
+        } else {
+          dispatch(createTripEventFailure(result.error));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(createTripEventFailure(error.error));
       });
   };
 };

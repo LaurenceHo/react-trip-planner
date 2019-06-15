@@ -10,7 +10,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { selectedTripDayId } from '../store/actions/dashboard-actions';
+import { updateSelectedTripDayId } from '../store/actions/dashboard-actions';
 
 const styles = {
   tripDayList: {
@@ -36,7 +36,7 @@ class TripDayList extends React.Component<any, any> {
             button
             key={tripDay.id}
             selected={dashboard.selectedTripDayId === tripDay.id}
-            onClick={() => this.props.selectedTripDayId(tripDay.id)}>
+            onClick={() => this.props.updateSelectedTripDayId(tripDay.id)}>
             <ListItemText primary={tripDay.trip_date} />
             <ListItemIcon>
               <Icon>chevron_right</Icon>
@@ -58,7 +58,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
-      selectedTripDayId,
+      updateSelectedTripDayId,
     },
     dispatch
   );

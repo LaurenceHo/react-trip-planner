@@ -5,7 +5,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user-service';
 import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../types';
-import { alertError, alertSuccess, clearAlert } from './alert-actions';
+import { createAlert, clearAlert } from './alert-actions';
 
 const userService = new UserService();
 
@@ -34,12 +34,12 @@ export const userLogin = (userLoginPayload: { email: string; password: string })
           dispatch(push('/dashboard'));
         } else {
           dispatch(userLoginFailure());
-          dispatch(alertError(result.error));
+          dispatch(createAlert({ type: 'error', message: result.error }));
         }
       })
       .catch((error: any) => {
         dispatch(userLoginFailure());
-        dispatch(alertError(error));
+        dispatch(createAlert({ type: 'error', message: error.error }));
       });
   };
 };
@@ -51,17 +51,19 @@ export const userRegister = (userLoginPayload: { username: string; email: string
       .register(userLoginPayload)
       .then((result: any) => {
         if (result.success) {
-          dispatch(alertSuccess('You are all set! Will redirect to login page in 3 secs...'));
+          dispatch(
+            createAlert({ type: 'success', message: 'You are all set! Will redirect to login page in 3 secs...' })
+          );
           setTimeout(() => {
             dispatch(push('/login'));
             dispatch(clearAlert());
           }, 3000);
         } else {
-          dispatch(alertError(result.error));
+          dispatch(createAlert({ type: 'error', message: result.error }));
         }
       })
       .catch((error: any) => {
-        dispatch(alertError(error));
+        dispatch(createAlert({ type: 'error', message: error.error }));
       });
   };
 };

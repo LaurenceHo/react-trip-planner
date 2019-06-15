@@ -12,7 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
-import { alertError, clearAlert } from '../store/actions/alert-actions';
+import { createAlert, clearAlert } from '../store/actions/alert-actions';
 import { userLogin } from '../store/actions/user-actions';
 
 const styles = {
@@ -49,7 +49,7 @@ class Login extends React.Component<any, LoginPageState> {
     const formSubmit = (event: any) => {
       event.preventDefault();
       if (isEmpty(email) || isEmpty(password)) {
-        this.props.alertError('Email or password cannot be empty');
+        this.props.createAlert({ type: 'error', message: 'Email or password cannot be empty' });
       } else {
         const user = {
           email,
@@ -151,7 +151,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
       clearAlert,
-      alertError,
+      createAlert,
       userLogin,
     },
     dispatch

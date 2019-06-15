@@ -1,12 +1,19 @@
 import { Trip } from '../../models/trip';
 import {
-  FETCHING_TRIP_LIST,
-  FETCHING_TRIP_LIST_SUCCESS,
-  FETCHING_TRIP_LIST_FAILURE,
   FETCHING_TRIP_DETAIL,
   FETCHING_TRIP_DETAIL_FAILURE,
   FETCHING_TRIP_DETAIL_SUCCESS,
+  FETCHING_TRIP_LIST,
+  FETCHING_TRIP_LIST_FAILURE,
+  FETCHING_TRIP_LIST_SUCCESS,
 } from '../types';
+
+export interface TripState {
+  isLoadingTripList: boolean;
+  isLoadingTripDetail: boolean;
+  tripList: Trip[];
+  tripDetail: Trip;
+}
 
 const tripList: Trip[] = [];
 const tripDetail: Trip = {
@@ -21,14 +28,14 @@ const tripDetail: Trip = {
   trip_day: [],
 };
 
-const initialState = {
+const initialState: TripState = {
   isLoadingTripList: false,
   isLoadingTripDetail: false,
   tripList,
   tripDetail,
 };
 
-export const tripReducers = (state: any = initialState, action: any) => {
+export const tripReducers = (state: TripState = initialState, action: any) => {
   switch (action.type) {
     case FETCHING_TRIP_LIST:
       return {

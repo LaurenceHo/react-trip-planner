@@ -1,5 +1,5 @@
 import { Action, ActionCreator } from 'redux';
-import { ALERT_ERROR, ALERT_SUCCESS, CLEAR_ALERT } from '../types';
+import { CLEAR_ALERT, CREATE_ALERT } from '../types';
 
 export const clearAlert: ActionCreator<Action> = () => {
   return {
@@ -7,16 +7,9 @@ export const clearAlert: ActionCreator<Action> = () => {
   };
 };
 
-export const alertSuccess: ActionCreator<Action> = (message: string) => {
+export const createAlert: ActionCreator<Action> = (alert: { type: string; message: string }) => {
   return {
-    type: ALERT_SUCCESS,
-    message,
-  };
-};
-
-export const alertError: ActionCreator<Action> = (message: string) => {
-  return {
-    type: ALERT_ERROR,
-    message,
+    type: CREATE_ALERT,
+    alert,
   };
 };
