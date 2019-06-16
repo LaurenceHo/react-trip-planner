@@ -1,5 +1,5 @@
 import {
-  OPEN_EVENT_FORM,
+  OPEN_TRIP_EVENT_FORM,
   OPEN_TRIP_DAY_FORM,
   OPEN_TRIP_FORM,
   UPDATE_SELECTED_TRIP_DAY_ID,
@@ -14,7 +14,7 @@ export interface DashboardState {
   };
   openTripForm: boolean;
   openTripDayForm: boolean;
-  openEventForm: boolean;
+  openTripEventForm: boolean;
   currentMenu: 'upcoming' | 'current' | 'past' | 'archived';
   selectedTripDayId: number;
 }
@@ -27,7 +27,7 @@ const initialState: DashboardState = {
   },
   openTripForm: false,
   openTripDayForm: false,
-  openEventForm: false,
+  openTripEventForm: false,
   currentMenu: 'current',
   selectedTripDayId: 0,
 };
@@ -58,10 +58,10 @@ export const dashboardReducers = (state: DashboardState = initialState, action: 
         openTripDayForm: action.payload,
       };
 
-    case OPEN_EVENT_FORM:
+    case OPEN_TRIP_EVENT_FORM:
       return {
         ...state,
-        openEventForm: action.payload,
+        openTripEventForm: action.payload,
       };
 
     default:

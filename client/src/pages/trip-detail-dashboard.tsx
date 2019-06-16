@@ -8,11 +8,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import EventList from '../components/event-list';
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
 import TripDayList from '../components/trip-day-list';
 import TripDetailBanner from '../components/trip-detail-banner';
+import TripEventList from '../components/trip-event-list';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripDetail, getTripList } from '../store/actions/trip-actions';
 
@@ -76,7 +76,7 @@ class TripDetailDashboard extends React.Component<any, any> {
                     message='You have no trip day, please create trip day at first.'
                   />
                 ) : (
-                  <EventList />
+                  <TripEventList />
                 )}
               </Grid>
             </Grid>

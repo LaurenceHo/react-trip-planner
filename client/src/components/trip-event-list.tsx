@@ -8,7 +8,11 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+
 import { TripDay } from '../models/trip-day';
+import { openTripEventForm } from '../store/actions/dashboard-actions';
 import myTheme from './theme';
 
 const styles = {
@@ -28,7 +32,7 @@ const styles = {
   },
 };
 
-class EventList extends React.Component<any, any> {
+class TripEventList extends React.Component<any, any> {
   render() {
     const { classes, selectedTripDayId, tripDetail } = this.props;
     let tripDay: TripDay = null;
@@ -41,7 +45,12 @@ class EventList extends React.Component<any, any> {
         <div className={classes.eventWrapper}>
           <Grid container direction='row' justify='flex-start' alignItems='center' spacing={2}>
             <Grid item>
-              <Button className={classes.button} variant='contained' color='primary' size='medium'>
+              <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='medium'
+                onClick={() => this.props.openTripEventForm(true)}>
                 <Icon className={classes.buttonIcon}>add</Icon> New Event
               </Button>
             </Grid>
@@ -92,7 +101,16 @@ const mapStateToProps = (state: any) => {
   };
 };
 
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+  return bindActionCreators(
+    {
+      openTripEventForm,
+    },
+    dispatch
+  );
+};
+
 export default connect(
   mapStateToProps,
-  {}
-)(withStyles(styles)(EventList));
+  mapDispatchToProps
+)(withStyles(styles)(TripEventList));
