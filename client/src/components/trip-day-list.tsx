@@ -10,7 +10,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { updateSelectedTripDayId } from '../store/actions/dashboard-actions';
+
+import { openTripDayForm, updateSelectedTripDayId } from '../store/actions/dashboard-actions';
 
 const styles = {
   tripDayList: {
@@ -24,11 +25,11 @@ class TripDayList extends React.Component<any, any> {
 
     return (
       <List className={classes.tripDayList}>
-        <ListItem button key='Create new day'>
+        <ListItem button key='Create new day' onClick={() => this.props.openTripDayForm(true)}>
           <ListItemIcon>
             <Icon>add</Icon>
           </ListItemIcon>
-          <ListItemText primary='Create new day' />
+          <ListItemText primary='New Day' />
         </ListItem>
         {!isEmpty && <Divider />}
         {tripDetail.trip_day.map(tripDay => (
@@ -58,6 +59,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
+      openTripDayForm,
       updateSelectedTripDayId,
     },
     dispatch

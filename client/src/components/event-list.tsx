@@ -21,7 +21,10 @@ const styles = {
   button: {
     margin: '0.5rem',
     'text-transform': 'none',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
+  },
+  buttonIcon: {
+    marginRight: '0.5rem',
   },
 };
 
@@ -38,23 +41,23 @@ class EventList extends React.Component<any, any> {
     return (
       <MuiThemeProvider theme={myTheme}>
         <div className={classes.eventWrapper}>
-          <Paper className={classes.root}>
-            <Grid container spacing={2}>
-              <Grid item>
-                <Button className={classes.button}>
-                  <Icon>add</Icon> Create event
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm container>
-                <Grid item container direction='column' spacing={2}>
-                  <Typography variant='h5' component='h3'>
-                    {tripDay.trip_date}
-                  </Typography>
-                  {!isEmpty(tripDay.name) && <Typography variant='subtitle1'>{tripDay.name}</Typography>}
-                </Grid>
-              </Grid>
+          <Grid container direction='row' justify='flex-start' alignItems='center' spacing={2}>
+            <Grid item>
+              <Button className={classes.button} variant='contained' color='primary' size='medium'>
+                <Icon className={classes.buttonIcon}>add</Icon> New Event
+              </Button>
             </Grid>
-          </Paper>
+            <Grid item>
+              <Typography variant='h5' component='h3'>
+                {tripDay.trip_date}
+              </Typography>
+            </Grid>
+            {!isEmpty(tripDay.name) && (
+              <Grid item>
+                <Typography variant='subtitle1'>{tripDay.name}</Typography>
+              </Grid>
+            )}
+          </Grid>
         </div>
         {tripDay.events.map(tripEvent => (
           <div className={classes.eventWrapper} key={tripEvent.id}>

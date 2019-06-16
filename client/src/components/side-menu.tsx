@@ -15,6 +15,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
 import { getTripList } from '../store/actions/trip-actions';
 import TripForm from './trip-form';
+import TripDayForm from './trip-day-form';
 
 interface SideMenuState {
   expendListOpen: boolean;
@@ -25,9 +26,16 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     expendListOpen: true,
   };
 
-  componentWillReceiveProps(nextProps: Readonly<any>): void {
-    if (this.props.isDrawerOpen !== nextProps.isDrawerOpen) {
-      this.setState({ expendListOpen: !!nextProps.isDrawerOpen });
+  getSnapshotBeforeUpdate(prevProps: Readonly<any>): any | null {
+    if (this.props.isDrawerOpen !== prevProps.isDrawerOpen) {
+      return this.props.isDrawerOpen;
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<SideMenuState>, snapshot?: any): void {
+    if (snapshot !== null) {
+      this.setState({ expendListOpen: snapshot });
     }
   }
 
@@ -56,31 +64,36 @@ export class SideMenu extends React.Component<any, SideMenuState> {
 
     const sideMenuOption = [
       { key: 'upcoming', icon: 'event', label: 'Upcoming' },
-      { key: 'current', icon: 'today', label: 'Current' },
+      { key: 'current', icon: 'today', label: 'Currently Traveling' },
       { key: 'past', icon: 'date_range', label: 'Past' },
     ];
     return (
       <div>
         <TripForm />
+        <TripDayForm />
         <List>
-          <ListItem button key='Create trip' onClick={() => this.props.openTripForm(true)}>
+          <ListItem
+            button
+            key='Create trip'
+            onClick={() => this.props.openTripForm(true)}
+            disabled={router.location.pathname !== '/dashboard'}>
             <ListItemIcon>
               <Icon>add</Icon>
             </ListItemIcon>
-            <ListItemText primary='Create trip' />
+            <ListItemText primary='New Trip' />
           </ListItem>
           <Divider />
           <ListItem button onClick={this.handExpendListClick}>
             <ListItemIcon>
               <Icon>filter_list</Icon>
             </ListItemIcon>
-            <ListItemText primary='Filter by date' />
+            <ListItemText primary='Filter by Date' />
             {expendListOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           <Collapse in={expendListOpen} timeout='auto' unmountOnExit>
             {sideMenuOption.map(option => (
               <ListItem
-                style={{ paddingLeft: '4rem' }}
+                style={{ paddingLeft: '2rem' }}
                 button
                 disabled={router.location.pathname !== '/dashboard'}
                 key={option.key}

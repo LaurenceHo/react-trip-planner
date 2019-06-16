@@ -28,3 +28,7 @@ export const tripFormValidationSchema = Yup.object().shape({
   start_date: Yup.string('Enter trip start date').required('Start date is required'),
   end_date: Yup.string('Enter trip end date').required('End date is required'),
 });
+
+export const tripDayFormValidationSchema = Yup.object().shape({
+  trip_date: Yup.string('Enter trip date').required('Trip date is required'),
+});
