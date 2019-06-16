@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { ErrorMessages } from '../../constants/errors';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
@@ -24,7 +25,7 @@ import {
   FETCHING_TRIP_LIST,
   FETCHING_TRIP_LIST_FAILURE,
   FETCHING_TRIP_LIST_SUCCESS,
-} from '../types';
+} from '../../constants/actions';
 import { clearAlert, createAlert } from './alert-actions';
 import { updateSelectedTripDayId } from './dashboard-actions';
 
@@ -97,7 +98,7 @@ export const getTripList = () => {
       .getTripList(requestPayload)
       .then((result: any) => {
         if (isEmpty(result)) {
-          dispatch(_fetchTripListFailure('Ooooops, there is something wrong, please try again.'));
+          dispatch(_fetchTripListFailure(ErrorMessages.response.message));
         } else {
           if (result.success) {
             map(result.result, (trip: Trip) => {
@@ -151,7 +152,7 @@ export const getTripDetail = (tripId: number) => {
       .getTripDetail(tripId)
       .then((tripDetailResult: any) => {
         if (isEmpty(tripDetailResult)) {
-          dispatch(_fetchTripDetailFailure('Ooooops, there is something wrong, please try again.'));
+          dispatch(_fetchTripDetailFailure(ErrorMessages.response.message));
         } else {
           if (tripDetailResult.success) {
             if (!isEmpty(tripDetailResult.result.start_date)) {

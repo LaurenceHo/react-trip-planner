@@ -1,5 +1,5 @@
 import { User } from '../../models/user';
-import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../types';
+import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../../constants/actions';
 
 const user: User = JSON.parse(localStorage.getItem('user'));
 const userInitialState = user ? { status: { loggedIn: true }, user } : { status: { loggedIn: false }, user };

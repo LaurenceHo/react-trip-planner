@@ -4,7 +4,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { User } from '../../models/user';
 import { UserService } from '../../services/user-service';
-import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../types';
+import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../../constants/actions';
 import { createAlert, clearAlert } from './alert-actions';
 
 const userService = new UserService();

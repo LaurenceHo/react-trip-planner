@@ -13,7 +13,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
-import { userRegisterValidationSchema } from '../components/validation';
+import { userRegisterValidationSchema } from '../constants/validation';
 import { clearAlert, createAlert } from '../store/actions/alert-actions';
 import { userRegister } from '../store/actions/user-actions';
 

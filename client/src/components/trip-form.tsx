@@ -19,7 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { timezone } from '../assets/timezone';
 import { openTripForm } from '../store/actions/dashboard-actions';
 import { createTrip } from '../store/actions/trip-actions';
-import { tripFormValidationSchema } from './validation';
+import { tripFormValidationSchema } from '../constants/validation';
 
 const styles = {
   menu: {

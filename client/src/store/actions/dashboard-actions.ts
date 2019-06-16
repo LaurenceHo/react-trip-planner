@@ -5,7 +5,7 @@ import {
   OPEN_TRIP_FORM,
   SET_SIDE_MENU,
   UPDATE_SELECTED_TRIP_DAY_ID,
-} from '../types';
+} from '../../constants/actions';
 
 export const setSideMenu: ActionCreator<Action> = (menu: string) => {
   return {

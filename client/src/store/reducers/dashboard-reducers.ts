@@ -4,7 +4,7 @@ import {
   OPEN_TRIP_FORM,
   UPDATE_SELECTED_TRIP_DAY_ID,
   SET_SIDE_MENU,
-} from '../types';
+} from '../../constants/actions';
 
 export interface DashboardState {
   edit: {

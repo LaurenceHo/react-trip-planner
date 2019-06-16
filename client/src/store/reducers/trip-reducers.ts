@@ -6,7 +6,7 @@ import {
   FETCHING_TRIP_LIST,
   FETCHING_TRIP_LIST_FAILURE,
   FETCHING_TRIP_LIST_SUCCESS,
-} from '../types';
+} from '../../constants/actions';
 
 export interface TripState {
   isLoadingTripList: boolean;
