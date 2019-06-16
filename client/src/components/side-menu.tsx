@@ -43,19 +43,9 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     this.setState({ expendListOpen: !this.state.expendListOpen });
   };
 
-  handMenuChange = (menu: string) => {
+  handMenuChange = (menu: string): void => {
     this.props.setSideMenu(menu);
-    let requestBody = null;
-    if (menu === 'archived') {
-      requestBody = {
-        archived: true,
-      };
-    } else {
-      requestBody = {
-        archived: false,
-      };
-    }
-    this.props.getTripList(requestBody);
+    this.props.getTripList();
   };
 
   render() {

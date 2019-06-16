@@ -35,10 +35,7 @@ const styles = {
 class TripDetailDashboard extends React.Component<any, any> {
   componentDidMount(): void {
     if (isEmpty(this.props.tripList)) {
-      // TODO - should use user's filter to fetch trip list
-      this.props.getTripList({
-        archived: false,
-      });
+      this.props.getTripList();
     }
     this.props.getTripDetail(this.props.match.params.id);
   }

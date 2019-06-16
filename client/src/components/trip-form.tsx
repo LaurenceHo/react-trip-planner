@@ -43,7 +43,7 @@ interface TripFormTypes {
 }
 
 class TripForm extends React.Component<any, any> {
-  handleDialogClose = () => {
+  handleDialogClose = (): void => {
     this.props.openTripForm(false);
   };
 
@@ -62,13 +62,13 @@ class TripForm extends React.Component<any, any> {
         setFieldTouched,
       } = props;
 
-      const change = (name, e) => {
+      const change = (name, e): void => {
         e.persist();
         handleChange(e);
         setFieldTouched(name, true, false);
       };
 
-      const handleDateChange = (name: string) => (date: Moment | null) => {
+      const handleDateChange = (name: string) => (date: Moment | null): void => {
         const dateString = moment(date).format('YYYY-MM-DD');
         setFieldValue(name, dateString);
       };

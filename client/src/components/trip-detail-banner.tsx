@@ -9,6 +9,8 @@ import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import * as moment from 'moment';
+
 import myTheme from './theme';
 
 const styles = {
@@ -20,6 +22,9 @@ const styles = {
 class TripDetailBanner extends React.Component<any, any> {
   render() {
     const { classes, tripDetail } = this.props;
+    const startDateMoment = moment(tripDetail.start_date);
+    const endDateMoment = moment(tripDetail.end_date);
+    const dateDiff = endDateMoment.diff(startDateMoment, 'days');
 
     const GoBackButton = withRouter(({ history }) => (
       <IconButton onClick={() => history.goBack()}>
@@ -40,7 +45,7 @@ class TripDetailBanner extends React.Component<any, any> {
                   {tripDetail.destination}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  {tripDetail.start_date} ~ {tripDetail.end_date}
+                  {tripDetail.start_date} ~ {tripDetail.end_date} ({dateDiff} days)
                 </Typography>
                 {!isEmpty(tripDetail.name) && <Typography variant='body2'>{tripDetail.name}</Typography>}
               </Grid>

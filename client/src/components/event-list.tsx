@@ -29,8 +29,6 @@ const styles = {
 };
 
 class EventList extends React.Component<any, any> {
-  componentDidMount(): void {}
-
   render() {
     const { classes, selectedTripDayId, tripDetail } = this.props;
     let tripDay: TripDay = null;

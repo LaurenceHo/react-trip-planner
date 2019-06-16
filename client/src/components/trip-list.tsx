@@ -42,11 +42,7 @@ const styles = {
 
 class TripList extends React.Component<any, any> {
   componentDidMount(): void {
-    const defaultRequestBody = {
-      archived: false,
-    };
-
-    this.props.getTripList(defaultRequestBody);
+    this.props.getTripList();
   }
 
   componentDidUpdate(): void {}
