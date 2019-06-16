@@ -27,7 +27,7 @@ export class EventRepository implements BaseRepository<Event> {
       .select()
       .from('event')
       .where(whereClauses)
-      .orderBy('start_time')
+      .orderBy('start_time') // TODO
       .then((results: Event[]) => callback(results))
       .catch((err: any) => callback(null, err));
   }

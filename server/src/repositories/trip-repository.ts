@@ -65,14 +65,47 @@ export class TripRepository implements BaseRepository<Trip> {
     if (isEmpty(columns)) {
       columns = ['id', 'start_date', 'end_date', 'name', 'destination', 'archived'];
     }
-    knex
-      .column(columns)
-      .select()
-      .from('trip')
-      .where(whereClauses)
-      .orderBy('start_date')
-      .then((results: Trip[]) => callback(results))
-      .catch((err: any) => callback(null, err));
+    if (!isEmpty(whereClauses.start_date) && !isEmpty(whereClauses.end_date)) {
+      knex
+        .column(columns)
+        .select()
+        .from('trip')
+        .where('start_date', '<', whereClauses.start_date)
+        .andWhere('end_date', '>', whereClauses.end_date)
+        .andWhere('archived', false)
+        .orderBy('start_date') // TODO
+        .then((results: Trip[]) => callback(results))
+        .catch((err: any) => callback(null, err));
+    } else if (!isEmpty(whereClauses.start_date) && isEmpty(whereClauses.end_date)) {
+      knex
+        .column(columns)
+        .select()
+        .from('trip')
+        .where('start_date', '>', whereClauses.start_date)
+        .andWhere('archived', false)
+        .orderBy('start_date') // TODO
+        .then((results: Trip[]) => callback(results))
+        .catch((err: any) => callback(null, err));
+    } else if (isEmpty(whereClauses.start_date) && !isEmpty(whereClauses.end_date)) {
+      knex
+        .column(columns)
+        .select()
+        .from('trip')
+        .where('end_date', '<', whereClauses.end_date)
+        .andWhere('archived', false)
+        .orderBy('start_date') // TODO
+        .then((results: Trip[]) => callback(results))
+        .catch((err: any) => callback(null, err));
+    } else if (isEmpty(whereClauses.start_date) && isEmpty(whereClauses.end_date)) {
+      knex
+        .column(columns)
+        .select()
+        .from('trip')
+        .where('archived', true)
+        .orderBy('start_date') // TODO
+        .then((results: Trip[]) => callback(results))
+        .catch((err: any) => callback(null, err));
+    }
   }
 
   create(item: Trip, callback: any): void {
