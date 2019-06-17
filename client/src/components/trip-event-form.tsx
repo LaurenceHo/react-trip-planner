@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { withStyles } from '@material-ui/styles';
 import { Formik, FormikActions, FormikProps } from 'formik';
 import * as moment from 'moment';
@@ -17,10 +17,10 @@ import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { timezone } from '../assets/timezone';
-import { DATE_FORMAT } from '../constants/general';
-import { tripFormValidationSchema } from '../constants/validation';
-import { openTripForm } from '../store/actions/dashboard-actions';
-import { createTrip } from '../store/actions/trip-actions';
+import { DATE_TIME_FORMAT } from '../constants/general';
+import { eventFormValidationSchema } from '../constants/validation';
+import { openTripEventForm } from '../store/actions/dashboard-actions';
+import { createTripEvent } from '../store/actions/trip-actions';
 
 const styles = {
   menu: {
@@ -34,26 +34,44 @@ const styles = {
   },
 };
 
-interface TripFormTypes {
+interface TripEventFormTypes {
+  trip_day_id: number;
+  category_id: number;
   timezone_id: number;
-  start_date: string;
-  end_date: string;
-  name: string;
-  destination: string;
-  archived: boolean;
+  currency_id: number;
+  start_time: string;
+  end_time: string;
+  title: string;
+  start_location: string;
+  end_location: string;
+  note: string;
+  tag: string;
+  cost: number;
 }
 
-class TripForm extends React.Component<any, any> {
+class TripEventForm extends React.Component<any, any> {
   handleDialogClose = (): void => {
-    this.props.openTripForm(false);
+    this.props.openTripEventForm(false);
   };
 
   render() {
     const { classes, dashboard } = this.props;
 
-    const InnerForm = (props: FormikProps<TripFormTypes>) => {
+    const InnerForm = (props: FormikProps<TripEventFormTypes>) => {
       const {
-        values: { timezone_id, start_date, end_date, name, destination },
+        values: {
+          category_id,
+          timezone_id,
+          currency_id,
+          start_time,
+          end_time,
+          title,
+          start_location,
+          end_location,
+          note,
+          tag,
+          cost,
+        },
         errors,
         touched,
         handleChange,
@@ -70,62 +88,47 @@ class TripForm extends React.Component<any, any> {
       };
 
       const handleDateChange = (name: string) => (date: Moment | null): void => {
-        const dateString = moment(date).format(DATE_FORMAT);
-        const startDateMoment = moment(start_date);
-        const endDateMoment = moment(end_date);
-        if (name === 'start_date' && startDateMoment.diff(endDateMoment, 'days') > 0) {
-          setFieldValue('end_date', dateString);
-        }
+        const dateString = moment(date).format(DATE_TIME_FORMAT);
         setFieldValue(name, dateString);
       };
 
       return (
         <form onSubmit={handleSubmit}>
           <TextField
-            label='Name'
-            name='name'
+            label='Title'
+            name='title'
+            helperText={touched.title ? errors.title : ''}
+            error={touched.title && Boolean(errors.title)}
             margin='normal'
-            value={name}
-            onChange={change.bind(null, 'name')}
-            fullWidth
-          />
-          <TextField
-            label='Destination'
-            name='destination'
-            helperText={touched.destination ? errors.destination : ''}
-            error={touched.destination && Boolean(errors.destination)}
-            margin='normal'
-            value={destination}
-            onChange={change.bind(null, 'destination')}
+            value={title}
+            onChange={change.bind(null, 'title')}
             required
             fullWidth
           />
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DatePicker
-                  label='Start date'
-                  name='start_date'
+                <DateTimePicker
+                  label='Start time'
+                  name='start_time'
                   margin='normal'
-                  value={start_date}
-                  onChange={handleDateChange('start_date')}
-                  format='YYYY-MM-DD'
-                  required
+                  value={start_time}
+                  onChange={handleDateChange('start_time')}
+                  format={DATE_TIME_FORMAT}
                   fullWidth
                 />
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item xs={6}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DatePicker
-                  label='End date'
-                  name='end_date'
+                <DateTimePicker
+                  label='End time'
+                  name='end_time'
                   margin='normal'
-                  value={end_date}
-                  onChange={handleDateChange('end_date')}
-                  minDate={start_date}
-                  format='YYYY-MM-DD'
-                  required
+                  value={end_time}
+                  onChange={handleDateChange('end_time')}
+                  minDate={end_time}
+                  format={DATE_TIME_FORMAT}
                   fullWidth
                 />
               </MuiPickersUtilsProvider>
@@ -173,29 +176,35 @@ class TripForm extends React.Component<any, any> {
     return (
       <div>
         <Dialog
-          open={dashboard.openTripForm}
+          open={dashboard.openTripEventForm}
           onClose={this.handleDialogClose}
           aria-labelledby='form-dialog-title'
           maxWidth='sm'
           fullWidth>
-          <DialogTitle id='form-dialog-title'>Create trip</DialogTitle>
+          <DialogTitle id='form-dialog-title'>Create event</DialogTitle>
           <DialogContent>
             <Formik
               initialValues={{
-                timezone_id: 99,
-                start_date: moment().format(DATE_FORMAT),
-                end_date: moment().format(DATE_FORMAT),
-                name: '',
-                destination: '',
-                archived: false,
+                trip_day_id: this.props.dashboard.selectedTripDayId,
+                category_id: 1,
+                timezone_id: this.props.tripDetail.timezone_id,
+                currency_id: 0,
+                start_time: moment().format(DATE_TIME_FORMAT),
+                end_time: moment().format(DATE_TIME_FORMAT),
+                title: '',
+                start_location: '',
+                end_location: '',
+                note: '',
+                tag: '',
+                cost: 0,
               }}
-              validationSchema={tripFormValidationSchema}
-              onSubmit={(values: TripFormTypes, actions: FormikActions<TripFormTypes>) => {
+              validationSchema={eventFormValidationSchema}
+              onSubmit={(values: TripEventFormTypes, actions: FormikActions<TripEventFormTypes>) => {
                 actions.setSubmitting(false);
-                this.props.createTrip(values);
+                this.props.createTripEvent(values);
                 this.handleDialogClose();
               }}
-              render={(props: FormikProps<TripFormTypes>) => <InnerForm {...props} />}
+              render={(props: FormikProps<TripEventFormTypes>) => <InnerForm {...props} />}
             />
           </DialogContent>
         </Dialog>
@@ -207,14 +216,15 @@ class TripForm extends React.Component<any, any> {
 const mapStateToProps = (state: any) => {
   return {
     dashboard: state.dashboard,
+    tripDetail: state.trip.tripDetail,
   };
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
   return bindActionCreators(
     {
-      openTripForm,
-      createTrip,
+      openTripEventForm,
+      createTripEvent,
     },
     dispatch
   );
@@ -223,4 +233,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(TripForm));
+)(withStyles(styles)(TripEventForm));

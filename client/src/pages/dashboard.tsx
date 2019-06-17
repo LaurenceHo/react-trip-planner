@@ -19,6 +19,9 @@ import { Route } from 'react-router';
 
 import SideMenu from '../components/side-menu';
 import myTheme from '../components/theme';
+import TripDayForm from '../components/trip-day-form';
+import TripEventForm from '../components/trip-event-form';
+import TripForm from '../components/trip-form';
 import TripList from '../components/trip-list';
 import { UserService } from '../services/user-service';
 import store from '../store';
@@ -297,6 +300,10 @@ export const Dashboard = () => {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <TripForm />
+          <TripDayForm />
+          <TripEventForm />
+
           <Route exact path='/dashboard' component={TripList as any} />
           <Route path='/dashboard/trip/:id' component={TripDetailDashboard} />
         </main>

@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import { ErrorMessages } from './errors';
 
-const USERNAME_MAX_LENGTH = 30;
-const USERNAME_REGEX = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+const USERNAME_MAX_LENGTH = 15;
+const USERNAME_REGEX = /^([a-zA-Z0-9._-]+)$/;
 const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
 
 export const userLoginValidationSchema = Yup.object().shape({
@@ -39,4 +39,10 @@ export const tripFormValidationSchema = Yup.object().shape({
   destination: Yup.string()
     .trim()
     .required(ErrorMessages.destination.required),
+});
+
+export const eventFormValidationSchema = Yup.object().shape({
+  title: Yup.string()
+    .trim()
+    .required(ErrorMessages.title.required),
 });

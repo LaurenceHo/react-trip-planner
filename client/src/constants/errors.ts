@@ -10,10 +10,13 @@ export const ErrorMessages = {
   userName: {
     invalid: 'Please enter valid user name and letters and be longer than 4',
     required: 'User name is required',
-    maxlength: 'This value is too long. It should have 30 characters or fewer.',
+    maxlength: 'This value is too long. It should have 15 characters or fewer.',
   },
   destination: {
     required: 'Destination is required',
+  },
+  title: {
+    required: 'Title is required',
   },
   response: {
     message: 'Ooooops, there is something wrong, please try again.',

@@ -14,8 +14,6 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
 import { getTripList } from '../store/actions/trip-actions';
-import TripForm from './trip-form';
-import TripDayForm from './trip-day-form';
 
 interface SideMenuState {
   expendListOpen: boolean;
@@ -59,8 +57,6 @@ export class SideMenu extends React.Component<any, SideMenuState> {
     ];
     return (
       <div>
-        <TripForm />
-        <TripDayForm />
         <List>
           <ListItem
             button

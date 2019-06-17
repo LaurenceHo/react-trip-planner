@@ -1,10 +1,12 @@
 import { isEmpty, map } from 'lodash';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { timezone } from '../../assets/timezone';
 import { ErrorMessages } from '../../constants/errors';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../constants/general';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
@@ -28,9 +30,6 @@ import {
 } from '../../constants/actions';
 import { clearAlert, createAlert } from './alert-actions';
 import { updateSelectedTripDayId } from './dashboard-actions';
-
-const DATE_FORMAT = 'YYYY-MM-DD';
-const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 
 const tripService = new TripService();
 export const fetchingTripList = () => {
@@ -67,18 +66,18 @@ const _generateGetTripListPayload = (currentMenu: string) => {
     };
   } else if (currentMenu === 'current') {
     requestBody = {
-      start_date: moment().format('YYYY-MM-DD'),
-      end_date: moment().format('YYYY-MM-DD'),
+      start_date: moment().format(DATE_FORMAT),
+      end_date: moment().format(DATE_FORMAT),
       archived: false,
     };
   } else if (currentMenu === 'upcoming') {
     requestBody = {
-      start_date: moment().format('YYYY-MM-DD'),
+      start_date: moment().format(DATE_FORMAT),
       archived: false,
     };
   } else if (currentMenu === 'past') {
     requestBody = {
-      end_date: moment().format('YYYY-MM-DD'),
+      end_date: moment().format(DATE_FORMAT),
       archived: false,
     };
   } else {
@@ -155,6 +154,7 @@ export const getTripDetail = (tripId: number) => {
           dispatch(_fetchTripDetailFailure(ErrorMessages.response.message));
         } else {
           if (tripDetailResult.success) {
+            const timezoneObject = timezone.find(tz => tz.id === tripDetailResult.result.timezone_id);
             if (!isEmpty(tripDetailResult.result.start_date)) {
               tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
             }
@@ -166,10 +166,14 @@ export const getTripDetail = (tripId: number) => {
                 tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
                 map(tripDay.events, (tripEvent: Event) => {
                   if (!isEmpty(tripEvent.start_time)) {
-                    tripEvent.start_time = moment(tripEvent.start_time).format(DATE_TIME_FORMAT);
+                    tripEvent.start_time = moment(tripEvent.start_time)
+                      .tz(timezoneObject.utc)
+                      .format(DATE_TIME_FORMAT);
                   }
                   if (!isEmpty(tripEvent.end_time)) {
-                    tripEvent.end_time = moment(tripEvent.end_time).format(DATE_TIME_FORMAT);
+                    tripEvent.end_time = moment(tripEvent.end_time)
+                      .tz(timezoneObject.utc)
+                      .format(DATE_TIME_FORMAT);
                   }
                   return tripEvent;
                 });
