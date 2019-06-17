@@ -12,6 +12,7 @@ const tripDayRepository = new TripDayRepository();
 
 export class TripRepository implements BaseRepository<Trip> {
   retrieveDetail(whereClauses: any, callback: any): void {
+    console.log('#####', whereClauses);
     let trip: Trip = null;
     const columns = ['id', 'timezone_id', 'start_date', 'end_date', 'name', 'destination', 'archived'];
     knex
@@ -96,12 +97,12 @@ export class TripRepository implements BaseRepository<Trip> {
         .orderBy('start_date') // TODO
         .then((results: Trip[]) => callback(results))
         .catch((err: any) => callback(null, err));
-    } else if (isEmpty(whereClauses.start_date) && isEmpty(whereClauses.end_date)) {
+    } else {
       knex
         .column(columns)
         .select()
         .from('trip')
-        .where('archived', true)
+        .where(whereClauses)
         .orderBy('start_date') // TODO
         .then((results: Trip[]) => callback(results))
         .catch((err: any) => callback(null, err));
