@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
+
 import { knex } from './knex';
 import { timezoneList } from './timezone';
 
@@ -208,6 +209,14 @@ const createTripDay = () => {
         .format('YYYY-MM-DD'),
       name: 'Trip day 3',
     },
+    {
+      user_id: 1,
+      trip_id: 2,
+      trip_date: moment()
+        .add(31, 'd')
+        .format('YYYY-MM-DD'),
+      name: 'Taipei 1',
+    },
   ];
 
   knex('trip_day')
@@ -233,14 +242,24 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 2,
       timezone_id: 99,
-      start_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 07:00',
-      end_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 07:30',
+      start_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 07:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 07:30',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
       title: 'Take the bus from Auckland CBD',
     },
     {
@@ -248,14 +267,24 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 1,
       timezone_id: 99,
-      start_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 09:00',
-      end_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 10:00',
+      start_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 09:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 10:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
       title: 'sightseeing in Auckland',
     },
     {
@@ -263,14 +292,24 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 1,
       timezone_id: 99,
-      start_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 12:00',
-      end_time:
-        moment()
-          .add(-60, 'd')
-          .format('YYYY-MM-DD') + ' 13:00',
+      start_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 12:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(-60, 'd')
+            .format('YYYY-MM-DD') + ' 13:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
       title: 'Lunch @ Mt.Eden',
       cost: 50,
       currency_id: 12,
@@ -280,17 +319,81 @@ const createEvent = () => {
       trip_day_id: 2,
       category_id: 1,
       timezone_id: 99,
-      start_time:
-        moment()
-          .add(-59, 'd')
-          .format('YYYY-MM-DD') + ' 06:00',
-      end_time:
-        moment()
-          .add(-59, 'd')
-          .format('YYYY-MM-DD') + ' 07:00',
+      start_time: moment
+        .tz(
+          moment()
+            .add(-59, 'd')
+            .format('YYYY-MM-DD') + ' 06:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(-59, 'd')
+            .format('YYYY-MM-DD') + ' 07:00',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
       title: 'Breakfast',
       cost: 20,
       currency_id: 12,
+    },
+    {
+      user_id: 1,
+      trip_day_id: 3,
+      category_id: 1,
+      timezone_id: 99,
+      start_time: moment
+        .tz(
+          moment()
+            .add(-57, 'd')
+            .format('YYYY-MM-DD') + ' 06:30',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(-57, 'd')
+            .format('YYYY-MM-DD') + ' 07:30',
+          'Antarctica/McMurdo'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      title: 'Breakfast',
+      cost: 20,
+      currency_id: 12,
+    },
+    {
+      user_id: 1,
+      trip_day_id: 4,
+      category_id: 1,
+      timezone_id: 85,
+      start_time: moment
+        .tz(
+          moment()
+            .add(31, 'd')
+            .format('YYYY-MM-DD') + ' 07:00',
+          'Asia/Taipei'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      end_time: moment
+        .tz(
+          moment()
+            .add(31, 'd')
+            .format('YYYY-MM-DD') + ' 08:00',
+          'Asia/Taipei'
+        )
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
+      title: 'Breakfast',
+      cost: 150,
+      currency_id: 14,
     },
   ];
 
