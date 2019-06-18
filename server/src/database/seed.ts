@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import * as moment from 'moment';
 import { knex } from './knex';
 import { timezoneList } from './timezone';
 
@@ -139,8 +140,12 @@ const createTrip = () => {
       user_id: 1,
       timezone_id: 99,
       name: 'Go to New Zealand',
-      start_date: '2019-05-01',
-      end_date: '2019-05-15',
+      start_date: moment()
+        .add(-60, 'd')
+        .format('YYYY-MM-DD'),
+      end_date: moment()
+        .add(-45, 'd')
+        .format('YYYY-MM-DD'),
       destination: 'New Zealand',
       archived: false,
     },
@@ -148,9 +153,25 @@ const createTrip = () => {
       user_id: 1,
       timezone_id: 85,
       name: `Let's go to Taiwan`,
-      start_date: '2019-07-01',
-      end_date: '2019-07-15',
+      start_date: moment()
+        .add(30, 'd')
+        .format('YYYY-MM-DD'),
+      end_date: moment()
+        .add(45, 'd')
+        .format('YYYY-MM-DD'),
       destination: 'Taiwan',
+      archived: false,
+    },
+    {
+      user_id: 1,
+      timezone_id: 88,
+      start_date: moment()
+        .add(-5, 'd')
+        .format('YYYY-MM-DD'),
+      end_date: moment()
+        .add(5, 'd')
+        .format('YYYY-MM-DD'),
+      destination: 'Japan, Tokyo',
       archived: false,
     },
   ];
@@ -166,19 +187,25 @@ const createTripDay = () => {
     {
       user_id: 1,
       trip_id: 1,
-      trip_date: '2019-05-01',
+      trip_date: moment()
+        .add(-60, 'd')
+        .format('YYYY-MM-DD'),
       name: 'Trip day 1',
     },
     {
       user_id: 1,
       trip_id: 1,
-      trip_date: '2019-05-02',
+      trip_date: moment()
+        .add(-59, 'd')
+        .format('YYYY-MM-DD'),
       name: 'Trip day 2',
     },
     {
       user_id: 1,
       trip_id: 1,
-      trip_date: '2019-05-03',
+      trip_date: moment()
+        .add(-57, 'd')
+        .format('YYYY-MM-DD'),
       name: 'Trip day 3',
     },
   ];
@@ -206,8 +233,14 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 2,
       timezone_id: 99,
-      start_time: '2019-05-01 07:00',
-      end_time: '2019-05-01 07:30',
+      start_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 07:00',
+      end_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 07:30',
       title: 'Take the bus from Auckland CBD',
     },
     {
@@ -215,8 +248,14 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 1,
       timezone_id: 99,
-      start_time: '2019-05-01 09:00',
-      end_time: '2019-05-01  10:00',
+      start_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 09:00',
+      end_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 10:00',
       title: 'sightseeing in Auckland',
     },
     {
@@ -224,8 +263,14 @@ const createEvent = () => {
       trip_day_id: 1,
       category_id: 1,
       timezone_id: 99,
-      start_time: '2019-05-01 12:00',
-      end_time: '2019-05-01 13:00',
+      start_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 12:00',
+      end_time:
+        moment()
+          .add(-60, 'd')
+          .format('YYYY-MM-DD') + ' 13:00',
       title: 'Lunch @ Mt.Eden',
       cost: 50,
       currency_id: 12,
@@ -235,8 +280,14 @@ const createEvent = () => {
       trip_day_id: 2,
       category_id: 1,
       timezone_id: 99,
-      start_time: '2019-05-02 06:00',
-      end_time: '2019-05-02 07:00',
+      start_time:
+        moment()
+          .add(-59, 'd')
+          .format('YYYY-MM-DD') + ' 06:00',
+      end_time:
+        moment()
+          .add(-59, 'd')
+          .format('YYYY-MM-DD') + ' 07:00',
       title: 'Breakfast',
       cost: 20,
       currency_id: 12,
