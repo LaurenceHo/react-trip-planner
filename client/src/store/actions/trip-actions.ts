@@ -166,12 +166,14 @@ export const getTripDetail = (tripId: number) => {
                 tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
                 map(tripDay.events, (tripEvent: Event) => {
                   if (!isEmpty(tripEvent.start_time)) {
-                    tripEvent.start_time = moment(tripEvent.start_time)
+                    tripEvent.start_time = moment
+                      .utc(tripEvent.start_time)
                       .tz(timezoneObject.utc)
                       .format(DATE_TIME_FORMAT);
                   }
                   if (!isEmpty(tripEvent.end_time)) {
-                    tripEvent.end_time = moment(tripEvent.end_time)
+                    tripEvent.end_time = moment
+                      .utc(tripEvent.end_time)
                       .tz(timezoneObject.utc)
                       .format(DATE_TIME_FORMAT);
                   }
