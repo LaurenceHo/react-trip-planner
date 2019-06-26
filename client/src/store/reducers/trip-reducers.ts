@@ -18,7 +18,6 @@ export interface TripState {
 const tripList: Trip[] = [];
 const tripDetail: Trip = {
   id: 0,
-  user_id: 0,
   timezone_id: 0,
   start_date: '',
   end_date: '',

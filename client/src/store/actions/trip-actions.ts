@@ -1,4 +1,4 @@
-import { isEmpty, map } from 'lodash';
+import { isEmpty, isNumber, map } from 'lodash';
 import * as moment from 'moment-timezone';
 
 import { AnyAction } from 'redux';
@@ -313,9 +313,20 @@ const _createTripEventFailure = (message: string) => {
 
 export const createTripEvent = (payload: Event) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
+    let newPayload: Event = {
+      trip_day_id: 0,
+      category_id: 0,
+      timezone_id: 0,
+      title: '',
+    };
+    Object.keys(payload).forEach(prop => {
+      if ((isNumber(payload[prop]) && payload[prop] > 0) || !isEmpty(payload[prop])) {
+        newPayload[prop] = payload[prop];
+      }
+    });
     dispatch(creatingTripEvent());
     tripService
-      .createTripEvent(getState().trip.tripDetail.id, payload)
+      .createTripEvent(getState().trip.tripDetail.id, newPayload)
       .then((result: any) => {
         if (result.success) {
           dispatch(creatingTripEventSuccess());
