@@ -13,6 +13,7 @@ import myTheme from '../components/theme';
 import TripDayList from '../components/trip-day-list';
 import TripDetailBanner from '../components/trip-detail-banner';
 import TripEventList from '../components/trip-event-list';
+import { ErrorMessages } from '../constants/errors';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripDetail, getTripList } from '../store/actions/trip-actions';
 
@@ -73,7 +74,7 @@ class TripDetailDashboard extends React.Component<any, any> {
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={isEmpty(tripDetail.trip_day)}
                     variant='info'
-                    message='You have no trip day, please create trip day at first.'
+                    message={ErrorMessages.createTripDay.message}
                   />
                 ) : (
                   <TripEventList />

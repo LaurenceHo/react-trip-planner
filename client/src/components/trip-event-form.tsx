@@ -5,16 +5,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import TextField from '@material-ui/core/TextField';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import TextField from '@material-ui/core/TextField';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { withStyles } from '@material-ui/styles';
 import { Formik, FormikActions, FormikProps } from 'formik';
+import { isEmpty } from 'lodash';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
@@ -43,6 +45,12 @@ const styles = {
   categoryGroup: {
     margin: '0.5rem',
     'flex-direction': 'row',
+  },
+  categoryLabel: {
+    width: '15rem',
+  },
+  chip: {
+    margin: '0.25rem',
   },
 };
 
@@ -102,7 +110,6 @@ class TripEventForm extends React.Component<any, any> {
         setFieldTouched,
       } = props;
 
-      const handleDelete = (): void => {};
       const change = (name, e): void => {
         e.persist();
         handleChange(e);
@@ -110,7 +117,14 @@ class TripEventForm extends React.Component<any, any> {
       };
 
       const handleDateChange = (name: string) => (date: Moment | null): void => {
-        const dateString = moment(date).format(DATE_TIME_FORMAT);
+        const dateString = date ? moment(date).format(DATE_TIME_FORMAT) : null;
+        if (name === 'start_time' && date) {
+          const startDateMoment = moment(date);
+          const endDateMoment = end_time ? moment(end_time) : null;
+          if (startDateMoment.diff(endDateMoment, 'm') > 0 || !end_time) {
+            setFieldValue('end_time', dateString);
+          }
+        }
         setFieldValue(name, dateString);
       };
 
@@ -157,6 +171,7 @@ class TripEventForm extends React.Component<any, any> {
       return (
         <form onSubmit={handleSubmit}>
           <div className={classes.categoryGroupRoot}>
+            <FormLabel component='legend'>Category</FormLabel>
             <RadioGroup
               name='category_id'
               className={classes.categoryGroup}
@@ -168,7 +183,8 @@ class TripEventForm extends React.Component<any, any> {
                   value={c.value}
                   control={<Radio />}
                   label={categoryLabel(c.key)}
-                  labelPlacement='top'
+                  labelPlacement='end'
+                  className={classes.categoryLabel}
                 />
               ))}
             </RadioGroup>
@@ -194,6 +210,7 @@ class TripEventForm extends React.Component<any, any> {
                   value={start_time}
                   onChange={handleDateChange('start_time')}
                   format={DATE_TIME_FORMAT}
+                  clearable
                   fullWidth
                 />
               </MuiPickersUtilsProvider>
@@ -206,8 +223,9 @@ class TripEventForm extends React.Component<any, any> {
                   margin='normal'
                   value={end_time}
                   onChange={handleDateChange('end_time')}
-                  minDate={end_time}
+                  minDate={start_time ? start_time : moment().add(-10, 'years')}
                   format={DATE_TIME_FORMAT}
+                  clearable
                   fullWidth
                 />
               </MuiPickersUtilsProvider>
@@ -309,7 +327,7 @@ class TripEventForm extends React.Component<any, any> {
           <TextField
             label='Tag'
             name='tag'
-            helperText={touched.tag ? errors.tag : ''}
+            helperText='Use comma to separate tag'
             error={touched.tag && Boolean(errors.tag)}
             margin='normal'
             value={tag}
@@ -317,13 +335,12 @@ class TripEventForm extends React.Component<any, any> {
             multiline
             fullWidth
           />
-          <Chip
-            size='small'
-            label='Deletable Primary Chip'
-            onDelete={handleDelete}
-            className={classes.chip}
-            color='secondary'
-          />
+          {!isEmpty(tag) &&
+            tag
+              .split(',')
+              .map((t, index) => (
+                <Chip key={`${t}-${index}`} size='small' label={t} className={classes.chip} color='secondary' />
+              ))}
           <Grid container spacing={2} className={classes.buttonWrapper}>
             <Grid item>
               <Button variant='contained' onClick={this.handleDialogClose}>
@@ -360,13 +377,13 @@ class TripEventForm extends React.Component<any, any> {
                   category_id: '1',
                   timezone_id: this.props.tripDetail.timezone_id,
                   currency_id: 0,
-                  start_time: moment().format(DATE_TIME_FORMAT),
-                  end_time: moment().format(DATE_TIME_FORMAT),
+                  start_time: null,
+                  end_time: null,
                   title: '',
                   start_location: '',
                   end_location: '',
                   note: '',
-                  tag: '',
+                  tag: 'test1,test2',
                   cost: 0,
                 }}
                 validationSchema={eventFormValidationSchema}

@@ -21,4 +21,7 @@ export const ErrorMessages = {
   response: {
     message: 'Ooooops, there is something wrong, please try again.',
   },
+  createTripDay: {
+    message: 'You have no trip day, please create trip day at first.',
+  },
 };
