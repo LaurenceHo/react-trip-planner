@@ -13,7 +13,7 @@ import myTheme from '../components/theme';
 import TripDayList from '../components/trip-day-list';
 import TripDetailBanner from '../components/trip-detail-banner';
 import TripEventList from '../components/trip-event-list';
-import { ErrorMessages } from '../constants/errors';
+import { Messages } from '../constants/messages';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripDetail, getTripList } from '../store/actions/trip-actions';
 
@@ -74,7 +74,7 @@ class TripDetailDashboard extends React.Component<any, any> {
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={isEmpty(tripDetail.trip_day)}
                     variant='info'
-                    message={ErrorMessages.createTripDay.message}
+                    message={Messages.createTripDay.message}
                   />
                 ) : (
                   <TripEventList />

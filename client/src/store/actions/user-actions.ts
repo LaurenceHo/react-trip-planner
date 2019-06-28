@@ -2,10 +2,11 @@ import { push } from 'connected-react-router';
 import { Action, ActionCreator, AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../../constants/actions';
+import { Messages } from '../../constants/messages';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user-service';
-import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../../constants/actions';
-import { createAlert, clearAlert } from './alert-actions';
+import { clearAlert, createAlert } from './alert-actions';
 
 const userService = new UserService();
 
@@ -51,9 +52,7 @@ export const userRegister = (userLoginPayload: { username: string; email: string
       .register(userLoginPayload)
       .then((result: any) => {
         if (result.success) {
-          dispatch(
-            createAlert({ type: 'success', message: 'You are all set! Will redirect to login page in 3 secs...' })
-          );
+          dispatch(createAlert({ type: 'success', message: Messages.registerSuccess.message }));
           setTimeout(() => {
             dispatch(push('/login'));
             dispatch(clearAlert());

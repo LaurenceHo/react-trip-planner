@@ -5,7 +5,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { timezone } from '../../assets/timezone';
-import { ErrorMessages } from '../../constants/errors';
+import { Messages } from '../../constants/messages';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../constants/general';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
@@ -97,7 +97,7 @@ export const getTripList = () => {
       .getTripList(requestPayload)
       .then((result: any) => {
         if (isEmpty(result)) {
-          dispatch(_fetchTripListFailure(ErrorMessages.response.message));
+          dispatch(_fetchTripListFailure(Messages.response.message));
         } else {
           if (result.success) {
             map(result.result, (trip: Trip) => {
@@ -151,7 +151,7 @@ export const getTripDetail = (tripId: number) => {
       .getTripDetail(tripId)
       .then((tripDetailResult: any) => {
         if (isEmpty(tripDetailResult)) {
-          dispatch(_fetchTripDetailFailure(ErrorMessages.response.message));
+          dispatch(_fetchTripDetailFailure(Messages.response.message));
         } else {
           if (tripDetailResult.success) {
             const timezoneObject = timezone.find(tz => tz.id === tripDetailResult.result.timezone_id);

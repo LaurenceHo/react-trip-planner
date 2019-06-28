@@ -1,4 +1,4 @@
-export const ErrorMessages = {
+export const Messages = {
   email: {
     invalid: 'Please enter valid email',
     required: 'Email address is required',
@@ -23,5 +23,8 @@ export const ErrorMessages = {
   },
   createTripDay: {
     message: 'You have no trip day, please create trip day at first.',
+  },
+  registerSuccess: {
+    message: 'You are all set! Will be going to redirect to login page in 3 secs...',
   },
 };
