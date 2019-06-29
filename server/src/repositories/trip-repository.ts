@@ -71,8 +71,8 @@ export class TripRepository implements BaseRepository<Trip> {
         .column(columns)
         .select()
         .from('trip')
-        .where('start_date', '<', whereClauses.start_date)
-        .andWhere('end_date', '>', whereClauses.end_date)
+        .where('start_date', '<=', whereClauses.start_date)
+        .andWhere('end_date', '>=', whereClauses.end_date)
         .andWhere('archived', false)
         .orderBy('start_date') // TODO
         .then((results: Trip[]) => callback(results))
