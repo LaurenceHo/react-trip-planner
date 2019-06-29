@@ -25,7 +25,7 @@ class TripDayList extends React.Component<any, any> {
 
     return (
       <List className={classes.tripDayList}>
-        <ListItem button key='Create new day' onClick={() => this.props.openTripDayForm(true)}>
+        <ListItem button key='New Day' onClick={() => this.props.openTripDayForm(true)}>
           <ListItemIcon>
             <Icon>add</Icon>
           </ListItemIcon>

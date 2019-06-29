@@ -60,7 +60,7 @@ export class SideMenu extends React.Component<any, SideMenuState> {
         <List>
           <ListItem
             button
-            key='Create trip'
+            key='New Trip'
             onClick={() => this.props.openTripForm(true)}
             disabled={router.location.pathname !== '/dashboard'}>
             <ListItemIcon>

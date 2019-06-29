@@ -22,7 +22,7 @@ export const Messages = {
     message: 'Ooooops, there is something wrong, please try again.',
   },
   createTripDay: {
-    message: 'You have no trip day, please create trip day at first.',
+    message: 'You have no trip detail, please create trip day at first.',
   },
   registerSuccess: {
     message: 'You are all set! Will be going to redirect to login page in 3 secs...',

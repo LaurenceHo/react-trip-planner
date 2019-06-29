@@ -143,7 +143,7 @@ const _fetchTripDetailFailure = (message: string) => {
   };
 };
 
-export const getTripDetail = (tripId: number) => {
+export const getTripDetail = (tripId: number, isCreateOrUpdate: boolean) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
     dispatch(clearAlert());
     dispatch(fetchingTripDetail());
@@ -181,7 +181,7 @@ export const getTripDetail = (tripId: number) => {
                 });
                 return tripDay;
               });
-              if (getState().dashboard.selectedTripDayId === 0) {
+              if (!isCreateOrUpdate) {
                 dispatch(updateSelectedTripDayId(tripDetailResult.result.trip_day[0].id));
               }
             }
@@ -275,7 +275,7 @@ export const createTripDay = (payload: TripDay) => {
       .then((result: any) => {
         if (result.success) {
           dispatch(creatingTripDaySuccess());
-          dispatch(getTripDetail(payload.trip_id));
+          dispatch(getTripDetail(payload.trip_id, true));
         } else {
           dispatch(_createTripDayFailure(result.error));
         }
@@ -330,7 +330,7 @@ export const createTripEvent = (payload: Event) => {
       .then((result: any) => {
         if (result.success) {
           dispatch(creatingTripEventSuccess());
-          dispatch(getTripDetail(getState().trip.tripDetail.id));
+          dispatch(getTripDetail(getState().trip.tripDetail.id, true));
         } else {
           dispatch(_createTripEventFailure(result.error));
         }
