@@ -213,9 +213,16 @@ const createTripDay = () => {
       user_id: 1,
       trip_id: 2,
       trip_date: moment()
-        .add(31, 'd')
+        .add(30, 'd')
         .format('YYYY-MM-DD'),
       name: 'Taipei 1',
+    },
+    {
+      user_id: 1,
+      trip_id: 2,
+      trip_date: moment()
+        .add(31, 'd')
+        .format('YYYY-MM-DD'),
     },
   ];
 
@@ -231,7 +238,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 1,
       category_id: 4,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       title: 'Hostel in Auckland',
       note: 'Cannot refund',
       cost: 100,
@@ -241,7 +249,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 1,
       category_id: 2,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       start_time: moment
         .tz(
           moment()
@@ -266,7 +275,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 1,
       category_id: 1,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       start_time: moment
         .tz(
           moment()
@@ -291,7 +301,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 1,
       category_id: 1,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       start_time: moment
         .tz(
           moment()
@@ -318,7 +329,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 2,
       category_id: 1,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       start_time: moment
         .tz(
           moment()
@@ -345,7 +357,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 3,
       category_id: 1,
-      timezone_id: 99,
+      start_time_timezone_id: 99,
+      end_time_timezone_id: 99,
       start_time: moment
         .tz(
           moment()
@@ -372,7 +385,8 @@ const createEvent = () => {
       user_id: 1,
       trip_day_id: 4,
       category_id: 1,
-      timezone_id: 85,
+      start_time_timezone_id: 85,
+      end_time_timezone_id: 85,
       start_time: moment
         .tz(
           moment()
