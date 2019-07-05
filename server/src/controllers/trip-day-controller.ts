@@ -7,37 +7,7 @@ import { parameterIdValidation } from '../utils';
 const tripDayService = new TripDayService();
 
 export class TripDayController implements BaseController<TripDayService> {
-  retrieveDetail(req: any, res: express.Response): void {
-    try {
-      const trip_day_id: number = parameterIdValidation(req.params.trip_day_id);
-      const user_id: number = req.user.id;
-      tripDayService.retrieveDetail({ trip_day_id, user_id }, (result: TripDay, error: any) => {
-        if (error) {
-          res.status(400).send({ error: error.sqlMessage });
-        } else {
-          res.status(200).send({ success: true, result });
-        }
-      });
-    } catch (error) {
-      res.status(400).send({ error });
-    }
-  }
-
-  retrieve(req: any, res: express.Response): void {
-    try {
-      const trip_id: number = parameterIdValidation(req.params.trip_id);
-      const user_id: number = req.user.id;
-      tripDayService.retrieve(null, { trip_id, user_id }, (result: TripDay[], error: any) => {
-        if (error) {
-          res.status(400).send({ error: error.sqlMessage });
-        } else {
-          res.status(200).send({ success: true, result });
-        }
-      });
-    } catch (error) {
-      res.status(400).send({ error });
-    }
-  }
+  retrieve(req: any, res: express.Response): void {}
 
   create(req: any, res: express.Response): void {
     try {

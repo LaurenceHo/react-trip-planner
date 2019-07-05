@@ -6,24 +6,13 @@ const router = express.Router();
 const authenticationService = new AuthenticationService();
 const tripDayController = new TripDayController();
 
-router.get('/:trip_id/day', authenticationService.checkTripOwner, tripDayController.retrieve);
+/* Create trip day */
+router.post('/:trip_id/day/create', authenticationService.checkTripOwnerByUrl, tripDayController.create);
 
-router.get(
-  '/:trip_id/day/:trip_day_id',
-  authenticationService.checkTripOwner,
-  authenticationService.checkTripDayOwner,
-  tripDayController.retrieveDetail
-);
+/* Update trip day */
+router.put('/:trip_id/day/update', authenticationService.checkTripOwnerByUrl, tripDayController.update);
 
-router.post('/:trip_id/day/create', authenticationService.checkTripOwner, tripDayController.create);
-
-router.put('/:trip_id/day/update', authenticationService.checkTripOwner, tripDayController.update);
-
-router.delete(
-  '/:trip_id/day/:trip_day_id',
-  authenticationService.checkTripOwner,
-  authenticationService.checkTripDayOwner,
-  tripDayController.delete
-);
+/* Delete trip day */
+router.delete('/:trip_id/day/:trip_day_id', authenticationService.checkTripDayOwnerByUrl, tripDayController.delete);
 
 export = router;

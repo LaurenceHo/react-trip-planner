@@ -6,14 +6,16 @@ const router = express.Router();
 const authenticationService = new AuthenticationService();
 const tripController = new TripController();
 
+/* Retrieve trip list */
 router.post('', tripController.retrieve);
 
-router.get('/:trip_id', authenticationService.checkTripOwner, tripController.retrieveDetail);
+/* Retrieve trip detail including trip day and trip event */
+router.get('/:trip_id', authenticationService.checkTripOwnerByUrl, tripController.retrieveDetail);
 
+/* Create trip */
 router.post('/create', tripController.create);
 
+/* Update trip */
 router.put('/update', tripController.update);
-
-router.delete('/:trip_id', authenticationService.checkTripOwner, tripController.delete);
 
 export = router;
