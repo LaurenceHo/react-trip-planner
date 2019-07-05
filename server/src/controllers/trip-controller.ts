@@ -70,19 +70,4 @@ export class TripController implements BaseController<TripService> {
       res.status(400).send({ error });
     }
   }
-
-  delete(req: express.Request, res: express.Response): void {
-    try {
-      const id: number = parameterIdValidation(req.params.trip_id);
-      tripService.delete(id, (result: any, error: any) => {
-        if (error) {
-          res.status(400).send({ error: error.sqlMessage });
-        } else {
-          res.status(200).send({ success: true, result });
-        }
-      });
-    } catch (error) {
-      res.status(400).send({ error });
-    }
-  }
 }

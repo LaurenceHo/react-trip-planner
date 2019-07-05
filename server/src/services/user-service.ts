@@ -39,11 +39,6 @@ export class UserService implements BaseService<User> {
     userRepository.update(item, callback);
   }
 
-  delete(id: number, callback: any): void {
-    // Do nothing
-    console.log(id, callback);
-  }
-
   checkPassword(password: string, hashPassword: string): boolean {
     return bcrypt.compareSync(password, hashPassword);
   }

@@ -20,8 +20,4 @@ export class TripService implements BaseService<Trip> {
   update(item: Trip, callback: any): void {
     tripRepository.update(item, callback);
   }
-
-  delete(id: number, callback: any): void {
-    tripRepository.delete(id, callback);
-  }
 }

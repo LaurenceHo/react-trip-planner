@@ -7,8 +7,6 @@ import { parameterIdValidation } from '../utils';
 const tripDayService = new TripDayService();
 
 export class TripDayController implements BaseController<TripDayService> {
-  retrieve(req: any, res: express.Response): void {}
-
   create(req: any, res: express.Response): void {
     try {
       const tripDay: TripDay = req.body;

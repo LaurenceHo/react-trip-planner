@@ -12,7 +12,6 @@ const tripDayRepository = new TripDayRepository();
 
 export class TripRepository implements BaseRepository<Trip> {
   retrieveDetail(whereClauses: any, callback: any): void {
-    console.log('#####', whereClauses);
     let trip: Trip = null;
     const columns = ['id', 'timezone_id', 'start_date', 'end_date', 'name', 'destination', 'archived'];
     knex
@@ -84,7 +83,7 @@ export class TripRepository implements BaseRepository<Trip> {
         .from('trip')
         .where('start_date', '>', whereClauses.start_date)
         .andWhere('archived', false)
-        .orderBy('start_date') // TODO
+        .orderBy('start_date') // TODO, can be order by different column
         .then((results: Trip[]) => callback(results))
         .catch((err: any) => callback(null, err));
     } else if (isEmpty(whereClauses.start_date) && !isEmpty(whereClauses.end_date)) {
@@ -94,7 +93,7 @@ export class TripRepository implements BaseRepository<Trip> {
         .from('trip')
         .where('end_date', '<', whereClauses.end_date)
         .andWhere('archived', false)
-        .orderBy('start_date') // TODO
+        .orderBy('start_date') // TODO, can be order by different column
         .then((results: Trip[]) => callback(results))
         .catch((err: any) => callback(null, err));
     } else {
@@ -103,7 +102,7 @@ export class TripRepository implements BaseRepository<Trip> {
         .select()
         .from('trip')
         .where(whereClauses)
-        .orderBy('start_date') // TODO
+        .orderBy('start_date') // TODO, can be order by different column
         .then((results: Trip[]) => callback(results))
         .catch((err: any) => callback(null, err));
     }
@@ -121,14 +120,6 @@ export class TripRepository implements BaseRepository<Trip> {
     knex('trip')
       .where({ id: item.id, user_id: item.user_id })
       .update(item)
-      .then((result: any) => callback(result))
-      .catch((err: any) => callback(null, err));
-  }
-
-  delete(id: number, callback: any): void {
-    knex('trip')
-      .where({ id })
-      .del()
       .then((result: any) => callback(result))
       .catch((err: any) => callback(null, err));
   }

@@ -3,26 +3,11 @@ import * as jwt from 'jsonwebtoken';
 
 import { User } from '../models/user';
 import { UserService } from '../services/user-service';
+import { BaseController } from './base-controller';
 
 const userService = new UserService();
 
-export class UserController {
-  register(req: express.Request, res: express.Response): void {
-    try {
-      const newUser: User = req.body;
-      userService.create(newUser, (result: any, error: any) => {
-        if (error) {
-          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
-          res.status(400).send({ error: errorMessage });
-        } else {
-          res.status(200).send({ success: true, result });
-        }
-      });
-    } catch (error) {
-      res.status(400).send({ error });
-    }
-  }
-
+export class UserController implements BaseController<UserService> {
   login(req: express.Request, res: express.Response): void {
     try {
       const email = req.body.email;
@@ -55,6 +40,22 @@ export class UserController {
           }
         } else {
           res.status(401).json({ error: 'Authentication failed. Email or password is wrong.' });
+        }
+      });
+    } catch (error) {
+      res.status(400).send({ error });
+    }
+  }
+
+  create(req: express.Request, res: express.Response): void {
+    try {
+      const newUser: User = req.body;
+      userService.create(newUser, (result: any, error: any) => {
+        if (error) {
+          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
+          res.status(400).send({ error: errorMessage });
+        } else {
+          res.status(200).send({ success: true, result });
         }
       });
     } catch (error) {
