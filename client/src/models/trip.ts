@@ -7,6 +7,6 @@ export interface Trip {
   end_date: string;
   name?: string;
   destination: string;
-  archived: boolean;
+  archived: boolean | number;
   trip_day?: TripDay[];
 }

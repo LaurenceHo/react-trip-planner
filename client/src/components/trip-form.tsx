@@ -63,7 +63,7 @@ class TripForm extends React.Component<any, any> {
         setFieldTouched,
       } = props;
 
-      const change = (name, e): void => {
+      const change = (name: any, e: any): void => {
         e.persist();
         handleChange(e);
         setFieldTouched(name, true, false);

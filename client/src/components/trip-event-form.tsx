@@ -24,6 +24,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { Event as TripEvent } from '../models/event';
 import { currency } from '../assets/currency';
 import { timezone } from '../assets/timezone';
 import { DATE_TIME_FORMAT } from '../constants/general';
@@ -54,21 +55,6 @@ const styles = {
   },
 };
 
-interface TripEventFormTypes {
-  trip_day_id: number;
-  category_id: string;
-  timezone_id: number;
-  currency_id: number;
-  start_time: string;
-  end_time: string;
-  title: string;
-  start_location: string;
-  end_location: string;
-  note: string;
-  tag: string;
-  cost: number;
-}
-
 class TripEventForm extends React.Component<any, any> {
   handleDialogClose = (): void => {
     this.props.openTripEventForm(false);
@@ -86,11 +72,12 @@ class TripEventForm extends React.Component<any, any> {
       { value: '6', key: 'Cruise' },
     ];
 
-    const InnerForm = (props: FormikProps<TripEventFormTypes>) => {
+    const InnerForm = (props: FormikProps<TripEvent>) => {
       const {
         values: {
           category_id,
-          timezone_id,
+          start_time_timezone_id,
+          end_time_timezone_id,
           currency_id,
           start_time,
           end_time,
@@ -110,7 +97,7 @@ class TripEventForm extends React.Component<any, any> {
         setFieldTouched,
       } = props;
 
-      const change = (name, e): void => {
+      const change = (name: any, e: any): void => {
         e.persist();
         handleChange(e);
         setFieldTouched(name, true, false);
@@ -128,7 +115,7 @@ class TripEventForm extends React.Component<any, any> {
         setFieldValue(name, dateString);
       };
 
-      const categoryLabel = category => {
+      const categoryLabel = (category: string) => {
         if (category === 'Activity') {
           return (
             <div>
@@ -175,7 +162,7 @@ class TripEventForm extends React.Component<any, any> {
             <RadioGroup
               name='category_id'
               className={classes.categoryGroup}
-              value={category_id}
+              value={String(category_id)}
               onChange={change.bind(null, 'category_id')}>
               {categories.map((c: { key: string; value: string }) => (
                 <FormControlLabel
@@ -216,6 +203,31 @@ class TripEventForm extends React.Component<any, any> {
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item xs={6}>
+              <TextField
+                select
+                label='Timezone'
+                name='start_time_timezone_id'
+                margin='normal'
+                value={start_time_timezone_id}
+                onChange={change.bind(null, 'start_time_timezone_id')}
+                required
+                fullWidth
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}>
+                <MenuItem value={0}>--</MenuItem>
+                {timezone.map(tz => (
+                  <MenuItem key={tz.id} value={tz.id}>
+                    {tz.text}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <DateTimePicker
                   label='End time'
@@ -230,27 +242,30 @@ class TripEventForm extends React.Component<any, any> {
                 />
               </MuiPickersUtilsProvider>
             </Grid>
+            <Grid item xs={6}>
+              <TextField
+                select
+                label='Timezone'
+                name='end_time_timezone_id'
+                margin='normal'
+                value={end_time_timezone_id}
+                onChange={change.bind(null, 'end_time_timezone_id')}
+                required
+                fullWidth
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}>
+                <MenuItem value={0}>--</MenuItem>
+                {timezone.map(tz => (
+                  <MenuItem key={tz.id} value={tz.id}>
+                    {tz.text}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
           </Grid>
-          <TextField
-            select
-            label='Timezone'
-            name='timezone_id'
-            margin='normal'
-            value={timezone_id}
-            onChange={change.bind(null, 'timezone_id')}
-            required
-            fullWidth
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}>
-            {timezone.map(tz => (
-              <MenuItem key={tz.id} value={tz.id}>
-                {tz.text}
-              </MenuItem>
-            ))}
-          </TextField>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -317,7 +332,6 @@ class TripEventForm extends React.Component<any, any> {
             label='Note'
             name='note'
             helperText={touched.note ? errors.note : ''}
-            error={touched.note && Boolean(errors.note)}
             margin='normal'
             value={note}
             onChange={change.bind(null, 'note')}
@@ -328,7 +342,6 @@ class TripEventForm extends React.Component<any, any> {
             label='Tag'
             name='tag'
             helperText='Use comma to separate tag'
-            error={touched.tag && Boolean(errors.tag)}
             margin='normal'
             value={tag}
             onChange={change.bind(null, 'tag')}
@@ -374,8 +387,9 @@ class TripEventForm extends React.Component<any, any> {
               <Formik
                 initialValues={{
                   trip_day_id: this.props.dashboard.selectedTripDayId,
-                  category_id: '1',
-                  timezone_id: this.props.tripDetail.timezone_id,
+                  category_id: 1,
+                  start_time_timezone_id: 0,
+                  end_time_timezone_id: 0,
                   currency_id: 0,
                   start_time: null,
                   end_time: null,
@@ -383,16 +397,16 @@ class TripEventForm extends React.Component<any, any> {
                   start_location: '',
                   end_location: '',
                   note: '',
-                  tag: 'test1,test2',
+                  tag: 'tag1,tag2',
                   cost: 0,
                 }}
                 validationSchema={eventFormValidationSchema}
-                onSubmit={(values: TripEventFormTypes, actions: FormikActions<TripEventFormTypes>) => {
+                onSubmit={(values: TripEvent, actions: FormikActions<TripEvent>) => {
                   actions.setSubmitting(false);
                   this.props.createTripEvent(values);
                   this.handleDialogClose();
                 }}
-                render={(props: FormikProps<TripEventFormTypes>) => <InnerForm {...props} />}
+                render={(props: FormikProps<TripEvent>) => <InnerForm {...props} />}
               />
             </DialogContent>
           </Dialog>

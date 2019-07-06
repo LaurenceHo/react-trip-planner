@@ -1,5 +1,4 @@
 import { ApiService } from './api-service';
-import { Event } from '../models/event';
 import { Trip } from '../models/trip';
 import { TripDay } from '../models/trip-day';
 
@@ -43,19 +42,6 @@ export class TripService {
     );
   }
 
-  createTripEvent(tripId: number, requestBody: Event): any {
-    const searchParams = {};
-    const formParams = {};
-
-    return this.apiService.perform(
-      'POST',
-      `${SERVER_URL}/trip/${tripId}/day/${requestBody.trip_day_id}/event/create`,
-      requestBody,
-      searchParams,
-      formParams
-    );
-  }
-
   updateTrip(requestBody: Trip): any {
     const searchParams = {};
     const formParams = {};
@@ -63,13 +49,27 @@ export class TripService {
     return this.apiService.perform('PUT', `${SERVER_URL}/trip/update`, requestBody, searchParams, formParams);
   }
 
-  updateTripEvent(tripId: number, requestBody: Event): any {
+  updateTripDay(requestBody: TripDay): any {
     const searchParams = {};
     const formParams = {};
 
     return this.apiService.perform(
       'PUT',
-      `${SERVER_URL}/trip/${tripId}/day/${requestBody.trip_day_id}/event/update`,
+      `${SERVER_URL}/trip/${requestBody.trip_id}/day/update`,
+      requestBody,
+      searchParams,
+      formParams
+    );
+  }
+
+  deleteTripDay(tripDayId: number): any {
+    const requestBody = {};
+    const searchParams = {};
+    const formParams = {};
+
+    return this.apiService.perform(
+      'DELETE',
+      `${SERVER_URL}/trip/day/${tripDayId}`,
       requestBody,
       searchParams,
       formParams
