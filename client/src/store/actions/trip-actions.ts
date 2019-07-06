@@ -318,6 +318,15 @@ const _createEventRequestPayload = (payload: Event) => {
 export const createTripEvent = (payload: Event) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: any) => {
     const newPayload = _createEventRequestPayload(payload);
+
+    if (newPayload.start_time && !newPayload.start_time_timezone_id) {
+      newPayload.start_time_timezone_id = getState.tripDetail.timezone_id;
+    }
+
+    if (newPayload.end_time && !newPayload.end_time_timezone_id) {
+      newPayload.start_time_timezone_id = getState.tripDetail.timezone_id;
+    }
+
     dispatch(creatingTripEvent());
     eventService
       .createTripEvent(newPayload)
