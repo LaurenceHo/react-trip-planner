@@ -33,13 +33,7 @@ export class TripService {
     const searchParams = {};
     const formParams = {};
 
-    return this.apiService.perform(
-      'POST',
-      `${SERVER_URL}/trip/${requestBody.trip_id}/day/create`,
-      requestBody,
-      searchParams,
-      formParams
-    );
+    return this.apiService.perform('POST', `${SERVER_URL}/trip/day/create`, requestBody, searchParams, formParams);
   }
 
   updateTrip(requestBody: Trip): any {
@@ -53,13 +47,7 @@ export class TripService {
     const searchParams = {};
     const formParams = {};
 
-    return this.apiService.perform(
-      'PUT',
-      `${SERVER_URL}/trip/${requestBody.trip_id}/day/update`,
-      requestBody,
-      searchParams,
-      formParams
-    );
+    return this.apiService.perform('PUT', `${SERVER_URL}/trip/day/update`, requestBody, searchParams, formParams);
   }
 
   deleteTripDay(tripDayId: number): any {

@@ -38,24 +38,49 @@ export class AuthenticationService {
     }
   }
 
+  checkTripOwnerByPayload(req: any, res: any, next: any): void {
+    if (req.user) {
+      try {
+        const tripDay: TripDay = req.body;
+        if (tripDay.trip_id) {
+          const id: number = parameterIdValidation(tripDay.trip_id);
+          tripRepository.retrieve(['user_id'], { id }, (trips: Trip[], error: any) => {
+            if (error) {
+              res.status(400).send({ error });
+            }
+            if (!_.isEmpty(trips)) {
+              if (trips[0].user_id !== req.user.id) {
+                res.status(403).send({ error: 'You have no permission' });
+              } else {
+                if (tripDay.id) {
+                  // Update trip day
+                  const id: number = parameterIdValidation(tripDay.id);
+                  this._checkTripDayOwner(id, res, req, next);
+                } else {
+                  // Create trip day
+                  next();
+                }
+              }
+            } else {
+              res.status(404).send({ error: 'Not found' });
+            }
+          });
+        } else {
+          res.status(404).send({ error: 'Not found' });
+        }
+      } catch (error) {
+        res.status(400).send({ error });
+      }
+    } else {
+      res.status(401).send({ error: 'Please login first' });
+    }
+  }
+
   checkTripDayOwnerByUrl(req: any, res: any, next: any): void {
     if (req.user) {
       try {
         const id: number = parameterIdValidation(req.params.trip_day_id);
-        tripDayRepository.retrieve(['user_id'], { id }, (tripDays: TripDay[], error: any) => {
-          if (error) {
-            res.status(400).send({ error });
-          }
-          if (!_.isEmpty(tripDays)) {
-            if (tripDays[0].user_id !== req.user.id) {
-              res.status(403).send({ error: 'You have no permission' });
-            } else {
-              next();
-            }
-          } else {
-            res.status(404).send({ error: 'Not found' });
-          }
-        });
+        this._checkTripDayOwner(id, res, req, next);
       } catch (error) {
         res.status(400).send({ error });
       }
@@ -67,21 +92,8 @@ export class AuthenticationService {
   checkEventOwnerByUrl(req: any, res: any, next: any): void {
     if (req.user) {
       try {
-        const id: number = parameterIdValidation(req.params.event_id);
-        eventRepository.retrieve(['user_id'], { id }, (events: TripEvent[], error: any) => {
-          if (error) {
-            res.status(400).send({ error });
-          }
-          if (!_.isEmpty(events)) {
-            if (events[0].user_id !== req.user.id) {
-              res.status(403).send({ error: 'You have no permission' });
-            } else {
-              next();
-            }
-          } else {
-            res.status(404).send({ error: 'Not found' });
-          }
-        });
+        const eventId: number = parameterIdValidation(req.params.event_id);
+        this._checkTripEventOwner(eventId, res, req, next);
       } catch (error) {
         res.status(400).send({ error });
       }
@@ -95,6 +107,7 @@ export class AuthenticationService {
       try {
         const event: TripEvent = req.body;
         if (event.trip_day_id) {
+          // Update or create trip event based on trip day
           const tripDayId: number = parameterIdValidation(event.trip_day_id);
           tripDayRepository.retrieve(['user_id'], { id: tripDayId }, (tripDays: TripDay[], error: any) => {
             if (error) {
@@ -105,22 +118,11 @@ export class AuthenticationService {
                 res.status(403).send({ error: 'You have no permission' });
               } else {
                 if (event.id) {
+                  // Update trip event
                   const eventId: number = parameterIdValidation(event.id);
-                  eventRepository.retrieve(['user_id'], { id: eventId }, (events: TripEvent[], error: any) => {
-                    if (error) {
-                      res.status(400).send({ error });
-                    }
-                    if (!_.isEmpty(events)) {
-                      if (events[0].user_id !== req.user.id) {
-                        res.status(403).send({ error: 'You have no permission' });
-                      } else {
-                        next();
-                      }
-                    } else {
-                      res.status(404).send({ error: 'Not found' });
-                    }
-                  });
+                  this._checkTripEventOwner(eventId, res, req, next);
                 } else {
+                  // Create trip event
                   next();
                 }
               }
@@ -137,5 +139,39 @@ export class AuthenticationService {
     } else {
       res.status(401).send({ error: 'Please login first' });
     }
+  }
+
+  private _checkTripDayOwner(id: number, res: any, req: any, next: any) {
+    tripDayRepository.retrieve(['user_id'], { id }, (tripDays: TripDay[], error: any) => {
+      if (error) {
+        res.status(400).send({ error });
+      }
+      if (!_.isEmpty(tripDays)) {
+        if (tripDays[0].user_id !== req.user.id) {
+          res.status(403).send({ error: 'You have no permission' });
+        } else {
+          next();
+        }
+      } else {
+        res.status(404).send({ error: 'Not found' });
+      }
+    });
+  }
+
+  private _checkTripEventOwner(id: number, res: any, req: any, next: any) {
+    eventRepository.retrieve(['user_id'], { id }, (events: TripEvent[], error: any) => {
+      if (error) {
+        res.status(400).send({ error });
+      }
+      if (!_.isEmpty(events)) {
+        if (events[0].user_id !== req.user.id) {
+          res.status(403).send({ error: 'You have no permission' });
+        } else {
+          next();
+        }
+      } else {
+        res.status(404).send({ error: 'Not found' });
+      }
+    });
   }
 }

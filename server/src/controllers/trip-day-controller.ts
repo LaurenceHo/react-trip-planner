@@ -10,7 +10,6 @@ export class TripDayController implements BaseController<TripDayService> {
   create(req: any, res: express.Response): void {
     try {
       const tripDay: TripDay = req.body;
-      tripDay.trip_id = parameterIdValidation(req.params.trip_id);
       tripDay.user_id = req.user.id;
       tripDayService.create(tripDay, (result: any, error: any) => {
         if (error) {
@@ -27,7 +26,6 @@ export class TripDayController implements BaseController<TripDayService> {
   update(req: any, res: express.Response): void {
     try {
       const tripDay: TripDay = req.body;
-      tripDay.trip_id = parameterIdValidation(req.params.trip_id);
       tripDay.user_id = req.user.id;
       tripDayService.update(tripDay, (result: any, error: any) => {
         if (error) {

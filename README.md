@@ -53,14 +53,14 @@ and visit in your browser: `http://localhost:8080`, use the above credential to 
 3.  createTrip            (POST)   http://localhost:3000/api/trip/create
 4.  updateTrip            (PUT)    http://localhost:3000/api/trip/update
 
-5.  createTripDay         (POST)   http://localhost:3000/api/trip/:trip_id/day/create
-6.  updateTripDay         (PUT)    http://localhost:3000/api/trip/:trip_id/day/update
-7.  deleteTripDay         (DELETE) http://localhost:3000/api/trip/:trip_id/day/:trip_day_id
+5.  createTripDay         (POST)   http://localhost:3000/api/trip/day/create
+6.  updateTripDay         (PUT)    http://localhost:3000/api/trip/day/update
+7.  deleteTripDay         (DELETE) http://localhost:3000/api/trip/day/:trip_day_id
 
 8.  retrieveEvents        (POST)   http://localhost:3000/api/event
-9.  createEvent          (POST)   http://localhost:3000/api/trip/:trip_id/day/:trip_day_id/event/create
-10.  updateEvent          (PUT)    http://localhost:3000/api/trip/:trip_id/day/:trip_day_id/event/update
-11.  deleteEvent          (DELETE) http://localhost:3000/api/trip/:trip_id/day/:trip_day_id/event/:event_id
+9.  createEvent          (POST)   http://localhost:3000/api/event/create
+10.  updateEvent          (PUT)    http://localhost:3000/api/event/update
+11.  deleteEvent          (DELETE) http://localhost:3000/api/event/:event_id
 
 12. userRegister          (POST)   http://localhost:3000/api/user/register
 13. userLogin             (POST)   http://localhost:3000/api/user/login

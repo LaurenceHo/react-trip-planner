@@ -7,12 +7,12 @@ const authenticationService = new AuthenticationService();
 const tripDayController = new TripDayController();
 
 /* Create trip day */
-router.post('/:trip_id/day/create', authenticationService.checkTripOwnerByUrl, tripDayController.create);
+router.post('/day/create', authenticationService.checkTripOwnerByPayload, tripDayController.create);
 
 /* Update trip day */
-router.put('/:trip_id/day/update', authenticationService.checkTripOwnerByUrl, tripDayController.update);
+router.put('/day/update', authenticationService.checkTripOwnerByPayload, tripDayController.update);
 
 /* Delete trip day */
-router.delete('/:trip_id/day/:trip_day_id', authenticationService.checkTripDayOwnerByUrl, tripDayController.delete);
+router.delete('/day/:trip_day_id', authenticationService.checkTripDayOwnerByUrl, tripDayController.delete);
 
 export = router;
