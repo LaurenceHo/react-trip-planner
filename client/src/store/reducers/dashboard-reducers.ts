@@ -1,10 +1,4 @@
-import {
-  OPEN_TRIP_EVENT_FORM,
-  OPEN_TRIP_DAY_FORM,
-  OPEN_TRIP_FORM,
-  UPDATE_SELECTED_TRIP_DAY_ID,
-  SET_SIDE_MENU,
-} from '../../constants/actions';
+import { Actions } from '../../constants/actions';
 
 export interface DashboardState {
   edit: {
@@ -34,31 +28,31 @@ const initialState: DashboardState = {
 
 export const dashboardReducers = (state: DashboardState = initialState, action: any) => {
   switch (action.type) {
-    case SET_SIDE_MENU:
+    case Actions.SET_SIDE_MENU:
       return {
         ...state,
         currentMenu: action.menu,
       };
 
-    case UPDATE_SELECTED_TRIP_DAY_ID:
+    case Actions.UPDATE_SELECTED_TRIP_DAY_ID:
       return {
         ...state,
         selectedTripDayId: action.tripDayId,
       };
 
-    case OPEN_TRIP_FORM:
+    case Actions.OPEN_TRIP_FORM:
       return {
         ...state,
         openTripForm: action.payload,
       };
 
-    case OPEN_TRIP_DAY_FORM:
+    case Actions.OPEN_TRIP_DAY_FORM:
       return {
         ...state,
         openTripDayForm: action.payload,
       };
 
-    case OPEN_TRIP_EVENT_FORM:
+    case Actions.OPEN_TRIP_EVENT_FORM:
       return {
         ...state,
         openTripEventForm: action.payload,

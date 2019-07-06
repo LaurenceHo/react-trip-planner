@@ -1,15 +1,15 @@
 import { Action, ActionCreator } from 'redux';
-import { CLEAR_ALERT, CREATE_ALERT } from '../../constants/actions';
+import { Actions } from '../../constants/actions';
 
 export const clearAlert: ActionCreator<Action> = () => {
   return {
-    type: CLEAR_ALERT,
+    type: Actions.CLEAR_ALERT,
   };
 };
 
 export const createAlert: ActionCreator<Action> = (alert: { type: string; message: string }) => {
   return {
-    type: CREATE_ALERT,
+    type: Actions.CREATE_ALERT,
     alert,
   };
 };

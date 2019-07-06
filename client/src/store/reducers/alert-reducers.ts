@@ -1,4 +1,4 @@
-import { CLEAR_ALERT, CREATE_ALERT } from '../../constants/actions';
+import { Actions } from '../../constants/actions';
 
 export interface AlertState {
   type: 'success' | 'warning' | 'error' | 'info';
@@ -12,13 +12,13 @@ const initialState: AlertState = {
 
 export const alertReducers = (state: AlertState = initialState, action: any) => {
   switch (action.type) {
-    case CLEAR_ALERT:
+    case Actions.CLEAR_ALERT:
       return {
         type: null,
         message: null,
       };
 
-    case CREATE_ALERT:
+    case Actions.CREATE_ALERT:
       return {
         type: action.alert.type,
         message: action.alert.message,

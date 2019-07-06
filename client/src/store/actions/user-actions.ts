@@ -2,7 +2,7 @@ import { push } from 'connected-react-router';
 import { Action, ActionCreator, AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { USER_LOGIN_FAILURE, USER_LOGIN_SUCCESS } from '../../constants/actions';
+import { Actions } from '../../constants/actions';
 import { Messages } from '../../constants/messages';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user-service';
@@ -12,14 +12,14 @@ const userService = new UserService();
 
 export const userLoginSuccess: ActionCreator<Action> = (userAccount: User) => {
   return {
-    type: USER_LOGIN_SUCCESS,
+    type: Actions.USER_LOGIN_SUCCESS,
     userAccount,
   };
 };
 
 export const userLoginFailure: ActionCreator<Action> = () => {
   return {
-    type: USER_LOGIN_FAILURE,
+    type: Actions.USER_LOGIN_FAILURE,
   };
 };
 
