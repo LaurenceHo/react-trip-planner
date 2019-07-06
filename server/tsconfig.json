@@ -3,28 +3,16 @@
     "allowJs": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [
-      "es2015",
-      "dom"
-    ],
+    "lib": ["es2015", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "outDir": "../dist/server",
     "skipLibCheck": true,
     "sourceMap": true,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types/"
-    ]
+    "target": "es5"
   },
   "compileOnSave": true,
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "../node_modules/*",
-    "../dist",
-    "../client/*"
-  ]
+  "include": ["./src/**/*"]
 }
