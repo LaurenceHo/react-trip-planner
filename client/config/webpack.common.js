@@ -12,7 +12,6 @@ module.exports = {
     publicPath: '/',
   },
   resolve: {
-    modules: [path.join(__dirname, '../dist/client'), 'node_modules'],
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   module: {

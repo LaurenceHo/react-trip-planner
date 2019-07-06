@@ -12,6 +12,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
     hot: true,
     inline: true,
+    port: 8080,
   },
   plugins: [
     new HotModuleReplacementPlugin(),
