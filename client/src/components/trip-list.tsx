@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { Trip } from '../models/trip';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripList } from '../store/actions/trip-actions';
 import { SnackbarComponent } from './snackbar';
@@ -76,7 +77,7 @@ class TripList extends React.Component<any, any> {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tripList.map(trip => (
+                {tripList.map((trip: Trip) => (
                   <TableRow key={trip.id}>
                     <TableCell align='center'>{trip.name}</TableCell>
                     <TableCell align='center'>{`${trip.start_date} ~ ${trip.end_date}`}</TableCell>

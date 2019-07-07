@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { TripDay } from '../models/trip-day';
 import { openTripDayForm, updateSelectedTripDayId } from '../store/actions/dashboard-actions';
 
 const styles = {
@@ -32,7 +33,7 @@ class TripDayList extends React.Component<any, any> {
           <ListItemText primary='New Day' />
         </ListItem>
         {!isEmpty && <Divider />}
-        {tripDetail.trip_day.map(tripDay => (
+        {tripDetail.trip_day.map((tripDay: TripDay) => (
           <ListItem
             button
             key={tripDay.id}

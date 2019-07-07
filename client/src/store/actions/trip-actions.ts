@@ -1,12 +1,11 @@
-import { isEmpty, map } from 'lodash';
+import { cloneDeep, isEmpty, map } from 'lodash';
 import * as moment from 'moment-timezone';
-
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { timezone } from '../../assets/timezone';
 import { Actions } from '../../constants/actions';
-import { DATE_FORMAT, DATE_TIME_TZ_FORMAT } from '../../constants/general';
+import { DATE_FORMAT, DATE_TIME_FORMAT, DATE_TIME_TZ_FORMAT } from '../../constants/general';
 import { Messages } from '../../constants/messages';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
@@ -296,36 +295,53 @@ const _createTripEventFailure = (message: string) => {
   };
 };
 
-const _createEventRequestPayload = (payload: Event) => {
+const _createEventRequestPayload = (payload: Event, state: any) => {
+  let newPayload = cloneDeep(payload);
+
   Object.keys(payload).forEach(prop => {
-    if (prop === 'start_time' || prop === 'end_time') {
-      if (isEmpty(payload[prop])) {
-        payload[prop] = null;
+    if (prop === 'start_time') {
+      if (newPayload.start_time) {
+        newPayload.start_time_timezone_id = payload.start_time_timezone_id
+          ? payload.start_time_timezone_id
+          : state.tripDetail.timezone_id;
+        const startTimeTimezone = timezone.find(tz => tz.id === newPayload.start_time_timezone_id);
+        newPayload.start_time = moment
+          .tz(moment(payload.start_time).format(DATE_TIME_FORMAT), startTimeTimezone.utc)
+          .utc()
+          .format(DATE_TIME_FORMAT);
+      } else {
+        newPayload.start_time = null;
       }
-    } else if (prop === 'currency_id' && payload[prop] === 0) {
-      payload[prop] = null;
-    } else if (prop === 'start_time_timezone_id' && payload[prop] === 0) {
-      payload[prop] = null;
-    } else if (prop === 'end_time_timezone_id' && payload[prop] === 0) {
-      payload[prop] = null;
-    } else if (prop === 'cost' && isEmpty(payload[prop])) {
-      payload[prop] = null;
+    } else if (prop === 'end_time') {
+      if (newPayload.end_time) {
+        newPayload.end_time_timezone_id = payload.end_time_timezone_id
+          ? payload.end_time_timezone_id
+          : state.tripDetail.timezone_id;
+        const endTimeTimezone = timezone.find(tz => tz.id === newPayload.end_time_timezone_id);
+        newPayload.end_time = moment
+          .tz(moment(payload.end_time).format(DATE_TIME_FORMAT), endTimeTimezone.utc)
+          .utc()
+          .format(DATE_TIME_FORMAT);
+      } else {
+        newPayload.end_time = null;
+      }
+    } else if (prop === 'currency_id' && newPayload.currency_id === 0) {
+      newPayload.currency_id = null;
+    } else if (prop === 'start_time_timezone_id' && newPayload.start_time_timezone_id === 0) {
+      newPayload.start_time_timezone_id = null;
+    } else if (prop === 'end_time_timezone_id' && newPayload.end_time_timezone_id === 0) {
+      newPayload.end_time_timezone_id = null;
+    } else if (prop === 'cost' && isEmpty(newPayload.cost)) {
+      newPayload.cost = null;
     }
   });
-  return payload;
+
+  return newPayload;
 };
 
 export const createTripEvent = (payload: Event) => {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: any) => {
-    const newPayload = _createEventRequestPayload(payload);
-
-    if (newPayload.start_time && !newPayload.start_time_timezone_id) {
-      newPayload.start_time_timezone_id = getState.tripDetail.timezone_id;
-    }
-
-    if (newPayload.end_time && !newPayload.end_time_timezone_id) {
-      newPayload.start_time_timezone_id = getState.tripDetail.timezone_id;
-    }
+    const newPayload = _createEventRequestPayload(payload, getState);
 
     dispatch(creatingTripEvent());
     eventService

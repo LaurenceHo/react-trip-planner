@@ -67,7 +67,7 @@ class Register extends React.Component<any, any> {
         setFieldTouched,
       } = props;
 
-      const change = (name, e) => {
+      const change = (name: any, e: any) => {
         e.persist();
         handleChange(e);
         setFieldTouched(name, true, false);

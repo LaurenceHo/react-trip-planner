@@ -34,7 +34,7 @@ class TripEventList extends React.Component<any, any> {
     const { classes, selectedTripDayId, tripDetail } = this.props;
     let tripDay: TripDay = null;
     if (!isEmpty(tripDetail.trip_day)) {
-      tripDay = tripDetail.trip_day.find(tripDay => tripDay.id === selectedTripDayId);
+      tripDay = tripDetail.trip_day.find((tripDay: TripDay) => tripDay.id === selectedTripDayId);
     }
 
     return (
