@@ -151,7 +151,8 @@ export const schema = () => {
           table.foreign('trip_day_id').references('trip_day.id');
           table.foreign('category_id').references('category.id');
           table.foreign('user_id').references('user.id');
-          table.foreign('timezone_id').references('timezone.id');
+          table.foreign('start_time_timezone_id').references('timezone.id');
+          table.foreign('end_time_timezone_id').references('timezone.id');
           table.foreign('currency_id').references('currency.id');
         })
         .catch((err: any) => console.error(err));
