@@ -9,11 +9,12 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
 import { getTripList } from '../store/actions/trip-actions';
+import { RootState } from '../store/types';
 
 interface SideMenuState {
   expendListOpen: boolean;
@@ -116,7 +117,7 @@ interface SideMenuProps {
   isDrawerOpen: boolean;
 }
 
-const mapStateToProps = (state: any, sideMenuProps: SideMenuProps) => {
+const mapStateToProps = (state: RootState, sideMenuProps: SideMenuProps) => {
   return {
     router: state.router,
     dashboard: state.dashboard,
@@ -124,7 +125,7 @@ const mapStateToProps = (state: any, sideMenuProps: SideMenuProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       setSideMenu,

@@ -11,11 +11,12 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { openTripDayForm } from '../store/actions/dashboard-actions';
 import { createTripDay } from '../store/actions/trip-actions';
+import { RootState } from '../store/types';
 
 const styles = {
   menu: {
@@ -133,14 +134,14 @@ class TripDayForm extends React.Component<any, TripDayFormState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     dashboard: state.dashboard,
     tripDetail: state.trip.tripDetail,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       openTripDayForm,

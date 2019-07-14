@@ -21,7 +21,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { Event as TripEvent } from '../models/event';
@@ -31,6 +31,7 @@ import { DATE_TIME_FORMAT } from '../constants/general';
 import { eventFormValidationSchema } from '../constants/validation';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
 import { createTripEvent } from '../store/actions/trip-actions';
+import { RootState } from '../store/types';
 import myTheme from './theme';
 
 const styles = {
@@ -416,14 +417,14 @@ class TripEventForm extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     dashboard: state.dashboard,
     tripDetail: state.trip.tripDetail,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       openTripEventForm,

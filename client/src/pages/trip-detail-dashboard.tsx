@@ -42,7 +42,7 @@ class TripDetailDashboard extends React.Component<any, any> {
   }
 
   render() {
-    const { alert, isLoading, tripDetail, classes } = this.props;
+    const { alert, isLoading, tripDayList, classes } = this.props;
     return (
       <MuiThemeProvider theme={myTheme}>
         {isLoading ? (
@@ -68,11 +68,11 @@ class TripDetailDashboard extends React.Component<any, any> {
                 <TripDayList />
               </Grid>
               <Grid item xs={10}>
-                {isEmpty(tripDetail.trip_day) ? (
+                {isEmpty(tripDayList) ? (
                   <SnackbarComponent
                     outerClassName={classes.snackbar}
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={isEmpty(tripDetail.trip_day)}
+                    open={isEmpty(tripDayList)}
                     variant='info'
                     message={Messages.createTripDay.message}
                   />
@@ -91,9 +91,9 @@ class TripDetailDashboard extends React.Component<any, any> {
 const mapStateToProps = (state: any) => {
   return {
     alert: state.alert,
-    isLoading: state.trip.isLoadingTripDetail,
+    isLoading: state.trip.isLoading,
     tripList: state.trip.tripList,
-    tripDetail: state.trip.tripDetail,
+    tripDayList: state.trip.tripDetail.trip_day,
   };
 };
 

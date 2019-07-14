@@ -10,6 +10,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import * as moment from 'moment';
+import { RootState } from '../store/types';
 
 import myTheme from './theme';
 
@@ -57,7 +58,7 @@ class TripDetailBanner extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     tripDetail: state.trip.tripDetail,
   };

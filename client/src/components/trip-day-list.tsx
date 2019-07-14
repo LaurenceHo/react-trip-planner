@@ -8,11 +8,12 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { TripDay } from '../models/trip-day';
 import { openTripDayForm, updateSelectedTripDayId } from '../store/actions/dashboard-actions';
+import { RootState } from '../store/types';
 
 const styles = {
   tripDayList: {
@@ -22,7 +23,7 @@ const styles = {
 
 class TripDayList extends React.Component<any, any> {
   render() {
-    const { classes, dashboard, tripDetail } = this.props;
+    const { classes, dashboard, tripDayList } = this.props;
 
     return (
       <List className={classes.tripDayList}>
@@ -33,7 +34,7 @@ class TripDayList extends React.Component<any, any> {
           <ListItemText primary='New Day' />
         </ListItem>
         {!isEmpty && <Divider />}
-        {tripDetail.trip_day.map((tripDay: TripDay) => (
+        {tripDayList.map((tripDay: TripDay) => (
           <ListItem
             button
             key={tripDay.id}
@@ -50,14 +51,14 @@ class TripDayList extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     dashboard: state.dashboard,
-    tripDetail: state.trip.tripDetail,
+    tripDayList: state.trip.tripDetail.trip_day,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       openTripDayForm,

@@ -12,38 +12,34 @@ import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
 import { EventService } from '../../services/event-service';
 import { TripService } from '../../services/trip-service';
+import { RootState } from '../types';
 import { clearAlert, createAlert } from './alert-actions';
 import { updateSelectedTripDayId } from './dashboard-actions';
 
 const eventService = new EventService();
 const tripService = new TripService();
-export const fetchingTripList = () => {
-  return {
-    type: Actions.FETCHING_TRIP_LIST,
-  };
+
+export const _parseToLocalTime = (tripEvent: Event, timezoneId: number): Event => {
+  if (!isEmpty(tripEvent.start_time)) {
+    const startTimeTimezoneId = tripEvent.start_time_timezone_id || timezoneId;
+    const startTimeTimezone = timezone.find(tz => tz.id === startTimeTimezoneId);
+    tripEvent.start_time = moment
+      .utc(tripEvent.start_time)
+      .tz(startTimeTimezone.utc)
+      .format(DATE_TIME_TZ_FORMAT);
+  }
+  if (!isEmpty(tripEvent.end_time)) {
+    const endTimeTimezoneId = tripEvent.end_time_timezone_id || timezoneId;
+    const endTimeTimezone = timezone.find(tz => tz.id === endTimeTimezoneId);
+    tripEvent.end_time = moment
+      .utc(tripEvent.end_time)
+      .tz(endTimeTimezone.utc)
+      .format(DATE_TIME_TZ_FORMAT);
+  }
+  return tripEvent;
 };
 
-export const fetchingTripListFailure = () => {
-  return {
-    type: Actions.FETCHING_TRIP_LIST_FAILURE,
-  };
-};
-
-export const fetchingTripListSuccess = (tripList: Trip[]) => {
-  return {
-    type: Actions.FETCHING_TRIP_LIST_SUCCESS,
-    tripList,
-  };
-};
-
-const _fetchTripListFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch(fetchingTripListFailure());
-    dispatch(createAlert({ type: 'error', message }));
-  };
-};
-
-const _generateGetTripListPayload = (currentMenu: string) => {
+const _generateGetTripListPayload = (currentMenu: 'archived' | 'current' | 'upcoming' | 'past') => {
   let requestBody = null;
   if (currentMenu === 'archived') {
     requestBody = {
@@ -73,27 +69,93 @@ const _generateGetTripListPayload = (currentMenu: string) => {
   return requestBody;
 };
 
+const _createEventRequestPayload = (payload: Event, state: RootState) => {
+  let newPayload = cloneDeep(payload);
+  Object.keys(newPayload).forEach(prop => {
+    // Convert to UTC date time string before sending request to server
+    if (prop === 'start_time') {
+      if (newPayload.start_time) {
+        newPayload.start_time_timezone_id = payload.start_time_timezone_id
+          ? payload.start_time_timezone_id
+          : state.trip.tripDetail.timezone_id;
+        const startTimeTimezone = timezone.find(tz => tz.id === newPayload.start_time_timezone_id);
+        newPayload.start_time = moment
+          .tz(moment(payload.start_time).format(DATE_TIME_FORMAT), startTimeTimezone.utc)
+          .utc()
+          .format(DATE_TIME_FORMAT);
+      } else {
+        newPayload.start_time = null;
+      }
+    } else if (prop === 'end_time') {
+      if (newPayload.end_time) {
+        newPayload.end_time_timezone_id = payload.end_time_timezone_id
+          ? payload.end_time_timezone_id
+          : state.trip.tripDetail.timezone_id;
+        const endTimeTimezone = timezone.find(tz => tz.id === newPayload.end_time_timezone_id);
+        newPayload.end_time = moment
+          .tz(moment(payload.end_time).format(DATE_TIME_FORMAT), endTimeTimezone.utc)
+          .utc()
+          .format(DATE_TIME_FORMAT);
+      } else {
+        newPayload.end_time = null;
+      }
+    } else if (prop === 'currency_id' && newPayload.currency_id === 0) {
+      newPayload.currency_id = null;
+    } else if (prop === 'start_time_timezone_id' && newPayload.start_time_timezone_id === 0) {
+      newPayload.start_time_timezone_id = null;
+    } else if (prop === 'end_time_timezone_id' && newPayload.end_time_timezone_id === 0) {
+      newPayload.end_time_timezone_id = null;
+    } else if (prop === 'cost' && isEmpty(newPayload.cost)) {
+      newPayload.cost = null;
+    }
+  });
+
+  return newPayload;
+};
+
+export const fetchingTripList = () => {
+  return {
+    type: Actions.FETCHING_TRIP_LIST,
+  };
+};
+
+export const fetchingTripListFailure = () => {
+  return {
+    type: Actions.FETCHING_TRIP_LIST_FAILURE,
+  };
+};
+
+export const fetchingTripListSuccess = (tripList: Trip[]) => {
+  return {
+    type: Actions.FETCHING_TRIP_LIST_SUCCESS,
+    tripList,
+  };
+};
+
+const _fetchTripListFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(fetchingTripListFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
 export const getTripList = () => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: any) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>, getState: any) => {
     dispatch(clearAlert());
     dispatch(fetchingTripList());
     const requestPayload = _generateGetTripListPayload(getState().dashboard.currentMenu);
     tripService
       .getTripList(requestPayload)
-      .then((result: any) => {
-        if (isEmpty(result)) {
-          dispatch(_fetchTripListFailure(Messages.response.message));
+      .then((result: { success: boolean; result: Trip[] }) => {
+        if (result.success) {
+          map(result.result, (trip: Trip) => {
+            trip.start_date = moment(trip.start_date).format(DATE_FORMAT);
+            trip.end_date = moment(trip.end_date).format(DATE_FORMAT);
+            return trip;
+          });
+          dispatch(fetchingTripListSuccess(result.result));
         } else {
-          if (result.success) {
-            map(result.result, (trip: Trip) => {
-              trip.start_date = moment(trip.start_date).format(DATE_FORMAT);
-              trip.end_date = moment(trip.end_date).format(DATE_FORMAT);
-              return trip;
-            });
-            dispatch(fetchingTripListSuccess(result.result));
-          } else {
-            dispatch(_fetchTripListFailure(result.error));
-          }
+          dispatch(_fetchTripListFailure(Messages.response.message));
         }
       })
       .catch((error: any) => {
@@ -122,58 +184,36 @@ export const fetchingTripDetailSuccess = (tripDetail: Trip) => {
 };
 
 const _fetchTripDetailFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(fetchingTripDetailFailure());
     dispatch(createAlert({ type: 'error', message }));
   };
 };
 
-export const getTripDetail = (tripId: number, isCreateOrUpdate: boolean) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+export const getTripDetail = (tripId: number) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(clearAlert());
     dispatch(fetchingTripDetail());
     tripService
       .getTripDetail(tripId)
-      .then((tripDetailResult: any) => {
-        if (isEmpty(tripDetailResult)) {
-          dispatch(_fetchTripDetailFailure(Messages.response.message));
-        } else {
-          if (tripDetailResult.success) {
-            tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
-            tripDetailResult.result.end_date = moment(tripDetailResult.result.end_date).format(DATE_FORMAT);
-            if (!isEmpty(tripDetailResult.result.trip_day)) {
-              map(tripDetailResult.result.trip_day, (tripDay: TripDay) => {
-                tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
-                map(tripDay.events, (tripEvent: Event) => {
-                  if (!isEmpty(tripEvent.start_time)) {
-                    const startTimeTimezoneId = tripEvent.start_time_timezone_id || tripDetailResult.timezone_id;
-                    const startTimeTimezone = timezone.find(tz => tz.id === startTimeTimezoneId);
-                    tripEvent.start_time = moment
-                      .utc(tripEvent.start_time)
-                      .tz(startTimeTimezone.utc)
-                      .format(DATE_TIME_TZ_FORMAT);
-                  }
-                  if (!isEmpty(tripEvent.end_time)) {
-                    const endTimeTimezoneId = tripEvent.end_time_timezone_id || tripDetailResult.timezone_id;
-                    const endTimeTimezone = timezone.find(tz => tz.id === endTimeTimezoneId);
-                    tripEvent.end_time = moment
-                      .utc(tripEvent.end_time)
-                      .tz(endTimeTimezone.utc)
-                      .format(DATE_TIME_TZ_FORMAT);
-                  }
-                  return tripEvent;
-                });
-                return tripDay;
+      .then((tripDetailResult: { success: boolean; result: Trip }) => {
+        if (tripDetailResult.success) {
+          tripDetailResult.result.start_date = moment(tripDetailResult.result.start_date).format(DATE_FORMAT);
+          tripDetailResult.result.end_date = moment(tripDetailResult.result.end_date).format(DATE_FORMAT);
+          if (!isEmpty(tripDetailResult.result.trip_day)) {
+            map(tripDetailResult.result.trip_day, (tripDay: TripDay) => {
+              tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
+              map(tripDay.events, (tripEvent: Event) => {
+                return _parseToLocalTime(tripEvent, tripDetailResult.result.timezone_id);
               });
-              if (!isCreateOrUpdate) {
-                dispatch(updateSelectedTripDayId(tripDetailResult.result.trip_day[0].id));
-              }
-            }
-            tripDetailResult.result.archived = tripDetailResult.result.archived === 1;
-            dispatch(fetchingTripDetailSuccess(tripDetailResult.result));
-          } else {
-            dispatch(_fetchTripDetailFailure(tripDetailResult.error));
+              return tripDay;
+            });
+            dispatch(updateSelectedTripDayId(tripDetailResult.result.trip_day[0].id));
           }
+          tripDetailResult.result.archived = tripDetailResult.result.archived === 1;
+          dispatch(fetchingTripDetailSuccess(tripDetailResult.result));
+        } else {
+          dispatch(_fetchTripDetailFailure(Messages.response.message));
         }
       })
       .catch((error: any) => {
@@ -194,30 +234,32 @@ export const creatingTripFailure = () => {
   };
 };
 
-export const creatingTripSuccess = () => {
+export const creatingTripSuccess = (trip: Trip) => {
   return {
     type: Actions.CREATING_TRIP_SUCCESS,
+    trip,
   };
 };
 
 const _createTripFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(creatingTripFailure());
     dispatch(createAlert({ type: 'error', message }));
   };
 };
 
 export const createTrip = (payload: Trip) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(clearAlert());
     dispatch(creatingTrip());
     tripService
       .createTrip(payload)
       .then((result: any) => {
         if (result.success) {
-          dispatch(creatingTripSuccess());
-          dispatch(getTripList());
+          payload.id = result.result.trip_id;
+          dispatch(creatingTripSuccess(payload));
         } else {
-          dispatch(_createTripFailure(result.error));
+          dispatch(_createTripFailure(Messages.response.message));
         }
       })
       .catch((error: any) => {
@@ -238,30 +280,32 @@ export const creatingTripDayFailure = () => {
   };
 };
 
-export const creatingTripDaySuccess = () => {
+export const creatingTripDaySuccess = (tripDay: TripDay) => {
   return {
     type: Actions.CREATING_TRIP_DAY_SUCCESS,
+    tripDay,
   };
 };
 
 const _createTripDayFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(creatingTripDayFailure());
     dispatch(createAlert({ type: 'error', message }));
   };
 };
 
 export const createTripDay = (payload: TripDay) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(creatingTripDay());
     tripService
       .createTripDay(payload)
       .then((result: any) => {
         if (result.success) {
-          dispatch(creatingTripDaySuccess());
-          dispatch(getTripDetail(payload.trip_id, true));
+          payload.id = result.result.trip_day_id;
+          dispatch(updateSelectedTripDayId(result.result.trip_day_id));
+          dispatch(creatingTripDaySuccess(payload));
         } else {
-          dispatch(_createTripDayFailure(result.error));
+          dispatch(_createTripDayFailure(Messages.response.message));
         }
       })
       .catch((error: any) => {
@@ -282,76 +326,33 @@ export const creatingTripEventFailure = () => {
   };
 };
 
-export const creatingTripEventSuccess = () => {
+export const creatingTripEventSuccess = (tripEvent: Event) => {
   return {
     type: Actions.CREATING_TRIP_EVENT_SUCCESS,
+    tripEvent,
   };
 };
 
 const _createTripEventFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
     dispatch(creatingTripEventFailure());
     dispatch(createAlert({ type: 'error', message }));
   };
 };
 
-const _createEventRequestPayload = (payload: Event, state: any) => {
-  let newPayload = cloneDeep(payload);
-
-  Object.keys(payload).forEach(prop => {
-    if (prop === 'start_time') {
-      if (newPayload.start_time) {
-        newPayload.start_time_timezone_id = payload.start_time_timezone_id
-          ? payload.start_time_timezone_id
-          : state.tripDetail.timezone_id;
-        const startTimeTimezone = timezone.find(tz => tz.id === newPayload.start_time_timezone_id);
-        newPayload.start_time = moment
-          .tz(moment(payload.start_time).format(DATE_TIME_FORMAT), startTimeTimezone.utc)
-          .utc()
-          .format(DATE_TIME_FORMAT);
-      } else {
-        newPayload.start_time = null;
-      }
-    } else if (prop === 'end_time') {
-      if (newPayload.end_time) {
-        newPayload.end_time_timezone_id = payload.end_time_timezone_id
-          ? payload.end_time_timezone_id
-          : state.tripDetail.timezone_id;
-        const endTimeTimezone = timezone.find(tz => tz.id === newPayload.end_time_timezone_id);
-        newPayload.end_time = moment
-          .tz(moment(payload.end_time).format(DATE_TIME_FORMAT), endTimeTimezone.utc)
-          .utc()
-          .format(DATE_TIME_FORMAT);
-      } else {
-        newPayload.end_time = null;
-      }
-    } else if (prop === 'currency_id' && newPayload.currency_id === 0) {
-      newPayload.currency_id = null;
-    } else if (prop === 'start_time_timezone_id' && newPayload.start_time_timezone_id === 0) {
-      newPayload.start_time_timezone_id = null;
-    } else if (prop === 'end_time_timezone_id' && newPayload.end_time_timezone_id === 0) {
-      newPayload.end_time_timezone_id = null;
-    } else if (prop === 'cost' && isEmpty(newPayload.cost)) {
-      newPayload.cost = null;
-    }
-  });
-
-  return newPayload;
-};
-
 export const createTripEvent = (payload: Event) => {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState: any) => {
-    const newPayload = _createEventRequestPayload(payload, getState);
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>, getState: any) => {
+    const newPayload = _createEventRequestPayload(payload, getState());
 
     dispatch(creatingTripEvent());
     eventService
       .createTripEvent(newPayload)
       .then((result: any) => {
         if (result.success) {
-          dispatch(creatingTripEventSuccess());
-          dispatch(getTripDetail(getState().trip.tripDetail.id, true));
+          newPayload.id = result.result.event_id;
+          dispatch(creatingTripEventSuccess(newPayload));
         } else {
-          dispatch(_createTripEventFailure(result.error));
+          dispatch(_createTripEventFailure(Messages.response.message));
         }
       })
       .catch((error: any) => {

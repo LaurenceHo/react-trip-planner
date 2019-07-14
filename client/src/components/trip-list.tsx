@@ -11,12 +11,13 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { Trip } from '../models/trip';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripList } from '../store/actions/trip-actions';
+import { RootState } from '../store/types';
 import { SnackbarComponent } from './snackbar';
 import myTheme from './theme';
 
@@ -101,15 +102,15 @@ class TripList extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     alert: state.alert,
-    isLoading: state.trip.isLoadingTripList,
+    isLoading: state.trip.isLoading,
     tripList: state.trip.tripList,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       clearAlert,

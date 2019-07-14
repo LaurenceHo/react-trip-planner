@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { timezone } from '../assets/timezone';
@@ -21,6 +21,7 @@ import { DATE_FORMAT } from '../constants/general';
 import { tripFormValidationSchema } from '../constants/validation';
 import { openTripForm } from '../store/actions/dashboard-actions';
 import { createTrip } from '../store/actions/trip-actions';
+import { RootState } from '../store/types';
 
 const styles = {
   menu: {
@@ -204,13 +205,13 @@ class TripForm extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     dashboard: state.dashboard,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       openTripForm,

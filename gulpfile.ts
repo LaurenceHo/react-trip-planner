@@ -11,27 +11,23 @@ const nodemon = require('gulp-nodemon');
 /**
  * Remove build directory.
  */
-gulp.task('clean', (cb: any) => del([ 'dist/server' ], cb));
+gulp.task('clean', (cb: any) => del(['dist/server'], cb));
 
 /**
  * Build Express server
  */
 gulp.task('compile', () => {
-  const tsResult = gulp.src('server/src/**/*.ts')
+  const tsResult = gulp
+    .src('server/src/**/*.ts')
     .pipe(sourcemaps.init())
     .pipe(tsProject());
-  return tsResult.js
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/server'));
+  return tsResult.js.pipe(sourcemaps.write()).pipe(gulp.dest('dist/server'));
 });
 
 /**
  * Copy bin directory for www
  */
-gulp.task('serverResources', () =>
-  gulp.src([ 'server/src/bin/**' ])
-    .pipe(gulp.dest('dist/server/bin'))
-);
+gulp.task('serverResources', () => gulp.src(['server/src/bin/**']).pipe(gulp.dest('dist/server/bin')));
 
 /**
  * Start the express server
@@ -39,7 +35,7 @@ gulp.task('serverResources', () =>
 gulp.task('start', () =>
   nodemon({
     script: 'dist/server/bin/www',
-    ext: 'js'
+    ext: 'js',
   }).on('restart', () => {
     console.log('restarted!');
   })
@@ -52,11 +48,4 @@ gulp.task('start', () =>
  * 3. Copy the dependencies.
  */
 
-gulp.task(
-  'build',
-  gulp.series(
-    'clean',
-    'compile',
-    'serverResources',
-  )
-);
+gulp.task('build', gulp.series('clean', 'compile', 'serverResources'));

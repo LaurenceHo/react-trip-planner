@@ -7,11 +7,12 @@ import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { TripDay } from '../models/trip-day';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
+import { RootState } from '../store/types';
 import { EventComponent } from './event';
 import myTheme from './theme';
 
@@ -31,54 +32,58 @@ const styles = {
 
 class TripEventList extends React.Component<any, any> {
   render() {
-    const { classes, selectedTripDayId, tripDetail } = this.props;
+    const { classes, selectedTripDayId, tripDayList } = this.props;
     let tripDay: TripDay = null;
-    if (!isEmpty(tripDetail.trip_day)) {
-      tripDay = tripDetail.trip_day.find((tripDay: TripDay) => tripDay.id === selectedTripDayId);
+    if (!isEmpty(tripDayList)) {
+      tripDay = tripDayList.find((tripDay: TripDay) => tripDay.id === selectedTripDayId);
     }
 
     return (
       <MuiThemeProvider theme={myTheme}>
-        <div className={classes.eventWrapper}>
-          <Grid container direction='row' justify='flex-start' alignItems='center' spacing={2}>
-            <Grid item>
-              <Button
-                className={classes.button}
-                variant='contained'
-                color='primary'
-                size='medium'
-                onClick={() => this.props.openTripEventForm(true)}>
-                <Icon className={classes.buttonIcon}>add</Icon> New Event
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography variant='h5' component='h3'>
-                {tripDay.trip_date}
-              </Typography>
-            </Grid>
-            {!isEmpty(tripDay.name) && (
-              <Grid item>
-                <Typography variant='subtitle1'>{tripDay.name}</Typography>
+        {!isEmpty(tripDay) && (
+          <>
+            <div className={classes.eventWrapper}>
+              <Grid container direction='row' justify='flex-start' alignItems='center' spacing={2}>
+                <Grid item>
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    color='primary'
+                    size='medium'
+                    onClick={() => this.props.openTripEventForm(true)}>
+                    <Icon className={classes.buttonIcon}>add</Icon> New Event
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Typography variant='h5' component='h3'>
+                    {tripDay.trip_date}
+                  </Typography>
+                </Grid>
+                {!isEmpty(tripDay.name) && (
+                  <Grid item>
+                    <Typography variant='subtitle1'>{tripDay.name}</Typography>
+                  </Grid>
+                )}
               </Grid>
-            )}
-          </Grid>
-        </div>
-        {tripDay.events.map(tripEvent => (
-          <EventComponent key={tripEvent.id} tripEvent={tripEvent} />
-        ))}
+            </div>
+            {tripDay.events.map(tripEvent => (
+              <EventComponent key={tripEvent.id} tripEvent={tripEvent} />
+            ))}
+          </>
+        )}
       </MuiThemeProvider>
     );
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     selectedTripDayId: state.dashboard.selectedTripDayId,
-    tripDetail: state.trip.tripDetail,
+    tripDayList: state.trip.tripDetail.trip_day,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
   return bindActionCreators(
     {
       openTripEventForm,

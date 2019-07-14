@@ -1,9 +1,12 @@
-import { Trip } from '../../models/trip';
+import { map, sortBy } from 'lodash';
 import { Actions } from '../../constants/actions';
+import { Event as TripEvent } from '../../models/event';
+import { Trip } from '../../models/trip';
+import { TripDay } from '../../models/trip-day';
+import { _parseToLocalTime } from '../actions/trip-actions';
 
 export interface TripState {
-  isLoadingTripList: boolean;
-  isLoadingTripDetail: boolean;
+  isLoading: boolean;
   tripList: Trip[];
   tripDetail: Trip;
 }
@@ -21,8 +24,7 @@ const tripDetail: Trip = {
 };
 
 const initialState: TripState = {
-  isLoadingTripList: false,
-  isLoadingTripDetail: false,
+  isLoading: false,
   tripList,
   tripDetail,
 };
@@ -32,39 +34,96 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
     case Actions.FETCHING_TRIP_LIST:
       return {
         ...state,
-        isLoadingTripList: true,
+        isLoading: true,
       };
 
     case Actions.FETCHING_TRIP_LIST_FAILURE:
       return {
         ...state,
-        isLoadingTripList: false,
+        isLoading: false,
       };
 
     case Actions.FETCHING_TRIP_LIST_SUCCESS:
       return {
         ...state,
-        isLoadingTripList: false,
+        isLoading: false,
         tripList: action.tripList,
       };
 
     case Actions.FETCHING_TRIP_DETAIL:
       return {
         ...state,
-        isLoadingTripDetail: true,
+        isLoading: true,
       };
 
     case Actions.FETCHING_TRIP_DETAIL_FAILURE:
       return {
         ...state,
-        isLoadingTripDetail: false,
+        isLoading: false,
       };
 
     case Actions.FETCHING_TRIP_DETAIL_SUCCESS:
       return {
         ...state,
-        isLoadingTripDetail: false,
+        isLoading: false,
         tripDetail: action.tripDetail,
+      };
+
+    case Actions.CREATING_TRIP:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.CREATING_TRIP_SUCCESS:
+      let newTrip = action.trip;
+      newTrip.trip_day = [];
+
+      state.tripList.push(newTrip);
+      state.tripList = sortBy(state.tripList, (trip: Trip) => trip.start_date);
+
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.CREATING_TRIP_DAY:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.CREATING_TRIP_DAY_SUCCESS:
+      let newTripDay = action.tripDay;
+      newTripDay.events = [];
+
+      state.tripDetail.trip_day.push(newTripDay);
+      state.tripDetail.trip_day = sortBy(state.tripDetail.trip_day, (tripDay: TripDay) => tripDay.trip_date);
+
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.CREATING_TRIP_EVENT:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.CREATING_TRIP_EVENT_SUCCESS:
+      let tripEvent = _parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
+      map(state.tripDetail.trip_day, (tripDay: TripDay) => {
+        if (tripDay.id === tripEvent.trip_day_id) {
+          tripDay.events.push(tripEvent);
+          tripDay.events = sortBy(tripDay.events, (event: TripEvent) => event.start_time);
+        }
+        return tripDay;
+      });
+
+      return {
+        ...state,
+        isLoading: false,
       };
 
     default:

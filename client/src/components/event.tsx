@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface EventComponentProps {
   tripEvent: TripEvent;
 }
-export const EventComponent = (props: EventComponentProps) => {
+export const EventComponent: React.FunctionComponent<EventComponentProps> = (props: EventComponentProps) => {
   const { tripEvent } = props;
   const classes = useStyles({});
 
