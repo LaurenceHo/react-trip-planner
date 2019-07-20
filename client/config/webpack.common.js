@@ -5,14 +5,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const IgnorePlugin = require('webpack/lib/IgnorePlugin');
 
 module.exports = {
-  entry: ['./src/index.tsx', 'whatwg-fetch'],
+  entry: ['./src/index.tsx'],
   output: {
     path: path.resolve(__dirname, '../../dist/client'),
     filename: '[name].bundle.js',
     publicPath: '/',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   module: {
     rules: [

@@ -11,6 +11,7 @@ import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { TripDay } from '../models/trip-day';
+import { Event as TripEvent } from '../models/event';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
 import { RootState } from '../store/types';
 import { EventComponent } from './event';
@@ -32,11 +33,7 @@ const styles = {
 
 class TripEventList extends React.Component<any, any> {
   render() {
-    const { classes, selectedTripDayId, tripDayList } = this.props;
-    let tripDay: TripDay = null;
-    if (!isEmpty(tripDayList)) {
-      tripDay = tripDayList.find((tripDay: TripDay) => tripDay.id === selectedTripDayId);
-    }
+    const { classes, tripDay, tripEventList } = this.props;
 
     return (
       <MuiThemeProvider theme={myTheme}>
@@ -66,7 +63,7 @@ class TripEventList extends React.Component<any, any> {
                 )}
               </Grid>
             </div>
-            {tripDay.events.map(tripEvent => (
+            {tripEventList.map((tripEvent: TripEvent) => (
               <EventComponent key={tripEvent.id} tripEvent={tripEvent} />
             ))}
           </>
@@ -77,9 +74,17 @@ class TripEventList extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state: RootState) => {
+  const tripDay: TripDay = state.trip.tripDetail.trip_day.find(
+    (tripDay: TripDay) => tripDay.id === state.dashboard.selectedTripDayId
+  );
+  let tripEventList: TripEvent[] = [];
+  if (!isEmpty(tripDay)) {
+    tripEventList = tripDay.events;
+  }
   return {
     selectedTripDayId: state.dashboard.selectedTripDayId,
-    tripDayList: state.trip.tripDetail.trip_day,
+    tripDay,
+    tripEventList,
   };
 };
 
