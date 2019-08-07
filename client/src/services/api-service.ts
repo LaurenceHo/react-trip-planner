@@ -8,7 +8,7 @@ export class ApiService {
     requestOptions.cache = 'no-cache';
 
     const headers = new Headers({ Accept: '*/*' });
-    this.authHeader(headers);
+    ApiService.authHeader(headers);
 
     // Construct request body
     if (!isEmpty(formParams)) {
@@ -41,15 +41,19 @@ export class ApiService {
   }
 
   private checkStatus = (response: Response) => {
-    if (response.status === 401 || response.status === 403) {
-      localStorage.removeItem('user');
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('user');
+      }
+      throw new Error(response.statusText);
     }
-    return response;
   };
 
   private parseResponse = (response: Response) => response.json();
 
-  private authHeader(headers: Headers): any {
+  private static authHeader(headers: Headers): any {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user && user.token) {
