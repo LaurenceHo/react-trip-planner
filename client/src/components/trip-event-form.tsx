@@ -353,7 +353,7 @@ class TripEventForm extends React.Component<any, any> {
             tag
               .split(',')
               .map((t, index) => (
-                <Chip key={`${t}-${index}`} size='small' label={t} className={classes.chip} color='secondary' />
+                <Chip key={`${t}-${index}`} size='small' label={t} className={classes.chip} color='primary' />
               ))}
           <Grid container spacing={2} className={classes.buttonWrapper}>
             <Grid item>
