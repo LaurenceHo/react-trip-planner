@@ -3,13 +3,8 @@ import { Actions } from '../../constants/actions';
 import { Event as TripEvent } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
-import { _parseToLocalTime } from '../actions/trip-actions';
-
-export interface TripState {
-  isLoading: boolean;
-  tripList: Trip[];
-  tripDetail: Trip;
-}
+import { parseToLocalTime } from '../helpers';
+import { TripState } from '../types';
 
 const tripList: Trip[] = [];
 const tripDetail: Trip = {
@@ -112,7 +107,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     case Actions.CREATING_TRIP_EVENT_SUCCESS:
-      let tripEvent = _parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
+      let tripEvent = parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
       map(state.tripDetail.trip_day, (tripDay: TripDay) => {
         if (tripDay.id === tripEvent.trip_day_id) {
           tripDay.events.push(tripEvent);

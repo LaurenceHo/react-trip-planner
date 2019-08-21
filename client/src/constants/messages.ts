@@ -27,4 +27,7 @@ export const Messages = {
   registerSuccess: {
     message: 'You are all set! Will be going to redirect to login page in 3 secs...',
   },
+  login: {
+    message: 'Your session is expired, please do login.',
+  },
 };

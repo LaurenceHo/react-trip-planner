@@ -1,9 +1,5 @@
 import { Actions } from '../../constants/actions';
-
-export interface AlertState {
-  type: 'success' | 'warning' | 'error' | 'info';
-  message: string;
-}
+import { AlertState } from '../types';
 
 const initialState: AlertState = {
   type: null,

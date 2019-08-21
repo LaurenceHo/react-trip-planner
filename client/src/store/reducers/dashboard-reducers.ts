@@ -1,17 +1,5 @@
 import { Actions } from '../../constants/actions';
-
-export interface DashboardState {
-  edit: {
-    isEditMode: boolean;
-    idInEdit: number;
-    component: 'trip' | 'tripDay' | 'tripEvent';
-  };
-  openTripForm: boolean;
-  openTripDayForm: boolean;
-  openTripEventForm: boolean;
-  currentMenu: 'upcoming' | 'current' | 'past' | 'archived';
-  selectedTripDayId: number;
-}
+import { DashboardState } from '../types';
 
 const initialState: DashboardState = {
   edit: {

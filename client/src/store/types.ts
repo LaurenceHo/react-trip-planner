@@ -11,7 +11,6 @@ export interface RootState {
 }
 
 export interface DashboardState {
-  toggle: boolean;
   edit: {
     isEditMode: boolean;
     idInEdit: number;

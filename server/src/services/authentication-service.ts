@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { isEmpty } from 'lodash';
 import { Event as TripEvent } from '../models/event';
 import { Trip } from '../models/trip';
 import { TripDay } from '../models/trip-day';
@@ -16,7 +16,7 @@ const _checkTripDayOwner = (id: number, res: any, req: any, next: any) => {
     if (error) {
       res.status(400).send({ error });
     } else {
-      if (!_.isEmpty(tripDays)) {
+      if (!isEmpty(tripDays)) {
         if (tripDays[0].user_id !== req.user.id) {
           res.status(403).send({ error: 'You have no permission' });
         } else {
@@ -34,7 +34,7 @@ const _checkTripEventOwner = (id: number, res: any, req: any, next: any) => {
     if (error) {
       res.status(400).send({ error });
     } else {
-      if (!_.isEmpty(events)) {
+      if (!isEmpty(events)) {
         if (events[0].user_id !== req.user.id) {
           res.status(403).send({ error: 'You have no permission' });
         } else {
@@ -55,7 +55,7 @@ export const checkTripOwnerByUrl = (req: any, res: any, next: any): void => {
         if (error) {
           res.status(400).send({ error });
         } else {
-          if (!_.isEmpty(trips)) {
+          if (!isEmpty(trips)) {
             if (trips[0].user_id !== req.user.id) {
               res.status(403).send({ error: 'You have no permission' });
             } else {
@@ -84,7 +84,7 @@ export const checkTripOwnerByPayload = (req: any, res: any, next: any): void => 
           if (error) {
             res.status(400).send({ error });
           } else {
-            if (!_.isEmpty(trips)) {
+            if (!isEmpty(trips)) {
               if (trips[0].user_id !== req.user.id) {
                 res.status(403).send({ error: 'You have no permission' });
               } else {
@@ -150,7 +150,7 @@ export const checkEventOwnerByPayload = (req: any, res: any, next: any): void =>
           if (error) {
             res.status(400).send({ error });
           } else {
-            if (!_.isEmpty(tripDays)) {
+            if (!isEmpty(tripDays)) {
               if (tripDays[0].user_id !== req.user.id) {
                 res.status(403).send({ error: 'You have no permission' });
               } else {

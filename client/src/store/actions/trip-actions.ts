@@ -5,39 +5,20 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { timezone } from '../../assets/timezone';
 import { Actions } from '../../constants/actions';
-import { DATE_FORMAT, DATE_TIME_FORMAT, DATE_TIME_TZ_FORMAT } from '../../constants/general';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../constants/general';
 import { Messages } from '../../constants/messages';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
 import { EventService } from '../../services/event-service';
 import { TripService } from '../../services/trip-service';
+import { parseToLocalTime } from '../helpers';
 import { RootState } from '../types';
 import { clearAlert, createAlert } from './alert-actions';
 import { updateSelectedTripDayId } from './dashboard-actions';
 
 const eventService = new EventService();
 const tripService = new TripService();
-
-export const _parseToLocalTime = (tripEvent: Event, timezoneId: number): Event => {
-  if (!isEmpty(tripEvent.start_time)) {
-    const startTimeTimezoneId = tripEvent.start_time_timezone_id || timezoneId;
-    const startTimeTimezone = timezone.find(tz => tz.id === startTimeTimezoneId);
-    tripEvent.start_time = moment
-      .utc(tripEvent.start_time)
-      .tz(startTimeTimezone.utc)
-      .format(DATE_TIME_TZ_FORMAT);
-  }
-  if (!isEmpty(tripEvent.end_time)) {
-    const endTimeTimezoneId = tripEvent.end_time_timezone_id || timezoneId;
-    const endTimeTimezone = timezone.find(tz => tz.id === endTimeTimezoneId);
-    tripEvent.end_time = moment
-      .utc(tripEvent.end_time)
-      .tz(endTimeTimezone.utc)
-      .format(DATE_TIME_TZ_FORMAT);
-  }
-  return tripEvent;
-};
 
 const _generateGetTripListPayload = (currentMenu: 'archived' | 'current' | 'upcoming' | 'past') => {
   let requestBody = null;
@@ -204,7 +185,7 @@ export const getTripDetail = (tripId: number) => {
             map(tripDetailResult.result.trip_day, (tripDay: TripDay) => {
               tripDay.trip_date = moment(tripDay.trip_date).format(DATE_FORMAT);
               map(tripDay.events, (tripEvent: Event) => {
-                return _parseToLocalTime(tripEvent, tripDetailResult.result.timezone_id);
+                return parseToLocalTime(tripEvent, tripDetailResult.result.timezone_id);
               });
               return tripDay;
             });
