@@ -2,18 +2,17 @@ import { cloneDeep, isEmpty, map } from 'lodash';
 import * as moment from 'moment-timezone';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { timezone } from '../../assets/timezone';
 import { Actions } from '../../constants/actions';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../constants/general';
 import { Messages } from '../../constants/messages';
+import { RootState } from '../../constants/types';
 import { Event } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
 import { EventService } from '../../services/event-service';
 import { TripService } from '../../services/trip-service';
 import { parseToLocalTime } from '../helpers';
-import { RootState } from '../types';
 import { clearAlert, createAlert } from './alert-actions';
 import { updateSelectedTripDayId } from './dashboard-actions';
 
@@ -51,7 +50,7 @@ const _generateGetTripListPayload = (currentMenu: 'archived' | 'current' | 'upco
 };
 
 const _createEventRequestPayload = (payload: Event, state: RootState) => {
-  let newPayload = cloneDeep(payload);
+  const newPayload = cloneDeep(payload);
   Object.keys(newPayload).forEach(prop => {
     // Convert to UTC date time string before sending request to server
     if (prop === 'start_time') {
@@ -94,19 +93,19 @@ const _createEventRequestPayload = (payload: Event, state: RootState) => {
   return newPayload;
 };
 
-export const fetchingTripList = () => {
+const fetchingTripList = () => {
   return {
     type: Actions.FETCHING_TRIP_LIST,
   };
 };
 
-export const fetchingTripListFailure = () => {
+const fetchingTripListFailure = () => {
   return {
     type: Actions.FETCHING_TRIP_LIST_FAILURE,
   };
 };
 
-export const fetchingTripListSuccess = (tripList: Trip[]) => {
+const fetchingTripListSuccess = (tripList: Trip[]) => {
   return {
     type: Actions.FETCHING_TRIP_LIST_SUCCESS,
     tripList,
@@ -139,25 +138,23 @@ export const getTripList = () => {
           dispatch(_fetchTripListFailure(Messages.response.message));
         }
       })
-      .catch((error: any) => {
-        dispatch(_fetchTripListFailure(error.error));
-      });
+      .catch((error: any) => dispatch(_fetchTripListFailure(error.error)));
   };
 };
 
-export const fetchingTripDetail = () => {
+const fetchingTripDetail = () => {
   return {
     type: Actions.FETCHING_TRIP_DETAIL,
   };
 };
 
-export const fetchingTripDetailFailure = () => {
+const fetchingTripDetailFailure = () => {
   return {
     type: Actions.FETCHING_TRIP_DETAIL_FAILURE,
   };
 };
 
-export const fetchingTripDetailSuccess = (tripDetail: Trip) => {
+const fetchingTripDetailSuccess = (tripDetail: Trip) => {
   return {
     type: Actions.FETCHING_TRIP_DETAIL_SUCCESS,
     tripDetail,
@@ -203,19 +200,19 @@ export const getTripDetail = (tripId: number) => {
   };
 };
 
-export const creatingTrip = () => {
+const creatingTrip = () => {
   return {
     type: Actions.CREATING_TRIP,
   };
 };
 
-export const creatingTripFailure = () => {
+const creatingTripFailure = () => {
   return {
     type: Actions.CREATING_TRIP_FAILURE,
   };
 };
 
-export const creatingTripSuccess = (trip: Trip) => {
+const creatingTripSuccess = (trip: Trip) => {
   return {
     type: Actions.CREATING_TRIP_SUCCESS,
     trip,
@@ -249,19 +246,19 @@ export const createTrip = (payload: Trip) => {
   };
 };
 
-export const creatingTripDay = () => {
+const creatingTripDay = () => {
   return {
     type: Actions.CREATING_TRIP_DAY,
   };
 };
 
-export const creatingTripDayFailure = () => {
+const creatingTripDayFailure = () => {
   return {
     type: Actions.CREATING_TRIP_DAY_FAILURE,
   };
 };
 
-export const creatingTripDaySuccess = (tripDay: TripDay) => {
+const creatingTripDaySuccess = (tripDay: TripDay) => {
   return {
     type: Actions.CREATING_TRIP_DAY_SUCCESS,
     tripDay,
@@ -295,19 +292,19 @@ export const createTripDay = (payload: TripDay) => {
   };
 };
 
-export const creatingTripEvent = () => {
+const creatingTripEvent = () => {
   return {
     type: Actions.CREATING_TRIP_EVENT,
   };
 };
 
-export const creatingTripEventFailure = () => {
+const creatingTripEventFailure = () => {
   return {
     type: Actions.CREATING_TRIP_EVENT_FAILURE,
   };
 };
 
-export const creatingTripEventSuccess = (tripEvent: Event) => {
+const creatingTripEventSuccess = (tripEvent: Event) => {
   return {
     type: Actions.CREATING_TRIP_EVENT_SUCCESS,
     tripEvent,

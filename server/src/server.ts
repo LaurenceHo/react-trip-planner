@@ -1,10 +1,10 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as expressSanitizer from 'express-sanitizer';
+import * as helmet from 'helmet';
 import * as jwt from 'jsonwebtoken';
 import * as morgan from 'morgan';
 import * as path from 'path';
-import * as expressSanitizer from 'express-sanitizer';
-
 import { schema } from './database/schema';
 import * as eventRoute from './routes/event-route';
 import * as tripDayRoute from './routes/trip-day-route';
@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client'), { index: false }));
 app.use(expressSanitizer());
 app.use(morgan('dev'));
+app.use(helmet()); // https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
 
 const corsHeader = (req: any, res: any, next: any) => {
   const allowedOrigins = ['http://localhost:8080', 'http://localhost:8000'];

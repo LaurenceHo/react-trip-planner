@@ -1,5 +1,5 @@
 import { Actions } from '../../constants/actions';
-import { DashboardState } from '../types';
+import { DashboardState } from '../../constants/types';
 
 const initialState: DashboardState = {
   edit: {

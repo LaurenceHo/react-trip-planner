@@ -1,5 +1,5 @@
 import { Actions } from '../../constants/actions';
-import { AlertState } from '../types';
+import { AlertState } from '../../constants/types';
 
 const initialState: AlertState = {
   type: null,

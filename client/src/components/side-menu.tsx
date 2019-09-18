@@ -11,10 +11,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
+import { RootState } from '../constants/types';
 import { openTripForm, setSideMenu } from '../store/actions/dashboard-actions';
 import { getTripList } from '../store/actions/trip-actions';
-import { RootState } from '../store/types';
 
 interface SideMenuState {
   expendListOpen: boolean;

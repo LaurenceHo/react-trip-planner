@@ -1,5 +1,5 @@
-import { ApiService } from './api-service';
 import { Event } from '../models/event';
+import { ApiService } from './api-service';
 
 const SERVER_URL = 'http://localhost:3000/api';
 

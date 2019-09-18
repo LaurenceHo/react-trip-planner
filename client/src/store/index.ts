@@ -1,8 +1,7 @@
-import { routerMiddleware, connectRouter } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
-import { applyMiddleware, compose, combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-
 import { alertReducers } from './reducers/alert-reducers';
 import { dashboardReducers } from './reducers/dashboard-reducers';
 import { tripReducers } from './reducers/trip-reducers';

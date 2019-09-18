@@ -1,5 +1,5 @@
-import { User } from '../../models/user';
 import { Actions } from '../../constants/actions';
+import { User } from '../../models/user';
 
 const user: User = JSON.parse(localStorage.getItem('user'));
 const userInitialState = user ? { status: { loggedIn: true }, user } : { status: { loggedIn: false }, user };

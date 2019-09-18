@@ -1,6 +1,16 @@
 import { isEmpty } from 'lodash';
 
 export class ApiService {
+  private static authHeader(headers: Headers): any {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (user && user.token) {
+      return headers.append('Authorization', `Bearer ${user.token}`);
+    } else {
+      return headers;
+    }
+  }
+
   perform(method: string, urlPath: string, requestBody: any, searchParams: any, formParams: any): any {
     const requestOptions: any = {};
     requestOptions.mode = 'cors';
@@ -46,20 +56,11 @@ export class ApiService {
     } else {
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem('user');
+        return response;
       }
       throw new Error(response.statusText);
     }
   };
 
   private parseResponse = (response: Response) => response.json();
-
-  private static authHeader(headers: Headers): any {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (user && user.token) {
-      return headers.append('Authorization', `Bearer ${user.token}`);
-    } else {
-      return headers;
-    }
-  }
 }

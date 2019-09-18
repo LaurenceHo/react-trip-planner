@@ -1,10 +1,10 @@
 import { map, sortBy } from 'lodash';
 import { Actions } from '../../constants/actions';
+import { TripState } from '../../constants/types';
 import { Event as TripEvent } from '../../models/event';
 import { Trip } from '../../models/trip';
 import { TripDay } from '../../models/trip-day';
 import { parseToLocalTime } from '../helpers';
-import { TripState } from '../types';
 
 const tripList: Trip[] = [];
 const tripDetail: Trip = {
@@ -71,7 +71,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     case Actions.CREATING_TRIP_SUCCESS:
-      let newTrip = action.trip;
+      const newTrip = action.trip;
       newTrip.trip_day = [];
 
       state.tripList.push(newTrip);
@@ -89,7 +89,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     case Actions.CREATING_TRIP_DAY_SUCCESS:
-      let newTripDay = action.tripDay;
+      const newTripDay = action.tripDay;
       newTripDay.events = [];
 
       state.tripDetail.trip_day.push(newTripDay);
@@ -107,7 +107,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     case Actions.CREATING_TRIP_EVENT_SUCCESS:
-      let tripEvent = parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
+      const tripEvent = parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
       map(state.tripDetail.trip_day, (tripDay: TripDay) => {
         if (tripDay.id === tripEvent.trip_day_id) {
           tripDay.events.push(tripEvent);

@@ -1,6 +1,6 @@
-import { ApiService } from './api-service';
 import { Trip } from '../models/trip';
 import { TripDay } from '../models/trip-day';
+import { ApiService } from './api-service';
 
 const SERVER_URL = 'http://localhost:3000/api';
 

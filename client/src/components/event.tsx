@@ -1,5 +1,12 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import Paper from '@material-ui/core/Paper';
@@ -24,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       fontSize: '3rem',
     },
+    fab: {
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -32,10 +42,16 @@ const currencyList: Currency[] = currency;
 interface EventComponentProps {
   tripEvent: TripEvent;
 }
+
 export const EventComponent: React.FunctionComponent<EventComponentProps> = (props: EventComponentProps) => {
+  const [isDialogOpen, setDialogOpen] = React.useState(false);
+
   const { tripEvent } = props;
+
   const classes = useStyles({});
+
   const currency = currencyList.find((currency: Currency) => currency.id === tripEvent.currency_id);
+
   const eventIcon = () => {
     if (tripEvent.category_id === 1) {
       return <Icon className={classes.icon}>directions_run</Icon>;
@@ -52,6 +68,14 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
     }
   };
 
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <div className={classes.eventWrapper} key={tripEvent.id}>
       <Paper className={classes.paperRoot}>
@@ -59,7 +83,7 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
           <Grid item xs={1} style={{ borderRight: '2px dodgerblue solid' }}>
             {eventIcon()}
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={9}>
             <Grid container direction='column'>
               <Typography variant='h5' component='h3'>
                 {tripEvent.title}
@@ -91,8 +115,34 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
               </Grid>
             )}
           </Grid>
+          <Grid item xs={2} container direction='row' justify='flex-end' alignItems='center'>
+            <Fab color='primary' size='small' aria-label='edit' className={classes.fab}>
+              <Icon>edit</Icon>
+            </Fab>
+            <Fab color='secondary' size='small' aria-label='delete' className={classes.fab} onClick={handleDialogOpen}>
+              <Icon>delete</Icon>
+            </Fab>
+          </Grid>
         </Grid>
       </Paper>
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete Event?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            This will permanently delete the event <strong>{tripEvent.title}</strong>. Do you want to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleDialogClose} color='primary'>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

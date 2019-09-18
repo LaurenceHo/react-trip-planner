@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import { Action, ActionCreator, AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { Actions } from '../../constants/actions';
 import { Messages } from '../../constants/messages';
 import { User } from '../../models/user';

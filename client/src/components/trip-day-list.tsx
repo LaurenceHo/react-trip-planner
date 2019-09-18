@@ -10,10 +10,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
+import { RootState } from '../constants/types';
 import { TripDay } from '../models/trip-day';
 import { openTripDayForm, updateSelectedTripDayId } from '../store/actions/dashboard-actions';
-import { RootState } from '../store/types';
 
 const styles = {
   tripDayList: {

@@ -13,11 +13,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
+import { RootState } from '../constants/types';
 import { Trip } from '../models/trip';
 import { clearAlert } from '../store/actions/alert-actions';
 import { getTripList } from '../store/actions/trip-actions';
-import { RootState } from '../store/types';
 import { SnackbarComponent } from './snackbar';
 import myTheme from './theme';
 
@@ -46,8 +45,6 @@ class TripList extends React.Component<any, any> {
   componentDidMount(): void {
     this.props.getTripList();
   }
-
-  componentDidUpdate(): void {}
 
   render() {
     const { alert, classes, tripList, history, isLoading } = this.props;

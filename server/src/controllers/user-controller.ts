@@ -52,7 +52,7 @@ export class UserController implements BaseController<UserService> {
       const newUser: User = req.body;
       userService.create(newUser, (result: any, error: any) => {
         if (error) {
-          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
+          const errorMessage = error.sqlMessage ? error.sqlMessage : error;
           res.status(400).send({ error: errorMessage });
         } else {
           res.status(200).send({ success: true, result });
@@ -68,7 +68,7 @@ export class UserController implements BaseController<UserService> {
       const user: User = req.body;
       userService.update(user, (result: any, error: any) => {
         if (error) {
-          let errorMessage = error.sqlMessage ? error.sqlMessage : error;
+          const errorMessage = error.sqlMessage ? error.sqlMessage : error;
           res.status(400).send({ error: errorMessage });
         } else {
           res.status(200).send({ success: true, result });

@@ -15,13 +15,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { timezone } from '../assets/timezone';
 import { DATE_FORMAT } from '../constants/general';
+import { RootState } from '../constants/types';
 import { tripFormValidationSchema } from '../constants/validation';
 import { openTripForm } from '../store/actions/dashboard-actions';
 import { createTrip } from '../store/actions/trip-actions';
-import { RootState } from '../store/types';
 
 const styles = {
   menu: {
@@ -154,15 +153,8 @@ class TripForm extends React.Component<any, any> {
           </TextField>
           <Grid container spacing={2} className={classes.buttonWrapper}>
             <Grid item>
-              <Button variant='contained' onClick={this.handleDialogClose}>
-                Cancel
-              </Button>
-              <Button
-                className={classes.confirmButton}
-                disabled={!isValid}
-                variant='contained'
-                color='primary'
-                type='submit'>
+              <Button onClick={this.handleDialogClose}>Cancel</Button>
+              <Button className={classes.confirmButton} disabled={!isValid} color='primary' type='submit'>
                 Confirm
               </Button>
             </Grid>

@@ -9,11 +9,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
-import { TripDay } from '../models/trip-day';
+import { RootState } from '../constants/types';
 import { Event as TripEvent } from '../models/event';
+import { TripDay } from '../models/trip-day';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
-import { RootState } from '../store/types';
 import { EventComponent } from './event';
 import myTheme from './theme';
 

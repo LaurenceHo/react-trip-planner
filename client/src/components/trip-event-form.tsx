@@ -23,15 +23,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
-import { Event as TripEvent } from '../models/event';
 import { currency } from '../assets/currency';
 import { timezone } from '../assets/timezone';
 import { DATE_TIME_FORMAT } from '../constants/general';
+import { RootState } from '../constants/types';
 import { eventFormValidationSchema } from '../constants/validation';
+import { Event as TripEvent } from '../models/event';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
 import { createTripEvent } from '../store/actions/trip-actions';
-import { RootState } from '../store/types';
 import myTheme from './theme';
 
 const styles = {
@@ -357,15 +356,8 @@ class TripEventForm extends React.Component<any, any> {
               ))}
           <Grid container spacing={2} className={classes.buttonWrapper}>
             <Grid item>
-              <Button variant='contained' onClick={this.handleDialogClose}>
-                Cancel
-              </Button>
-              <Button
-                className={classes.confirmButton}
-                disabled={!isValid}
-                variant='contained'
-                color='primary'
-                type='submit'>
+              <Button onClick={this.handleDialogClose}>Cancel</Button>
+              <Button className={classes.confirmButton} disabled={!isValid} color='primary' type='submit'>
                 Confirm
               </Button>
             </Grid>

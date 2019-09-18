@@ -6,12 +6,11 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
+import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import * as moment from 'moment';
-import { RootState } from '../store/types';
-
+import { RootState } from '../constants/types';
 import myTheme from './theme';
 
 const styles = {

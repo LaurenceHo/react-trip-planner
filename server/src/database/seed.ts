@@ -7,7 +7,7 @@ import { timezoneList } from './timezone';
 const importTimeZoneFile = () => {
   const timezoneArray: any = [];
   timezoneList.forEach((timezone: any) => {
-    let tz = {
+    const tz = {
       value: timezone.value,
       abbr: timezone.abbr,
       offset: timezone.offset,

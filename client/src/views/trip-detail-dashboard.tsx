@@ -7,7 +7,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
 import TripDayList from '../components/trip-day-list';

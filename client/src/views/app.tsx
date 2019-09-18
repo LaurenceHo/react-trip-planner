@@ -2,7 +2,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import * as React from 'react';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
-
 import { User } from '../models/user';
 import store, { history } from '../store';
 import { Dashboard } from './dashboard';

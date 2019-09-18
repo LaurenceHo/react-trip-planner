@@ -13,10 +13,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
+import { RootState } from '../constants/types';
 import { openTripDayForm } from '../store/actions/dashboard-actions';
 import { createTripDay } from '../store/actions/trip-actions';
-import { RootState } from '../store/types';
 
 const styles = {
   menu: {
@@ -118,10 +117,8 @@ class TripDayForm extends React.Component<any, TripDayFormState> {
               </MuiPickersUtilsProvider>
               <Grid container spacing={2} className={classes.buttonWrapper}>
                 <Grid item>
-                  <Button variant='contained' onClick={this.handleDialogClose}>
-                    Cancel
-                  </Button>
-                  <Button className={classes.confirmButton} variant='contained' color='primary' type='submit'>
+                  <Button onClick={this.handleDialogClose}>Cancel</Button>
+                  <Button className={classes.confirmButton} color='primary' type='submit'>
                     Confirm
                   </Button>
                 </Grid>
