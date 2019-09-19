@@ -1,5 +1,4 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
+import { CircularProgress, Grid } from '@material-ui/core';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
@@ -9,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
-import TripDayList from '../components/trip-day-list';
+import { TripDayList } from '../components/trip-day-list';
 import TripDetailBanner from '../components/trip-detail-banner';
 import TripEventList from '../components/trip-event-list';
 import { Messages } from '../constants/messages';

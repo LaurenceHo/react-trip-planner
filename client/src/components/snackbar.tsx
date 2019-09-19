@@ -1,14 +1,7 @@
+import { createStyles, IconButton, makeStyles, Snackbar, SnackbarContent, Theme } from '@material-ui/core';
 import amber from '@material-ui/core/colors/amber';
 import green from '@material-ui/core/colors/green';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CloseIcon from '@material-ui/icons/Close';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import WarningIcon from '@material-ui/icons/Warning';
+import { CheckCircle, Close, Error, Info, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
 import * as React from 'react';
 
@@ -21,10 +14,10 @@ interface Classes {
 }
 
 const variantIcon: VariantIcon = {
-  success: CheckCircleIcon,
-  warning: WarningIcon,
-  error: ErrorIcon,
-  info: InfoIcon,
+  success: CheckCircle,
+  warning: Warning,
+  error: Error,
+  info: Info,
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -79,7 +72,7 @@ const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
       }
       action={[
         <IconButton key='close' aria-label='Close' color='inherit' onClick={onClose}>
-          <CloseIcon className={classes.icon} />
+          <Close className={classes.icon} />
         </IconButton>,
       ]}
       {...other}

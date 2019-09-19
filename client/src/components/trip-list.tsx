@@ -1,12 +1,5 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
+import { CircularProgress, Link, Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';

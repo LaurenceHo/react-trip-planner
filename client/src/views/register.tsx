@@ -1,8 +1,5 @@
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/icon';
+import { Button, Grid, Icon, TextField } from '@material-ui/core';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
 import { Formik, FormikActions, FormikProps } from 'formik';
 import { isEmpty } from 'lodash';

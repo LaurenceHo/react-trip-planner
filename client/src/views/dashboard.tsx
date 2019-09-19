@@ -1,17 +1,22 @@
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Icon from '@material-ui/core/icon';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import {
+  AppBar,
+  createStyles,
+  CssBaseline,
+  Divider,
+  Drawer,
+  Icon,
+  IconButton,
+  InputBase,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Theme,
+  Toolbar,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { push } from 'connected-react-router';
 import * as React from 'react';

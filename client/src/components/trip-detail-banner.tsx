@@ -1,9 +1,5 @@
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
+import { Grid, Icon, IconButton, Paper, Typography } from '@material-ui/core';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
