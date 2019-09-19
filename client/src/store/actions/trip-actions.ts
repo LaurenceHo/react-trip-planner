@@ -338,3 +338,47 @@ export const createTripEvent = (payload: Event) => {
       });
   };
 };
+
+const deletingTripEvent = () => {
+  return {
+    type: Actions.DELETING_TRIP_EVENT,
+  };
+};
+
+const deletingTripEventFailure = () => {
+  return {
+    type: Actions.DELETING_TRIP_EVENT_FAILURE,
+  };
+};
+
+const deletingTripEventSuccess = (tripEvent: Event) => {
+  return {
+    type: Actions.DELETING_TRIP_EVENT_SUCCESS,
+    tripEvent,
+  };
+};
+
+const _deleteTripEventFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(deletingTripEventFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
+export const deleteTripEvent = (payload: Event) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(deletingTripEvent());
+    eventService
+      .deleteTripEvent(payload.id)
+      .then((result: any) => {
+        if (result.success) {
+          dispatch(deletingTripEventSuccess(payload));
+        } else {
+          dispatch(_deleteTripEventFailure(Messages.response.message));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(_deleteTripEventFailure(error.error));
+      });
+  };
+};

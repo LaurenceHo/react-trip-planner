@@ -13,9 +13,11 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { currency } from '../assets/currency';
 import { Currency } from '../models/currency';
 import { Event as TripEvent } from '../models/event';
+import { deleteTripEvent } from '../store/actions/trip-actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +46,8 @@ interface EventComponentProps {
 }
 
 export const EventComponent: React.FunctionComponent<EventComponentProps> = (props: EventComponentProps) => {
+  const dispatch = useDispatch();
+
   const [isDialogOpen, setDialogOpen] = React.useState(false);
 
   const { tripEvent } = props;
@@ -68,12 +72,9 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
     }
   };
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
+  const handleDeleteEvent = () => {
     setDialogOpen(false);
+    dispatch(deleteTripEvent(tripEvent));
   };
 
   return (
@@ -119,7 +120,12 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
             <Fab color='primary' size='small' aria-label='edit' className={classes.fab}>
               <Icon>edit</Icon>
             </Fab>
-            <Fab color='secondary' size='small' aria-label='delete' className={classes.fab} onClick={handleDialogOpen}>
+            <Fab
+              color='secondary'
+              size='small'
+              aria-label='delete'
+              className={classes.fab}
+              onClick={() => setDialogOpen(true)}>
               <Icon>delete</Icon>
             </Fab>
           </Grid>
@@ -127,7 +133,7 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
       </Paper>
       <Dialog
         open={isDialogOpen}
-        onClose={handleDialogClose}
+        onClose={() => setDialogOpen(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
         <DialogTitle id='alert-dialog-title'>Delete Event?</DialogTitle>
@@ -137,8 +143,8 @@ export const EventComponent: React.FunctionComponent<EventComponentProps> = (pro
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={handleDialogClose} color='primary'>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteEvent} color='primary'>
             Confirm
           </Button>
         </DialogActions>

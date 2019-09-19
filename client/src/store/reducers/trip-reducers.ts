@@ -1,4 +1,4 @@
-import { map, sortBy } from 'lodash';
+import { map, remove, sortBy } from 'lodash';
 import { Actions } from '../../constants/actions';
 import { TripState } from '../../constants/types';
 import { Event as TripEvent } from '../../models/event';
@@ -116,6 +116,24 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
         return tripDay;
       });
 
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.DELETING_TRIP_EVENT:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.DELETING_TRIP_EVENT_SUCCESS:
+      map(state.tripDetail.trip_day, (tripDay: TripDay) => {
+        if (tripDay.id === action.tripEvent.trip_day_id) {
+          remove(tripDay.events, tripEvent => tripEvent.id === action.tripEvent.id);
+        }
+        return tripDay;
+      });
       return {
         ...state,
         isLoading: false,
