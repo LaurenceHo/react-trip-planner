@@ -26,7 +26,7 @@ import myTheme from '../components/theme';
 import TripDayForm from '../components/trip-day-form';
 import TripEventForm from '../components/trip-event-form';
 import TripForm from '../components/trip-form';
-import TripList from '../components/trip-list';
+import { TripList } from '../components/trip-list';
 import { UserService } from '../services/user-service';
 import store from '../store';
 import TripDetailDashboard from './trip-detail-dashboard';
@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Dashboard = () => {
+export const Dashboard: React.FC<any> = () => {
   const classes = useStyles({});
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = React.useState(true);

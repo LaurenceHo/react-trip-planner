@@ -91,7 +91,7 @@ interface SnackbarComponentProps {
   onClose?: any;
 }
 
-export const SnackbarComponent: React.FunctionComponent<SnackbarComponentProps> = (props: SnackbarComponentProps) => {
+export const SnackbarComponent: React.FC<SnackbarComponentProps> = (props: SnackbarComponentProps) => {
   const { open, anchorOrigin, autoHideDuration, outerClassName, className, message, onClose, variant } = props;
 
   return (

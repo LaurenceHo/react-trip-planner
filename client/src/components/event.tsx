@@ -49,7 +49,7 @@ interface EventComponentProps {
   tripEvent: TripEvent;
 }
 
-export const EventComponent: React.FunctionComponent<EventComponentProps> = (props: EventComponentProps) => {
+export const EventComponent: React.FC<EventComponentProps> = (props: EventComponentProps) => {
   const dispatch = useDispatch();
 
   const [isDialogOpen, setDialogOpen] = React.useState(false);

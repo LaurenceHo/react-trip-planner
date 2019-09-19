@@ -9,7 +9,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { SnackbarComponent } from '../components/snackbar';
 import myTheme from '../components/theme';
 import { TripDayList } from '../components/trip-day-list';
-import TripDetailBanner from '../components/trip-detail-banner';
+import { TripDetailBanner } from '../components/trip-detail-banner';
 import TripEventList from '../components/trip-event-list';
 import { Messages } from '../constants/messages';
 import { clearAlert } from '../store/actions/alert-actions';
