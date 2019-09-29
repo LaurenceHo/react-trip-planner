@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '3rem',
     },
     fab: {
-      margin: theme.spacing(1),
+      margin: theme.spacing(0.5),
     },
   })
 );
@@ -50,15 +50,11 @@ interface EventComponentProps {
 }
 
 export const EventComponent: React.FC<EventComponentProps> = (props: EventComponentProps) => {
-  const dispatch = useDispatch();
-
   const [isDialogOpen, setDialogOpen] = React.useState(false);
-
   const { tripEvent } = props;
-
-  const classes = useStyles({});
-
   const currency = currencyList.find((currency: Currency) => currency.id === tripEvent.currency_id);
+  const classes = useStyles({});
+  const dispatch = useDispatch();
 
   const eventIcon = () => {
     if (tripEvent.category_id === 1) {

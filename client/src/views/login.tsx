@@ -38,7 +38,7 @@ export const Login: React.FC<any> = (props: { history: History<any> }) => {
 
   const LoginButton = (isValid: boolean) => (
     <Button className={classes.loginButton} disabled={!isValid} variant='contained' color='primary' type='submit'>
-      Login
+      Sign In
       <Icon className={classes.sendIcon}>send</Icon>
     </Button>
   );
@@ -49,7 +49,7 @@ export const Login: React.FC<any> = (props: { history: History<any> }) => {
       variant='contained'
       color='primary'
       onClick={() => props.history.push('/register')}>
-      Register
+      Sign Up
     </Button>
   );
 
@@ -131,7 +131,7 @@ export const Login: React.FC<any> = (props: { history: History<any> }) => {
         )}
         <div className='user-form'>
           <div className='user-form-title-container'>
-            <h3 className='user-form-title '>Login</h3>
+            <h3 className='user-form-title'>Sign In</h3>
           </div>
           <Formik
             initialValues={{

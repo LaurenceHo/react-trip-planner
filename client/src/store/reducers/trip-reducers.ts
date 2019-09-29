@@ -70,6 +70,12 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
         isLoading: true,
       };
 
+    case Actions.CREATING_TRIP_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case Actions.CREATING_TRIP_SUCCESS:
       const newTrip = action.trip;
       newTrip.trip_day = [];
@@ -86,6 +92,12 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       return {
         ...state,
         isLoading: true,
+      };
+
+    case Actions.CREATING_TRIP_DAY_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
       };
 
     case Actions.CREATING_TRIP_DAY_SUCCESS:
@@ -106,6 +118,12 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
         isLoading: true,
       };
 
+    case Actions.CREATING_TRIP_EVENT_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case Actions.CREATING_TRIP_EVENT_SUCCESS:
       const tripEvent = parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
       map(state.tripDetail.trip_day, (tripDay: TripDay) => {
@@ -121,10 +139,35 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
         isLoading: false,
       };
 
+    case Actions.DELETING_TRIP_DAY:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.DELETING_TRIP_DAY_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.DELETING_TRIP_DAY_SUCCESS:
+      remove(state.tripDetail.trip_day, (tripDay: TripDay) => tripDay.id === action.tripDayId);
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case Actions.DELETING_TRIP_EVENT:
       return {
         ...state,
         isLoading: true,
+      };
+
+    case Actions.DELETING_TRIP_EVENT_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
       };
 
     case Actions.DELETING_TRIP_EVENT_SUCCESS:

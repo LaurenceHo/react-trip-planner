@@ -1,12 +1,28 @@
-import { Button, createStyles, Grid, Icon, makeStyles, Theme, Typography } from '@material-ui/core';
+import {
+  Button,
+  createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Fab,
+  Grid,
+  Icon,
+  makeStyles,
+  Theme,
+  Typography,
+} from '@material-ui/core';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../constants/types';
 import { Event as TripEvent } from '../models/event';
+import { Trip } from '../models/trip';
 import { TripDay } from '../models/trip-day';
 import { openTripEventForm } from '../store/actions/dashboard-actions';
+import { deleteTripDay } from '../store/actions/trip-actions';
 import { EventComponent } from './event';
 import myTheme from './theme';
 
@@ -23,19 +39,34 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonIcon: {
       marginRight: theme.spacing(1),
     },
+    fab: {
+      margin: theme.spacing(0.5),
+    },
   })
 );
+const tripDayDetail = (selectedTripDayId: number, tripDetail: Trip): TripDay => {
+  if (!isEmpty(tripDetail.trip_day)) {
+    return tripDetail.trip_day.find((tripDay: TripDay) => tripDay.id === selectedTripDayId);
+  }
+  return null;
+};
 export const TripEventList: React.FC<any> = () => {
+  const [isDialogOpen, setDialogOpen] = React.useState(false);
   const classes = useStyles({});
   const dispatch = useDispatch();
   const selectedTripDayId = useSelector((state: RootState) => state.dashboard.selectedTripDayId);
-  const tripDay: TripDay = useSelector((state: RootState) => state.trip.tripDetail.trip_day).find(
-    (tripDay: TripDay) => tripDay.id === selectedTripDayId
-  );
+  const tripDetail = useSelector((state: RootState) => state.trip.tripDetail);
+  const tripDay: TripDay = tripDayDetail(selectedTripDayId, tripDetail);
+
   let tripEventList: TripEvent[] = [];
   if (!isEmpty(tripDay)) {
     tripEventList = tripDay.events;
   }
+
+  const handleDeleteTripDay = () => {
+    setDialogOpen(false);
+    dispatch(deleteTripDay(selectedTripDayId));
+  };
 
   return (
     <MuiThemeProvider theme={myTheme}>
@@ -63,6 +94,21 @@ export const TripEventList: React.FC<any> = () => {
                   <Typography variant='subtitle1'>{tripDay.name}</Typography>
                 </Grid>
               )}
+              <Grid item>
+                <Fab color='primary' size='small' aria-label='edit' className={classes.fab}>
+                  <Icon>edit</Icon>
+                </Fab>
+                {isEmpty(tripDay.events) && (
+                  <Fab
+                    color='secondary'
+                    size='small'
+                    aria-label='delete'
+                    className={classes.fab}
+                    onClick={() => setDialogOpen(true)}>
+                    <Icon>delete</Icon>
+                  </Fab>
+                )}
+              </Grid>
             </Grid>
           </div>
           {tripEventList.map((tripEvent: TripEvent) => (
@@ -70,6 +116,24 @@ export const TripEventList: React.FC<any> = () => {
           ))}
         </>
       )}
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete Event?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            This will permanently delete the trip day <strong>{tripDay.trip_date} </strong>. Do you want to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteTripDay} color='primary'>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </MuiThemeProvider>
   );
 };
