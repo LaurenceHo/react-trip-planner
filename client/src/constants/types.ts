@@ -1,9 +1,9 @@
-import { ConnectedRouter } from 'connected-react-router';
+import { RouterState } from 'connected-react-router';
 import { Trip } from '../models/trip';
 import { User } from '../models/user';
 
 export interface RootState {
-  router?: ConnectedRouter;
+  router?: RouterState;
   dashboard: DashboardState;
   alert: AlertState;
   trip: TripState;

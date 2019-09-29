@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export const TripDetailBanner: React.FC<any> = () => {
   const classes = useStyles({});
   const tripDetail = useSelector((state: RootState) => state.trip.tripDetail);
-
   const startDateMoment = moment(tripDetail.start_date);
   const endDateMoment = moment(tripDetail.end_date);
   const dateDiff = endDateMoment.diff(startDateMoment, 'days');

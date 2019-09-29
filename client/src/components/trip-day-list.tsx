@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export const TripDayList: React.FC<any> = () => {
   const dispatch = useDispatch();
   const classes = useStyles({});
-
   const dashboard = useSelector((state: RootState) => state.dashboard);
   const tripDayList = useSelector((state: RootState) => state.trip.tripDetail.trip_day);
 

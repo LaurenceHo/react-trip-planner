@@ -47,14 +47,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface TripListProps {
-  history: History<any>;
-}
-
-export const TripList: React.FC<TripListProps> = ({ history }: TripListProps) => {
+export const TripList: React.FC<any> = ({ history }: { history: History<any> }) => {
   const dispatch = useDispatch();
   const classes = useStyles({});
-
   const alert = useSelector((state: RootState) => state.alert);
   const isLoading = useSelector((state: RootState) => state.trip.isLoading);
   const tripList = useSelector((state: RootState) => state.trip.tripList);
