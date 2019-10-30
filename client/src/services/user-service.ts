@@ -9,6 +9,7 @@ export class UserService extends ApiService {
 
   logout() {
     localStorage.removeItem('user');
+    return this.perform('POST', `${SERVER_URL}/user/logout`, null, null, null);
   }
 
   register(requestBody: { username: string; email: string; password: string }) {

@@ -1,5 +1,5 @@
 import { createStyles, Grid, Icon, IconButton, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
@@ -30,7 +30,7 @@ export const TripDetailBanner: React.FC<any> = () => {
   ));
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       <Paper className={classes.root}>
         <Grid container alignItems='center' spacing={2}>
           <Grid item>
@@ -49,6 +49,6 @@ export const TripDetailBanner: React.FC<any> = () => {
           </Grid>
         </Grid>
       </Paper>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

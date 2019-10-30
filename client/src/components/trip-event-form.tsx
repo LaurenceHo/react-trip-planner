@@ -17,9 +17,9 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { Formik, FormikActions, FormikProps } from 'formik';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -108,7 +108,23 @@ export const TripEventForm: React.FC<any> = () => {
       setFieldTouched(name, true, false);
     };
 
-    const handleDateChange = (name: string) => (date: Moment | null): void => {
+    const handleDateChange = (
+      name:
+        | 'title'
+        | 'id'
+        | 'category_id'
+        | 'start_time_timezone_id'
+        | 'end_time_timezone_id'
+        | 'currency_id'
+        | 'start_time'
+        | 'end_time'
+        | 'start_location'
+        | 'end_location'
+        | 'note'
+        | 'tag'
+        | 'cost'
+        | 'trip_day_id'
+    ) => (date: Moment | null): void => {
       const dateString = date ? moment(date).format(DATE_TIME_FORMAT) : null;
       if (name === 'start_time' && date) {
         const startDateMoment = moment(date);
@@ -372,7 +388,7 @@ export const TripEventForm: React.FC<any> = () => {
   };
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       <div>
         <Dialog
           open={dashboard.openTripEventForm}
@@ -399,7 +415,7 @@ export const TripEventForm: React.FC<any> = () => {
                 cost: 0,
               }}
               validationSchema={eventFormValidationSchema}
-              onSubmit={(values: TripEvent, actions: FormikActions<TripEvent>) => {
+              onSubmit={(values: TripEvent, actions: FormikHelpers<TripEvent>) => {
                 actions.setSubmitting(false);
                 dispatch(createTripEvent(values));
                 handleDialogClose();
@@ -409,6 +425,6 @@ export const TripEventForm: React.FC<any> = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

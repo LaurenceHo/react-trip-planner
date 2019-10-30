@@ -1,6 +1,6 @@
 import { Button, createStyles, Grid, Icon, makeStyles, TextField, Theme } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { Formik, FormikActions, FormikProps } from 'formik';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { History } from 'history';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
@@ -129,7 +129,7 @@ export const Register: React.FC<any> = (props: { history: History<any> }) => {
   };
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       <div className='container'>
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={12}>
@@ -156,7 +156,7 @@ export const Register: React.FC<any> = (props: { history: History<any> }) => {
               password: '',
             }}
             validationSchema={userRegisterValidationSchema}
-            onSubmit={(values: RegisterFormTypes, actions: FormikActions<RegisterFormTypes>) => {
+            onSubmit={(values: RegisterFormTypes, actions: FormikHelpers<RegisterFormTypes>) => {
               actions.setSubmitting(false);
               dispatch(userRegister(values));
             }}
@@ -164,6 +164,6 @@ export const Register: React.FC<any> = (props: { history: History<any> }) => {
           />
         </div>
       </div>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

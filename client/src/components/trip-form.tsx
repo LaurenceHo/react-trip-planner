@@ -12,7 +12,7 @@ import {
   Theme,
 } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { Formik, FormikActions, FormikProps } from 'formik';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
@@ -74,7 +74,9 @@ export const TripForm: React.FC<any> = () => {
       setFieldTouched(name, true, false);
     };
 
-    const handleDateChange = (name: string) => (date: Moment | null): void => {
+    const handleDateChange = (name: 'name' | 'timezone_id' | 'start_date' | 'end_date' | 'destination') => (
+      date: Moment | null
+    ): void => {
       const dateString = moment(date).format(DATE_FORMAT);
       const startDateMoment = moment(start_date);
       const endDateMoment = moment(end_date);
@@ -188,7 +190,7 @@ export const TripForm: React.FC<any> = () => {
               archived: false,
             }}
             validationSchema={tripFormValidationSchema}
-            onSubmit={(values: TripFormTypes, actions: FormikActions<TripFormTypes>) => {
+            onSubmit={(values: TripFormTypes, actions: FormikHelpers<TripFormTypes>) => {
               actions.setSubmitting(false);
               dispatch(createTrip(values));
               handleDialogClose();

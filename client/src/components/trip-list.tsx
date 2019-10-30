@@ -11,7 +11,7 @@ import {
   TableRow,
   Theme,
 } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { History } from 'history';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
@@ -59,7 +59,7 @@ export const TripList: React.FC<any> = ({ history }: { history: History<any> }) 
   }, []);
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       {isLoading ? (
         <div className={classes.progressWrapper}>
           <CircularProgress className={classes.progress} color='secondary' />
@@ -101,6 +101,6 @@ export const TripList: React.FC<any> = ({ history }: { history: History<any> }) 
           </Table>
         </Paper>
       )}
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

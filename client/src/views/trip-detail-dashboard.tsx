@@ -1,5 +1,5 @@
 import { CircularProgress, createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -48,7 +48,7 @@ export const TripDetailDashboard: React.FC<any> = (props: { history: any; locati
   }, []);
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       {isLoading ? (
         <div className={classes.progressWrapper}>
           <CircularProgress className={classes.progress} color='secondary' />
@@ -87,6 +87,6 @@ export const TripDetailDashboard: React.FC<any> = (props: { history: any; locati
           </Grid>
         </div>
       )}
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

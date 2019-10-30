@@ -13,7 +13,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,7 +69,7 @@ export const TripEventList: React.FC<any> = () => {
   };
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       {!isEmpty(tripDay) && (
         <>
           <div className={classes.eventWrapper}>
@@ -134,6 +134,6 @@ export const TripEventList: React.FC<any> = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

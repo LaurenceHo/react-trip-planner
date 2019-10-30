@@ -16,7 +16,7 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { push } from 'connected-react-router';
 import * as React from 'react';
@@ -227,7 +227,7 @@ export const Dashboard: React.FC<any> = () => {
   );
 
   return (
-    <MuiThemeProvider theme={myTheme}>
+    <ThemeProvider theme={myTheme}>
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
@@ -312,6 +312,6 @@ export const Dashboard: React.FC<any> = () => {
           <Route path='/dashboard/trip/:id' component={TripDetailDashboard} />
         </main>
       </div>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };
