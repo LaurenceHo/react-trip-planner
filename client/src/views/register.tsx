@@ -147,7 +147,7 @@ export const Register: React.FC<any> = (props: { history: History<any> }) => {
         )}
         <div className='user-form'>
           <div className='user-form-title-container'>
-            <h3 className='user-form-title'>Sign Up </h3>
+            <h3 className='user-form-title'>Sign Up</h3>
           </div>
           <Formik
             initialValues={{
@@ -159,9 +159,9 @@ export const Register: React.FC<any> = (props: { history: History<any> }) => {
             onSubmit={(values: RegisterFormTypes, actions: FormikHelpers<RegisterFormTypes>) => {
               actions.setSubmitting(false);
               dispatch(userRegister(values));
-            }}
-            render={(props: FormikProps<RegisterFormTypes>) => <RegisterForm {...props} />}
-          />
+            }}>
+            {(props: FormikProps<RegisterFormTypes>) => <RegisterForm {...props} />}
+          </Formik>
         </div>
       </div>
     </ThemeProvider>

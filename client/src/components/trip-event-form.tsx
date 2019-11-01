@@ -419,9 +419,9 @@ export const TripEventForm: React.FC<any> = () => {
                 actions.setSubmitting(false);
                 dispatch(createTripEvent(values));
                 handleDialogClose();
-              }}
-              render={(props: FormikProps<TripEvent>) => <InnerForm {...props} />}
-            />
+              }}>
+              {(props: FormikProps<TripEvent>) => <InnerForm {...props} />}
+            </Formik>
           </DialogContent>
         </Dialog>
       </div>

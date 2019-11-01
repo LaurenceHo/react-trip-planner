@@ -142,9 +142,9 @@ export const Login: React.FC<any> = (props: { history: History<any> }) => {
             onSubmit={(values: LoginFormTypes, actions: FormikHelpers<LoginFormTypes>) => {
               actions.setSubmitting(false);
               dispatch(userLogin(values));
-            }}
-            render={(props: FormikProps<LoginFormTypes>) => <LoginForm {...props} />}
-          />
+            }}>
+            {(props: FormikProps<LoginFormTypes>) => <LoginForm {...props} />}
+          </Formik>
         </div>
       </div>
     </ThemeProvider>
