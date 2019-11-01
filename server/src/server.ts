@@ -1,5 +1,7 @@
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
+import { Request, Response } from 'express';
 import * as expressSanitizer from 'express-sanitizer';
 import * as helmet from 'helmet';
 import * as jwt from 'jsonwebtoken';
@@ -15,7 +17,8 @@ schema();
 
 const app = express();
 
-app.set('superSecret', 'TripPlannerRestfulApis');
+app.set('superSecret', 'TripPlannerRestfulApis'); // TODO , should store in the config file
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client'), { index: false }));
@@ -41,26 +44,33 @@ const corsHeader = (req: any, res: any, next: any) => {
 };
 app.use(corsHeader);
 
-const jwtAuthentication = (req: any, res: express.Response, next: any) => {
-  if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-    jwt.verify(req.headers.authorization.split(' ')[1], app.get('superSecret'), (error: any, decode: any) => {
-      if (error) {
-        return res.status(401).send({
-          success: false,
-          error: 'Authentication failed. Please login.',
-        });
-      } else {
-        req.user = decode;
-        next();
-      }
-    });
-  } else {
+const jwtAuthentication = (req: Request, res: Response, next: any) => {
+  const _cleanToken = (message: string) => {
+    res.clearCookie('jwt');
     return res.status(401).send({
       success: false,
-      error: 'No authentication token provided.',
+      error: message,
     });
+  };
+
+  if (req.cookies && req.cookies.jwt) {
+    jwt.verify(req.cookies.jwt, app.get('superSecret'), (error: Error, decodedToken: any) => {
+      if (error) {
+        _cleanToken('Authentication failed. Please login.');
+      }
+
+      if (decodedToken.exp <= Date.now() / 1000) {
+        _cleanToken('Session expired. Please login again.');
+      }
+
+      req['user'] = decodedToken;
+      next();
+    });
+  } else {
+    _cleanToken('No authentication token provided.');
   }
 };
+
 app.use('/api/trip', jwtAuthentication);
 app.use('/api/event', jwtAuthentication);
 app.use('/api/user/update', jwtAuthentication);
@@ -70,12 +80,10 @@ app.use('/api/trip', tripDayRoute);
 app.use('/api/event', eventRoute);
 app.use('/api/user', userRoute);
 
-app.get('/*', (req: express.Request, res: express.Response) =>
-  res.sendFile(path.resolve(__dirname, '../client', 'index.html'))
-);
+app.get('/*', (req: Request, res: Response) => res.sendFile(path.resolve(__dirname, '../client', 'index.html')));
 
 // catch 404 and forward to error handler
-app.use((req: express.Request, res: express.Response, next) => {
+app.use((req: Request, res: Response, next) => {
   const err = new Error('Not Found');
   next(err);
 });

@@ -1,4 +1,4 @@
-import * as express from 'express';
+import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 import { User } from '../models/user';
@@ -8,38 +8,45 @@ import { BaseController } from './base-controller';
 const userService = new UserService();
 
 export class UserController implements BaseController<UserService> {
-  login(req: express.Request, res: express.Response): void {
+  login(req: Request, res: Response): void {
+    const { email, password } = req.body;
     try {
-      const email = req.body.email;
       userService.retrieve(null, { email }, (user: User, error: any) => {
         if (error) {
           res.status(400).send({ error: error.sqlMessage });
         }
 
         if (user) {
-          if (!userService.checkPassword(req.body.password, user.password)) {
+          if (!userService.checkPassword(password, user.password)) {
             res.status(401).json({ error: 'Authentication failed. Email or password is wrong.' });
           } else {
-            res.json({
-              success: true,
-              user: {
-                id: user.id,
+            const token = jwt.sign(
+              {
                 email: user.email,
                 username: user.username,
-                token: jwt.sign(
-                  {
-                    id: user.id,
-                    email: user.email,
-                    username: user.username,
-                  },
-                  req.app.get('superSecret'),
-                  { expiresIn: '1d' }
-                ),
               },
-            });
+              req.app.get('superSecret'),
+              { expiresIn: '1h' }
+            );
+
+            res
+              .status(200)
+              .cookie('jwt', token, {
+                maxAge: 60 * 60 * 1000,
+                httpOnly: true,
+                secure: false,
+                sameSite: true,
+              })
+              .send({
+                success: true,
+                user: {
+                  email: user.email,
+                  username: user.username,
+                },
+              });
           }
         } else {
-          res.status(401).json({ error: 'Authentication failed. Email or password is wrong.' });
+          res.status(401).send({ error: 'Authentication failed. Email or password is wrong.' });
         }
       });
     } catch (error) {
@@ -47,7 +54,7 @@ export class UserController implements BaseController<UserService> {
     }
   }
 
-  create(req: express.Request, res: express.Response): void {
+  create(req: Request, res: Response): void {
     try {
       const newUser: User = req.body;
       userService.create(newUser, (result: any, error: any) => {
@@ -63,7 +70,7 @@ export class UserController implements BaseController<UserService> {
     }
   }
 
-  update(req: express.Request, res: express.Response): void {
+  update(req: Request, res: Response): void {
     try {
       const user: User = req.body;
       userService.update(user, (result: any, error: any) => {
@@ -79,7 +86,7 @@ export class UserController implements BaseController<UserService> {
     }
   }
 
-  logout(req: express.Request, res: express.Response): void {
-    // TODO, remove jwt?
+  logout(req: Request, res: Response): void {
+    res.clearCookie('jwt');
   }
 }
