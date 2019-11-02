@@ -60,6 +60,12 @@ const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 
+  const action = onClose && (
+    <IconButton key='close' aria-label='Close' color='inherit' onClick={onClose}>
+      <Close className={classes.icon} />
+    </IconButton>
+  );
+
   return (
     <SnackbarContent
       className={clsx(classes[variant], className)}
@@ -70,11 +76,7 @@ const SnackbarContentWrapper = (props: SnackbarContentWrapperProps) => {
           {message}
         </span>
       }
-      action={[
-        <IconButton key='close' aria-label='Close' color='inherit' onClick={onClose}>
-          <Close className={classes.icon} />
-        </IconButton>,
-      ]}
+      action={action}
       {...other}
     />
   );

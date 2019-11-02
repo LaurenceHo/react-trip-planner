@@ -22,6 +22,7 @@ export class UserController implements BaseController<UserService> {
           } else {
             const token = jwt.sign(
               {
+                id: user.id,
                 email: user.email,
                 username: user.username,
               },

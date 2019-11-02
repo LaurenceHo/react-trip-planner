@@ -26,6 +26,7 @@ const initialState: TripState = {
 
 export const tripReducers = (state: TripState = initialState, action: any) => {
   switch (action.type) {
+    /** Fetching **/
     case Actions.FETCHING_TRIP_LIST:
       return {
         ...state,
@@ -64,6 +65,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
         tripDetail: action.tripDetail,
       };
 
+    /** Creating **/
     case Actions.CREATING_TRIP:
       return {
         ...state,
@@ -126,19 +128,45 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
 
     case Actions.CREATING_TRIP_EVENT_SUCCESS:
       const tripEvent = parseToLocalTime(action.tripEvent, state.tripDetail.timezone_id);
-      map(state.tripDetail.trip_day, (tripDay: TripDay) => {
+      state.tripDetail.trip_day = state.tripDetail.trip_day.map((tripDay: TripDay) => {
         if (tripDay.id === tripEvent.trip_day_id) {
           tripDay.events.push(tripEvent);
           tripDay.events = sortBy(tripDay.events, (event: TripEvent) => event.start_time);
         }
         return tripDay;
       });
-
       return {
         ...state,
         isLoading: false,
       };
 
+    /** Updating **/
+    case Actions.UPDATING_TRIP_DAY:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.UPDATING_TRIP_DAY_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.UPDATING_TRIP_DAY_SUCCESS:
+      state.tripDetail.trip_day = state.tripDetail.trip_day.map((tripDay: TripDay) => {
+        if (action.tripDay.id === tripDay.id) {
+          tripDay.name = action.tripDay.name;
+          tripDay.trip_date = action.tripDay.trip_date;
+        }
+        return tripDay;
+      });
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    /** Deleting **/
     case Actions.DELETING_TRIP_DAY:
       return {
         ...state,
@@ -171,7 +199,7 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     case Actions.DELETING_TRIP_EVENT_SUCCESS:
-      map(state.tripDetail.trip_day, (tripDay: TripDay) => {
+      state.tripDetail.trip_day = state.tripDetail.trip_day.map((tripDay: TripDay) => {
         if (tripDay.id === action.tripEvent.trip_day_id) {
           remove(tripDay.events, tripEvent => tripEvent.id === action.tripEvent.id);
         }

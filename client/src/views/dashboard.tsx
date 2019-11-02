@@ -229,7 +229,6 @@ export const Dashboard: React.FC<any> = () => {
   return (
     <ThemeProvider theme={myTheme}>
       <div className={classes.root}>
-        <CssBaseline />
         <AppBar
           position='fixed'
           className={clsx(classes.appBar, {

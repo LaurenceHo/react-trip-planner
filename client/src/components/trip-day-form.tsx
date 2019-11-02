@@ -22,9 +22,6 @@ import { createTripDay } from '../store/actions/trip-actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    menu: {
-      width: '12.5rem',
-    },
     buttonWrapper: {
       padding: theme.spacing(2, 0),
     },

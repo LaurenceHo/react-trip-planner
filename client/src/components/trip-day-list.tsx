@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
+  Paper,
   Theme,
 } from '@material-ui/core';
 import { isEmpty } from 'lodash';
@@ -31,26 +32,28 @@ export const TripDayList: React.FC<any> = () => {
   const tripDayList = useSelector((state: RootState) => state.trip.tripDetail.trip_day);
 
   return (
-    <List className={classes.tripDayList}>
-      <ListItem button key='New Day' onClick={() => dispatch(openTripDayForm(true))}>
-        <ListItemIcon>
-          <Icon>add</Icon>
-        </ListItemIcon>
-        <ListItemText primary='New Day' />
-      </ListItem>
-      {!isEmpty && <Divider />}
-      {tripDayList.map((tripDay: TripDay) => (
-        <ListItem
-          button
-          key={tripDay.id}
-          selected={dashboard.selectedTripDayId === tripDay.id}
-          onClick={() => dispatch(updateSelectedTripDayId(tripDay.id))}>
-          <ListItemText primary={tripDay.trip_date} />
+    <Paper>
+      <List className={classes.tripDayList}>
+        <ListItem button key='New Day' onClick={() => dispatch(openTripDayForm(true))}>
           <ListItemIcon>
-            <Icon>chevron_right</Icon>
+            <Icon>add</Icon>
           </ListItemIcon>
+          <ListItemText primary='New Day' />
         </ListItem>
-      ))}
-    </List>
+        {!isEmpty && <Divider />}
+        {tripDayList.map((tripDay: TripDay) => (
+          <ListItem
+            button
+            key={tripDay.id}
+            selected={dashboard.selectedTripDayId === tripDay.id}
+            onClick={() => dispatch(updateSelectedTripDayId(tripDay.id))}>
+            <ListItemText primary={tripDay.trip_date} />
+            <ListItemIcon>
+              <Icon>chevron_right</Icon>
+            </ListItemIcon>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
 };

@@ -25,6 +25,7 @@ import { openTripEventForm } from '../store/actions/dashboard-actions';
 import { deleteTripDay } from '../store/actions/trip-actions';
 import { EventComponent } from './event';
 import myTheme from './theme';
+import { TripDayInnerForm } from './trip-day-inner-form';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     fab: {
-      margin: theme.spacing(0.5),
+      margin: theme.spacing(0.25),
     },
   })
 );
@@ -52,6 +53,7 @@ const tripDayDetail = (selectedTripDayId: number, tripDetail: Trip): TripDay => 
 };
 export const TripEventList: React.FC<any> = () => {
   const [isDialogOpen, setDialogOpen] = React.useState(false);
+  const [isEditTripDay, setEditTripDay] = React.useState(false);
   const classes = useStyles({});
   const dispatch = useDispatch();
   const selectedTripDayId = useSelector((state: RootState) => state.dashboard.selectedTripDayId);
@@ -63,10 +65,47 @@ export const TripEventList: React.FC<any> = () => {
     tripEventList = tripDay.events;
   }
 
+  const handleEditTripDay = () => setEditTripDay(!isEditTripDay);
+
   const handleDeleteTripDay = () => {
     setDialogOpen(false);
     dispatch(deleteTripDay(selectedTripDayId));
   };
+
+  const TripDayDisplay = () => (
+    <>
+      <Grid item>
+        <Typography variant='h5' component='h3'>
+          {tripDay.trip_date}
+        </Typography>
+      </Grid>
+      {!isEmpty(tripDay.name) && (
+        <Grid item>
+          <Typography variant='subtitle1'>{tripDay.name}</Typography>
+        </Grid>
+      )}
+      <Grid item>
+        <Fab
+          color='primary'
+          size='small'
+          aria-label='edit'
+          className={classes.fab}
+          onClick={() => setEditTripDay(true)}>
+          <Icon>edit</Icon>
+        </Fab>
+        {isEmpty(tripDay.events) && (
+          <Fab
+            color='secondary'
+            size='small'
+            aria-label='delete'
+            className={classes.fab}
+            onClick={() => setDialogOpen(true)}>
+            <Icon>delete</Icon>
+          </Fab>
+        )}
+      </Grid>
+    </>
+  );
 
   return (
     <ThemeProvider theme={myTheme}>
@@ -84,31 +123,15 @@ export const TripEventList: React.FC<any> = () => {
                   <Icon className={classes.buttonIcon}>add</Icon> New Event
                 </Button>
               </Grid>
-              <Grid item>
-                <Typography variant='h5' component='h3'>
-                  {tripDay.trip_date}
-                </Typography>
-              </Grid>
-              {!isEmpty(tripDay.name) && (
-                <Grid item>
-                  <Typography variant='subtitle1'>{tripDay.name}</Typography>
-                </Grid>
+              {isEditTripDay ? (
+                <TripDayInnerForm
+                  isEdit={isEditTripDay}
+                  tripDayDetail={tripDay}
+                  handleOpenFunction={handleEditTripDay}
+                />
+              ) : (
+                <TripDayDisplay />
               )}
-              <Grid item>
-                <Fab color='primary' size='small' aria-label='edit' className={classes.fab}>
-                  <Icon>edit</Icon>
-                </Fab>
-                {isEmpty(tripDay.events) && (
-                  <Fab
-                    color='secondary'
-                    size='small'
-                    aria-label='delete'
-                    className={classes.fab}
-                    onClick={() => setDialogOpen(true)}>
-                    <Icon>delete</Icon>
-                  </Fab>
-                )}
-              </Grid>
             </Grid>
           </div>
           {tripEventList.map((tripEvent: TripEvent) => (

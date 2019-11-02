@@ -93,6 +93,7 @@ const _createEventRequestPayload = (payload: Event, state: RootState) => {
   return newPayload;
 };
 
+/** Fetching **/
 const fetchingTripList = () => {
   return {
     type: Actions.FETCHING_TRIP_LIST,
@@ -200,6 +201,7 @@ export const getTripDetail = (tripId: number) => {
   };
 };
 
+/** Creating **/
 const creatingTrip = () => {
   return {
     type: Actions.CREATING_TRIP,
@@ -292,53 +294,6 @@ export const createTripDay = (payload: TripDay) => {
   };
 };
 
-const deletingTripDay = () => {
-  return {
-    type: Actions.DELETING_TRIP_DAY,
-  };
-};
-
-const deletingTripDayFailure = () => {
-  return {
-    type: Actions.DELETING_TRIP_DAY_FAILURE,
-  };
-};
-
-const deletingTripDaySuccess = (tripDayId: number) => {
-  return {
-    type: Actions.DELETING_TRIP_DAY_SUCCESS,
-    tripDayId,
-  };
-};
-
-const _deleteTripDayFailure = (message: string) => {
-  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
-    dispatch(deletingTripDayFailure());
-    dispatch(createAlert({ type: 'error', message }));
-  };
-};
-
-export const deleteTripDay = (tripDayId: number) => {
-  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>, getState: any) => {
-    dispatch(deletingTripDay());
-
-    tripService
-      .deleteTripDay(tripDayId)
-      .then((result: any) => {
-        if (result.success) {
-          const updateTripDayId = getState().trip.tripDetail.trip_day[0].id || 0;
-          dispatch(updateSelectedTripDayId(updateTripDayId));
-          dispatch(deletingTripDaySuccess(tripDayId));
-        } else {
-          dispatch(_deleteTripDayFailure(Messages.response.message));
-        }
-      })
-      .catch((error: any) => {
-        dispatch(_deleteTripDayFailure(error.error));
-      });
-  };
-};
-
 const creatingTripEvent = () => {
   return {
     type: Actions.CREATING_TRIP_EVENT,
@@ -382,6 +337,99 @@ export const createTripEvent = (payload: Event) => {
       })
       .catch((error: any) => {
         dispatch(_createTripEventFailure(error.error));
+      });
+  };
+};
+
+/** Updating **/
+const updatingTripDay = () => {
+  return {
+    type: Actions.UPDATING_TRIP_DAY,
+  };
+};
+
+const updatingTripDayFailure = () => {
+  return {
+    type: Actions.UPDATING_TRIP_DAY_FAILURE,
+  };
+};
+
+const updatingTripDaySuccess = (tripDay: TripDay) => {
+  return {
+    type: Actions.UPDATING_TRIP_DAY_SUCCESS,
+    tripDay,
+  };
+};
+
+const _updateTripDayFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(updatingTripDayFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
+export const updateTripDay = (payload: TripDay) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(updatingTripDay());
+    tripService
+      .updateTripDay(payload)
+      .then((result: any) => {
+        if (result.success) {
+          dispatch(updatingTripDaySuccess(payload));
+        } else {
+          dispatch(_updateTripDayFailure(Messages.response.message));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(_updateTripDayFailure(error.error));
+      });
+  };
+};
+
+/** Deleting **/
+const deletingTripDay = () => {
+  return {
+    type: Actions.DELETING_TRIP_DAY,
+  };
+};
+
+const deletingTripDayFailure = () => {
+  return {
+    type: Actions.DELETING_TRIP_DAY_FAILURE,
+  };
+};
+
+const deletingTripDaySuccess = (tripDayId: number) => {
+  return {
+    type: Actions.DELETING_TRIP_DAY_SUCCESS,
+    tripDayId,
+  };
+};
+
+const _deleteTripDayFailure = (message: string) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>) => {
+    dispatch(deletingTripDayFailure());
+    dispatch(createAlert({ type: 'error', message }));
+  };
+};
+
+export const deleteTripDay = (tripDayId: number) => {
+  return (dispatch: ThunkDispatch<RootState, {}, AnyAction>, getState: any) => {
+    dispatch(deletingTripDay());
+
+    tripService
+      .deleteTripDay(tripDayId)
+      .then((result: any) => {
+        if (result.success) {
+          const updateTripDayId = getState().trip.tripDetail.trip_day[0].id || 0;
+          dispatch(updateSelectedTripDayId(updateTripDayId));
+          dispatch(deletingTripDaySuccess(tripDayId));
+        } else {
+          dispatch(_deleteTripDayFailure(Messages.response.message));
+        }
+      })
+      .catch((error: any) => {
+        dispatch(_deleteTripDayFailure(error.error));
       });
   };
 };
