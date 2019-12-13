@@ -67,7 +67,7 @@ const jwtAuthentication = (req: Request, res: Response, next: any) => {
       next();
     });
   } else {
-    _cleanToken('No authentication token provided.');
+    _cleanToken('Authentication failed. Please login.');
   }
 };
 

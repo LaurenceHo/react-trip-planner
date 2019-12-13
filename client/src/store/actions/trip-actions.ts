@@ -127,7 +127,7 @@ export const getTripList = () => {
     const requestPayload = _generateGetTripListPayload(getState().dashboard.currentMenu);
     tripService
       .getTripList(requestPayload)
-      .then((result: { success: boolean; result: Trip[] }) => {
+      .then((result: { success: boolean; result: Trip[]; error?: string }) => {
         if (result.success) {
           map(result.result, (trip: Trip) => {
             trip.start_date = moment(trip.start_date).format(DATE_FORMAT);
@@ -136,7 +136,7 @@ export const getTripList = () => {
           });
           dispatch(fetchingTripListSuccess(result.result));
         } else {
-          dispatch(_fetchTripListFailure(Messages.response.message));
+          dispatch(_fetchTripListFailure(result.error));
         }
       })
       .catch((error: any) => dispatch(_fetchTripListFailure(error.error)));
