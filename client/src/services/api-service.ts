@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 
 export class ApiService {
-  perform(method: string, urlPath: string, requestBody: any, searchParams: any, formParams: any): any {
+  perform(method: string, urlPath: string, requestBody: any, searchParams: any, formParams: any): Promise<any> {
     const requestOptions: any = {};
     requestOptions.mode = 'cors';
     requestOptions.credentials = 'include';
@@ -12,7 +12,6 @@ export class ApiService {
     // Construct request body
     if (!isEmpty(formParams)) {
       // Form submit
-      headers.append('Content-Type', 'application/x-www-form-urlencoded');
       const formData = new FormData();
       for (const formParam of Object.keys(formParams)) {
         formData.append(formParam, formParams[formParam]);
@@ -23,6 +22,7 @@ export class ApiService {
       headers.append('Content-Type', 'application/json');
       requestOptions.body = JSON.stringify(requestBody);
     } else if (!isEmpty(searchParams)) {
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
       const urlSearchParams = new URLSearchParams();
       for (const param of Object.keys(searchParams)) {
         urlSearchParams.append(param, searchParams[param]);
