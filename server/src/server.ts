@@ -37,7 +37,7 @@ const corsHeader = (req: any, res: any, next: any) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   if ('OPTIONS' === req.method) {
-    res.send(200);
+    res.sendStatus(200);
   } else {
     next();
   }

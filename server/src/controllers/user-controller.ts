@@ -33,7 +33,7 @@ export class UserController implements BaseController<UserService> {
             res
               .status(200)
               .cookie('jwt', token, {
-                maxAge: 60 * 60 * 1000,
+                maxAge: 60 * 60 * 1000 * 4,
                 httpOnly: true,
                 secure: false,
                 sameSite: true,
