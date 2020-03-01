@@ -65,7 +65,7 @@ export const TripDetailDashboard: React.FC<any> = (props: { history: any; locati
       ) : (
         <div>
           <div className={classes.tripDetailBannerWrapper}>
-            <TripDetailBanner />
+            <TripDetailBanner tripId={props.match.params.id} />
           </div>
           <Grid container spacing={2}>
             <Grid item xs={2}>

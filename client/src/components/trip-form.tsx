@@ -5,9 +5,11 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   Grid,
   makeStyles,
   MenuItem,
+  Switch,
   TextField,
   Theme,
 } from '@material-ui/core';
@@ -21,8 +23,9 @@ import { timezone } from '../assets/timezone';
 import { DATE_FORMAT } from '../constants/general';
 import { RootState } from '../constants/types';
 import { tripFormValidationSchema } from '../constants/validation';
-import { openTripForm } from '../store/actions/dashboard-actions';
-import { createTrip } from '../store/actions/trip-actions';
+import { Trip } from '../models/trip';
+import { openTripForm, setEditMode } from '../store/actions/dashboard-actions';
+import { createTrip, updateTrip } from '../store/actions/trip-actions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TripFormTypes {
+  id?: number;
   timezone_id: number;
   start_date: string;
   end_date: string;
@@ -51,14 +55,36 @@ export const TripForm: React.FC<any> = () => {
   const classes = useStyles({});
   const dispatch = useDispatch();
   const dashboard = useSelector((state: RootState) => state.dashboard);
+  const tripDetail: Trip = useSelector((state: RootState) => state.trip.tripDetail);
 
   const handleDialogClose = (): void => {
     dispatch(openTripForm(false));
+    dispatch(
+      setEditMode({
+        isEditMode: false,
+        idInEdit: 0,
+        component: null,
+      })
+    );
   };
 
+  const tripInitialValues = {
+    timezone_id: dashboard.edit.isEditMode && dashboard.edit.component === 'trip' ? tripDetail.timezone_id : 99,
+    start_date:
+      dashboard.edit.isEditMode && dashboard.edit.component === 'trip'
+        ? tripDetail.start_date
+        : moment().format(DATE_FORMAT),
+    end_date:
+      dashboard.edit.isEditMode && dashboard.edit.component === 'trip'
+        ? tripDetail.end_date
+        : moment().format(DATE_FORMAT),
+    name: dashboard.edit.isEditMode && dashboard.edit.component === 'trip' ? tripDetail.name : '',
+    destination: dashboard.edit.isEditMode && dashboard.edit.component === 'trip' ? tripDetail.destination : '',
+    archived: dashboard.edit.isEditMode && dashboard.edit.component === 'trip' ? tripDetail.archived : false,
+  };
   const InnerForm = (props: FormikProps<TripFormTypes>) => {
     const {
-      values: { timezone_id, start_date, end_date, name, destination },
+      values: { timezone_id, start_date, end_date, name, destination, archived },
       errors,
       touched,
       handleChange,
@@ -74,9 +100,7 @@ export const TripForm: React.FC<any> = () => {
       setFieldTouched(name, true, false);
     };
 
-    const handleDateChange = (name: 'name' | 'timezone_id' | 'start_date' | 'end_date' | 'destination') => (
-      date: Moment | null
-    ): void => {
+    const handleDateChange = (name: 'start_date' | 'end_date') => (date: Moment | null): void => {
       const dateString = moment(date).format(DATE_FORMAT);
       const startDateMoment = moment(start_date);
       const endDateMoment = moment(end_date);
@@ -158,6 +182,14 @@ export const TripForm: React.FC<any> = () => {
             </MenuItem>
           ))}
         </TextField>
+        {dashboard.edit.isEditMode && dashboard.edit.component === 'trip' && (
+          <FormControlLabel
+            control={
+              <Switch name='archived' checked={archived} onChange={change.bind(null, 'archived')} value={archived} />
+            }
+            label='Archived'
+          />
+        )}
         <Grid container spacing={2} className={classes.buttonWrapper}>
           <Grid item>
             <Button onClick={handleDialogClose}>Cancel</Button>
@@ -173,26 +205,24 @@ export const TripForm: React.FC<any> = () => {
   return (
     <div>
       <Dialog
-        open={dashboard.openTripForm}
+        open={dashboard.openTripForm || (dashboard.edit.isEditMode && dashboard.edit.component === 'trip')}
         onClose={handleDialogClose}
         aria-labelledby='form-dialog-title'
         maxWidth='sm'
         fullWidth>
-        <DialogTitle id='form-dialog-title'>Create trip</DialogTitle>
+        <DialogTitle id='form-dialog-title'>{dashboard.edit.isEditMode ? 'Edit' : 'Create'} trip</DialogTitle>
         <DialogContent>
           <Formik
-            initialValues={{
-              timezone_id: 99,
-              start_date: moment().format(DATE_FORMAT),
-              end_date: moment().format(DATE_FORMAT),
-              name: '',
-              destination: '',
-              archived: false,
-            }}
+            initialValues={tripInitialValues}
             validationSchema={tripFormValidationSchema}
             onSubmit={(values: TripFormTypes, actions: FormikHelpers<TripFormTypes>) => {
               actions.setSubmitting(false);
-              dispatch(createTrip(values));
+              if (dashboard.edit.isEditMode && dashboard.edit.component === 'trip') {
+                values.id = tripDetail.id;
+                dispatch(updateTrip(values));
+              } else {
+                dispatch(createTrip(values));
+              }
               handleDialogClose();
             }}>
             {(props: FormikProps<TripFormTypes>) => <InnerForm {...props} />}

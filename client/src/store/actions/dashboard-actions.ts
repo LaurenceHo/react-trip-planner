@@ -35,3 +35,14 @@ export const openTripEventForm: ActionCreator<Action> = (payload: boolean) => {
     payload,
   };
 };
+
+export const setEditMode: ActionCreator<Action> = (payload: {
+  isEditMode: boolean;
+  idInEdit: number;
+  component: 'trip' | 'tripDay' | 'tripEvent';
+}) => {
+  return {
+    type: Actions.SET_EDIT_MODE,
+    payload,
+  };
+};

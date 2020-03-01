@@ -46,6 +46,12 @@ export const dashboardReducers = (state: DashboardState = initialState, action: 
         openTripEventForm: action.payload,
       };
 
+    case Actions.SET_EDIT_MODE:
+      return {
+        ...state,
+        edit: action.payload,
+      };
+
     default:
       return state;
   }

@@ -141,6 +141,27 @@ export const tripReducers = (state: TripState = initialState, action: any) => {
       };
 
     /** Updating **/
+    case Actions.UPDATING_TRIP:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case Actions.UPDATING_TRIP_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case Actions.UPDATING_TRIP_SUCCESS:
+      Object.keys(action.trip).forEach(prop => {
+        state.tripDetail[prop] = action.trip[prop];
+      });
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     case Actions.UPDATING_TRIP_DAY:
       return {
         ...state,

@@ -108,23 +108,7 @@ export const TripEventForm: React.FC<any> = () => {
       setFieldTouched(name, true, false);
     };
 
-    const handleDateChange = (
-      name:
-        | 'title'
-        | 'id'
-        | 'category_id'
-        | 'start_time_timezone_id'
-        | 'end_time_timezone_id'
-        | 'currency_id'
-        | 'start_time'
-        | 'end_time'
-        | 'start_location'
-        | 'end_location'
-        | 'note'
-        | 'tag'
-        | 'cost'
-        | 'trip_day_id'
-    ) => (date: Moment | null): void => {
+    const handleDateChange = (name: 'start_time' | 'end_time') => (date: Moment | null): void => {
       const dateString = date ? moment(date).format(DATE_TIME_FORMAT) : null;
       if (name === 'start_time' && date) {
         const startDateMoment = moment(date);

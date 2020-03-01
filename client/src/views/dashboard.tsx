@@ -1,7 +1,6 @@
 import {
   AppBar,
   createStyles,
-  CssBaseline,
   Divider,
   Drawer,
   Icon,
