@@ -64,11 +64,8 @@ module.exports = {
      * Copies project static assets.
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
-    new CopyWebpackPlugin([
-      {
-        from: 'src/assets/favicon.ico',
-        to: 'favicon.ico',
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'src/assets/favicon.ico', to: 'favicon.ico' }],
+    }),
   ],
 };
