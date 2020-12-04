@@ -1,4 +1,3 @@
-import MomentUtils from '@date-io/moment';
 import {
   Button,
   createStyles,
@@ -13,7 +12,6 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -133,33 +131,28 @@ export const TripForm: React.FC<any> = () => {
         />
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DatePicker
-                label='Start date'
-                name='start_date'
-                margin='normal'
-                value={start_date}
-                onChange={handleDateChange('start_date')}
-                format='YYYY-MM-DD'
-                required
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              id='start_date'
+              label='Start date'
+              type='date'
+              defaultValue={start_date}
+              onChange={() => handleDateChange('start_date')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DatePicker
-                label='End date'
-                name='end_date'
-                margin='normal'
-                value={end_date}
-                onChange={handleDateChange('end_date')}
-                minDate={start_date}
-                format='YYYY-MM-DD'
-                required
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              id='end_date'
+              label='End date'
+              type='date'
+              defaultValue={end_date}
+              onChange={() => handleDateChange('end_date')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Grid>
         </Grid>
         <TextField
@@ -176,7 +169,7 @@ export const TripForm: React.FC<any> = () => {
               className: classes.menu,
             },
           }}>
-          {timezone.map(tz => (
+          {timezone.map((tz) => (
             <MenuItem key={tz.id} value={tz.id}>
               {tz.text}
             </MenuItem>

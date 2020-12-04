@@ -1,4 +1,3 @@
-import MomentUtils from '@date-io/moment';
 import {
   Button,
   Chip,
@@ -18,7 +17,6 @@ import {
   Theme,
 } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
@@ -194,18 +192,16 @@ export const TripEventForm: React.FC<any> = () => {
         />
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
-                label='Start time'
-                name='start_time'
-                margin='normal'
-                value={start_time}
-                onChange={handleDateChange('start_time')}
-                format={DATE_TIME_FORMAT}
-                clearable
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              id='start_time'
+              label='Start time'
+              type='time'
+              defaultValue={start_time}
+              onChange={() => handleDateChange('start_time')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -223,7 +219,7 @@ export const TripEventForm: React.FC<any> = () => {
                 },
               }}>
               <MenuItem value={0}>--</MenuItem>
-              {timezone.map(tz => (
+              {timezone.map((tz) => (
                 <MenuItem key={tz.id} value={tz.id}>
                   {tz.text}
                 </MenuItem>
@@ -233,19 +229,16 @@ export const TripEventForm: React.FC<any> = () => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
-                label='End time'
-                name='end_time'
-                margin='normal'
-                value={end_time}
-                onChange={handleDateChange('end_time')}
-                minDate={start_time ? start_time : moment().add(-10, 'years')}
-                format={DATE_TIME_FORMAT}
-                clearable
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              id='end_time'
+              label='End time'
+              type='time'
+              defaultValue={end_time}
+              onChange={() => handleDateChange('end_time')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -263,7 +256,7 @@ export const TripEventForm: React.FC<any> = () => {
                 },
               }}>
               <MenuItem value={0}>--</MenuItem>
-              {timezone.map(tz => (
+              {timezone.map((tz) => (
                 <MenuItem key={tz.id} value={tz.id}>
                   {tz.text}
                 </MenuItem>
@@ -325,7 +318,7 @@ export const TripEventForm: React.FC<any> = () => {
                 },
               }}>
               <MenuItem value={0}>--</MenuItem>
-              {currency.map(c => (
+              {currency.map((c) => (
                 <MenuItem key={c.id} value={c.id}>
                   {c.code}
                 </MenuItem>

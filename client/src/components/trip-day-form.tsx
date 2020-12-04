@@ -1,4 +1,3 @@
-import MomentUtils from '@date-io/moment';
 import {
   Button,
   createStyles,
@@ -10,7 +9,6 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as React from 'react';
@@ -93,20 +91,17 @@ export const TripDayForm: React.FC<any> = () => {
               onChange={handleChange('name')}
               fullWidth
             />
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DatePicker
-                label='Trip date'
-                name='start_date'
-                margin='normal'
-                value={tripDayFormState.trip_date}
-                onChange={handleDateChange('trip_date')}
-                minDate={tripDetail.start_date}
-                maxDate={tripDetail.end_date}
-                format='YYYY-MM-DD'
-                required
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              id='start_date'
+              label='Trip date'
+              type='date'
+              defaultValue={tripDayFormState.trip_date}
+              onChange={() => handleDateChange('trip_date')}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              required
+            />
             <Grid container spacing={2} className={classes.buttonWrapper}>
               <Grid item>
                 <Button onClick={handleDialogClose}>Cancel</Button>
