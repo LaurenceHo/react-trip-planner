@@ -42,6 +42,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new IgnorePlugin(/^\.\/locale$/, /moment$/),
     /*
      * Plugin: HtmlWebpackPlugin
      * Description: Simplifies creation of HTML files to serve your webpack bundles.
